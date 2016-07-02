@@ -1,0 +1,39 @@
+package cat.xojan.random1;
+
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.squareup.leakcanary.LeakCanary;
+
+import cat.xojan.random1.injection.component.AppComponent;
+import cat.xojan.random1.injection.component.DaggerAppComponent;
+import cat.xojan.random1.injection.module.AppModule;
+import io.fabric.sdk.android.Fabric;
+
+public class Application extends android.app.Application {
+
+    private AppComponent mComponent;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        Fabric.with(this, new Answers(), new Crashlytics());
+        initInjector();
+        initLeakDetection();
+    }
+
+    public AppComponent getAppComponent() {
+        return mComponent;
+    }
+
+    private void initInjector() {
+        mComponent = DaggerAppComponent.builder()
+                .appModule(new AppModule(this))
+                .build();
+    }
+
+    private void initLeakDetection() {
+        if (BuildConfig.DEBUG) {
+            LeakCanary.install(this);
+        }
+    }
+}

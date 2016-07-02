@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Podcasts RAC1 - No Oficial</string>
+    <string name="error_loading_podcasts">Error al carregar els podcasts</string>
+    <string name="no_podcasts_available">Podcasts no disponibles</string>
+    <string name="podcasts_latest">Últims</string>
+    <string name="podcasts_programs">Programes</string>
+</resources>

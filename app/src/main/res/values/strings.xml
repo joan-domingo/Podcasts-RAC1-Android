@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Podcasts RAC1 - No Official</string>
+    <string name="podcasts_latest">Latest</string>
+    <string name="podcasts_programs">Programs</string>
+    <string name="error_loading_podcasts">Error loading podcasts</string>
+    <string name="no_podcasts_available">No Podcasts Available</string>
+</resources>
