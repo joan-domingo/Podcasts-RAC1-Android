@@ -54,13 +54,6 @@ public class PodcastListFragment extends BaseFragment implements
         return podcastListFragment;
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getComponent(HomeComponent.class).inject(this);
-        mPresenter.setPodcastsListener(this);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -83,6 +76,13 @@ public class PodcastListFragment extends BaseFragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getComponent(HomeComponent.class).inject(this);
+        mPresenter.setPodcastsListener(this);
         showPodcasts();
     }
 

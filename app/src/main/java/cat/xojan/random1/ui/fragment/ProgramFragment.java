@@ -36,13 +36,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     private ProgramListAdapter mAdapter;
     private Unbinder unbinder;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getComponent(HomeComponent.class).inject(this);
-        mPresenter.setPodcastsListener(this);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -57,6 +50,13 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getComponent(HomeComponent.class).inject(this);
+        mPresenter.setPodcastsListener(this);
         mPresenter.showPrograms();
     }
 
