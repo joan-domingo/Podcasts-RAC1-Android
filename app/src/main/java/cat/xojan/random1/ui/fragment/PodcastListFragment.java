@@ -89,7 +89,9 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mAdapter.destroy();
+        if (mAdapter != null) {
+            mAdapter.destroy();
+        }
         mRecyclerView.setAdapter(null);
         unbinder.unbind();
     }
