@@ -180,9 +180,9 @@ public class RadioPlayerActivity extends BaseActivity {
         public void onClick(View v) {
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
-                mPlayer.setImageDrawable(getDrawable(R.drawable.ic_play_arrow));
+                mPlayer.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
             } else {
-                mPlayer.setImageDrawable(getDrawable(R.drawable.ic_pause));
+                mPlayer.setImageDrawable(getResources().getDrawable(R.drawable.ic_pause));
                 mMediaPlayer.start();
             }
         }
@@ -191,7 +191,7 @@ public class RadioPlayerActivity extends BaseActivity {
     private class MediaPlayerCompletionListener implements MediaPlayer.OnCompletionListener {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            mPlayer.setImageDrawable(getDrawable(R.drawable.ic_play_arrow));
+            mPlayer.setImageDrawable(getResources().getDrawable(R.drawable.ic_play_arrow));
             mMediaPlayer.seekTo(0);
         }
     }
