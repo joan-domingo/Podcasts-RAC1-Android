@@ -74,7 +74,7 @@ public class CroppedImageView extends ImageView {
         paint.setDither(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(Color.parseColor("#BAB399"));
-        canvas.drawRect(new Rect(0, 0, 600, 600), paint);
+        canvas.drawRect(new Rect(0, 0, 1000, 1000), paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(sbmp, rect, rect, paint);
 
@@ -83,7 +83,7 @@ public class CroppedImageView extends ImageView {
 
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        // This is the key that will make the height equivalent to its width
+        // This is the key that will make the height equivalent to its width or viceversa
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 }
