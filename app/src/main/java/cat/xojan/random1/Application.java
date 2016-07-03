@@ -16,7 +16,7 @@ public class Application extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Answers(), new Crashlytics());
+        initCrashlytics();
         initInjector();
         initLeakDetection();
     }
@@ -34,6 +34,12 @@ public class Application extends android.app.Application {
     private void initLeakDetection() {
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
+        }
+    }
+
+    private void initCrashlytics() {
+        if (!BuildConfig.DEBUG) {
+            Fabric.with(this, new Answers(), new Crashlytics());
         }
     }
 }
