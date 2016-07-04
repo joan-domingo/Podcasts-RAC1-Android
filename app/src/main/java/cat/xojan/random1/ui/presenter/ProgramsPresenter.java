@@ -34,8 +34,10 @@ public class ProgramsPresenter implements BasePresenter {
         mListener = listener;
     }
 
-    public void showPrograms() {
-        List<Program> programs = mProgramDataInteractor.loadPrograms();
+    public void showPrograms(List<Program> programs) {
+        if (programs == null) {
+            programs = mProgramDataInteractor.loadPrograms();
+        }
         mListener.onProgramsLoaded(programs);
     }
 

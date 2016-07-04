@@ -35,11 +35,13 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
 
     private ProgramListAdapter mAdapter;
     private Unbinder unbinder;
+    private List<Program> mPrograms;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         mSwipeRefresh.setEnabled(false);
@@ -57,7 +59,7 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
         super.onActivityCreated(savedInstanceState);
         getComponent(HomeComponent.class).inject(this);
         mPresenter.setPodcastsListener(this);
-        mPresenter.showPrograms();
+        mPresenter.showPrograms(mPrograms);
     }
 
     @Override
@@ -76,6 +78,7 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
 
     @Override
     public void onProgramsLoaded(List<Program> programs) {
+        mPrograms = programs;
         mAdapter = new ProgramListAdapter(programs, this);
         mRecyclerView.setAdapter(mAdapter);
     }

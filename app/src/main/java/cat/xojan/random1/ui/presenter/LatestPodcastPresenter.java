@@ -34,17 +34,21 @@ public class LatestPodcastPresenter implements BasePresenter {
         mPodcastDataInteractor = podcastDataInteractor;
     }
 
-    public void showPodcasts(String program) {
-        if (program == null) {
-            mPodcastSubscription = mPodcastDataInteractor.loadPodcasts()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new PodcastSubscriptionObserver());
+    public void showPodcasts(String program, List<Podcast> podcasts) {
+        if (podcasts == null) {
+            if (program == null) {
+                mPodcastSubscription = mPodcastDataInteractor.loadPodcasts()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new PodcastSubscriptionObserver());
+            } else {
+                mPodcastSubscription = mPodcastDataInteractor.loadPodcastsByProgram(program)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new PodcastSubscriptionObserver());
+            }
         } else {
-            mPodcastSubscription = mPodcastDataInteractor.loadPodcastsByProgram(program)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new PodcastSubscriptionObserver());
+            mListener.onPodcastsLoaded(podcasts);
         }
     }
 

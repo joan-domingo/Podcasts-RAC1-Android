@@ -43,6 +43,7 @@ public class PodcastListFragment extends BaseFragment implements
 
     private PodcastListAdapter mAdapter;
     private Unbinder unbinder;
+    private List<Podcast> mPodcasts;
 
     public static PodcastListFragment newInstance(String param) {
         Bundle args = new Bundle();
@@ -58,17 +59,12 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        setRetainInstance(true);
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mSwipeRefresh.setOnRefreshListener(new SwipeRefreshListener());
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefresh.post(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefresh.setRefreshing(true);
-            }
-        });
         return view;
     }
 
@@ -104,6 +100,7 @@ public class PodcastListFragment extends BaseFragment implements
 
     @Override
     public void onPodcastsLoaded(List<Podcast> podcasts) {
+        mPodcasts = podcasts;
         mSwipeRefresh.setRefreshing(false);
         mAdapter = new PodcastListAdapter(podcasts, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -133,8 +130,15 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     private void showPodcasts() {
-        Bundle args = getArguments();
-        mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null);
+        //workaround to show refreshing icon without swipe.
+        mSwipeRefresh.post(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefresh.setRefreshing(true);
+                Bundle args = getArguments();
+                mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
+            }
+        });
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
