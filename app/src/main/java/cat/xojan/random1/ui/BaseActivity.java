@@ -41,10 +41,19 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @param containerViewId The container view to where add the fragment.
      * @param fragment The fragment to be added.
      */
-    public void addFragment(int containerViewId, Fragment fragment, String tag) {
+    public void addFragment(int containerViewId, Fragment fragment, String tag,
+                            boolean addToBackSTack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(containerViewId, fragment, tag);
-        fragmentTransaction.addToBackStack(tag);
+        if (addToBackSTack) fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
+    }
+
+    /**
+     * Search for a fragment on the back stack.
+     * @param tag fragment's tag.
+     */
+    public Fragment getFragment(String tag) {
+        return getSupportFragmentManager().findFragmentByTag(tag);
     }
 }

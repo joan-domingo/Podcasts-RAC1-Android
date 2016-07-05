@@ -87,6 +87,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     public void onClick(Program program) {
         PodcastListFragment podcastListFragment = PodcastListFragment.newInstance(program.param());
         ((BaseActivity) getActivity()).addFragment(R.id.container_fragment,
-                podcastListFragment, PodcastListFragment.TAG);
+                podcastListFragment, PodcastListFragment.TAG, true);
     }
 }
