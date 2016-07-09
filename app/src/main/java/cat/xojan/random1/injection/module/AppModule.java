@@ -1,9 +1,13 @@
 package cat.xojan.random1.injection.module;
 
+import android.app.NotificationManager;
 import android.content.Context;
+
+import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
 import dagger.Module;
+import dagger.Provides;
 
 /**
  * A module for Android-specific dependencies which require a {@link Context} or
@@ -16,4 +20,5 @@ public class AppModule {
     public AppModule(Application application) {
         mApplication = application;
     }
+
 }

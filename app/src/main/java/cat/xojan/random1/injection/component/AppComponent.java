@@ -1,5 +1,7 @@
 package cat.xojan.random1.injection.component;
 
+import android.app.NotificationManager;
+
 import javax.inject.Singleton;
 
 import cat.xojan.random1.injection.module.AppModule;
@@ -13,4 +15,6 @@ import dagger.Component;
 @Component(modules = AppModule.class)
 public interface AppComponent {
     void inject(BaseActivity baseActivity);
+
+    //Exposed to sub-graphs.
 }
