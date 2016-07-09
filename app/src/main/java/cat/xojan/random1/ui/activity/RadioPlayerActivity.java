@@ -3,6 +3,9 @@ package cat.xojan.random1.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.domain.entity.Podcast;
@@ -38,6 +41,8 @@ public class RadioPlayerActivity extends BaseActivity implements HasComponent {
             RadioPlayerFragment radioPlayerFragment = RadioPlayerFragment.newInstance(podcast);
             addFragment(R.id.container_fragment, radioPlayerFragment, RadioPlayerFragment.TAG,
                     false);
+
+            logEvent(podcast);
         }
     }
 
@@ -53,5 +58,11 @@ public class RadioPlayerActivity extends BaseActivity implements HasComponent {
                 .radioPlayerModule(new RadioPlayerModule())
                 .build();
         mComponent.inject(this);
+    }
+
+    private void logEvent(Podcast podcast) {
+        Answers.getInstance().logContentView(new ContentViewEvent()
+                .putContentName(podcast.category())
+                .putContentType(podcast.description()));
     }
 }
