@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,6 +22,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.domain.entity.Podcast;
 import cat.xojan.random1.injection.component.HomeComponent;
@@ -117,6 +121,8 @@ public class PodcastListFragment extends BaseFragment implements
         Intent intent = new Intent(getActivity(), RadioPlayerActivity.class);
         intent.putExtra(RadioPlayerActivity.EXTRA_PODCAST, podcast);
         startActivity(intent);
+
+        logEvent(podcast);
     }
 
     @Override
@@ -140,6 +146,14 @@ public class PodcastListFragment extends BaseFragment implements
                 mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
             }
         });
+    }
+
+    private void logEvent(Podcast podcast) {
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName(podcast.category())
+                    .putContentType(podcast.description()));
+        }
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {

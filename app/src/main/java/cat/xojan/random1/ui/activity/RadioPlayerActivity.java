@@ -13,15 +13,12 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.squareup.picasso.Picasso;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.entity.Podcast;
@@ -112,8 +109,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         bindService(new Intent(this, RadioPlayerService.class), mConnection,
                 Context.BIND_AUTO_CREATE);
 
-        showActionBarNotification(mPodcast);
-        logEvent(mPodcast);
+        //showActionBarNotification(mPodcast);
     }
 
     @Override
@@ -133,8 +129,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             mBound = false;
         }
 
-        dismissActionBarNotification();
-        mNotificationController.destroy();
+        //dismissActionBarNotification();
+        //mNotificationController.destroy();
     }
 
     @Override
@@ -178,14 +174,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
                 .radioPlayerModule(new RadioPlayerModule())
                 .build();
         mComponent.inject(this);
-    }
-
-    private void logEvent(Podcast podcast) {
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName(podcast.category())
-                    .putContentType(podcast.description()));
-        }
     }
 
     private void showActionBarNotification(Podcast podcast) {
