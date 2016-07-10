@@ -136,6 +136,7 @@ public class PodcastListFragment extends BaseFragment implements
             public void run() {
                 mSwipeRefresh.setRefreshing(true);
                 Bundle args = getArguments();
+                mPodcasts = null;
                 mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
             }
         });
