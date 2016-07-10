@@ -16,8 +16,7 @@ public class RadioPlayerModule {
     }
 
     @Provides
-    NotificationController providesNotificationController(NotificationManager notificationManager,
-                                                          Context context) {
-        return new NotificationController(notificationManager, context);
+    NotificationController providesNotificationController(NotificationManager notificationManager) {
+        return new NotificationController(notificationManager);
     }
 }

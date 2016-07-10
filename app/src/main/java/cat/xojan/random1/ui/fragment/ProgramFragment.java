@@ -27,8 +27,7 @@ import cat.xojan.random1.ui.presenter.ProgramsPresenter;
 public class ProgramFragment extends BaseFragment implements ProgramsPresenter.ProgramListener,
         ProgramListAdapter.RecyclerViewListener {
 
-    @Inject
-    ProgramsPresenter mPresenter;
+    @Inject ProgramsPresenter mPresenter;
 
     @BindView(R.id.list) RecyclerView mRecyclerView;
     @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefresh;

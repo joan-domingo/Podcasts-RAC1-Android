@@ -87,8 +87,14 @@ public class RadioPlayerService extends Service {
     @Override
     public boolean onUnbind(Intent intent) {
         Log.d(TAG, "onUnbind");
-        stopMediaPlayer();
         return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
+        stopMediaPlayer();
     }
 
     /**
