@@ -1,5 +1,7 @@
 package cat.xojan.random1.domain.entity.rss;
 
+import android.text.TextUtils;
+
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
@@ -14,7 +16,7 @@ public class FeedItem {
     private String description;
     @Element
     private String link;
-    @Element
+    @Element(required = false)
     private String category;
 
     public String getTitle() {
@@ -30,6 +32,6 @@ public class FeedItem {
     }
 
     public String getCategory() {
-        return category;
+        return TextUtils.isEmpty(category) ? "" : category;
     }
 }
