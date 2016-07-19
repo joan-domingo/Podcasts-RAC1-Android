@@ -1,6 +1,6 @@
 package cat.xojan.random1.ui.presenter;
 
-import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,9 @@ public class LatestPodcastPresenter implements BasePresenter {
 
         @Override
         public void onError(Throwable e) {
-            Log.e("LatestPodcastPresenter", e.getLocalizedMessage());
+            if (e.getMessage() != null) {
+                Crashlytics.log(e.getMessage());
+            }
             mListener.onPodcastsLoaded(new ArrayList<Podcast>());
         }
 
