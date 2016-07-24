@@ -78,9 +78,7 @@ public class LatestPodcastPresenter implements BasePresenter {
 
         @Override
         public void onError(Throwable e) {
-            if (e.getMessage() != null) {
-                Crashlytics.log(e.getMessage());
-            }
+            Crashlytics.logException(e);
             mListener.onPodcastsLoaded(new ArrayList<Podcast>());
         }
 

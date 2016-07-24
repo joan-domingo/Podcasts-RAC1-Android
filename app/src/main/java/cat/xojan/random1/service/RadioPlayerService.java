@@ -75,7 +75,7 @@ public class RadioPlayerService extends Service {
         if (mMediaPlayer == null) {
             startMediaPlayer(url);
         }
-        return START_REDELIVER_INTENT;
+        return START_NOT_STICKY;
     }
 
     @Nullable
