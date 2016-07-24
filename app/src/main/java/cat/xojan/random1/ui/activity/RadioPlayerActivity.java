@@ -109,7 +109,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         bindService(new Intent(this, RadioPlayerService.class), mConnection,
                 Context.BIND_AUTO_CREATE);
 
-        //showActionBarNotification(mPodcast);
+        showActionBarNotification(mPodcast);
     }
 
     @Override
@@ -129,8 +129,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             mBound = false;
         }
 
-        //dismissActionBarNotification();
-        //mNotificationController.destroy();
+        dismissActionBarNotification();
+        mNotificationController.destroy();
     }
 
     @Override
@@ -177,8 +177,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     }
 
     private void showActionBarNotification(Podcast podcast) {
-        mNotificationController.showNotification(RadioPlayerActivity.class,
-                NOTIFICATION_ID, this, podcast);
+        mNotificationController.showNotification(HomeActivity.class, NOTIFICATION_ID, this,
+                podcast);
     }
 
     private void dismissActionBarNotification() {
