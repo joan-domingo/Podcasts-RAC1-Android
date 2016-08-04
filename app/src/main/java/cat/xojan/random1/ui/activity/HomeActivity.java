@@ -26,7 +26,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         final Intent intent = getIntent();
         if ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0
                 && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
