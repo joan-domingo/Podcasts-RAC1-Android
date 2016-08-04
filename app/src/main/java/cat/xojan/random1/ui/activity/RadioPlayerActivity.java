@@ -15,8 +15,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import javax.inject.Inject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
@@ -27,7 +25,6 @@ import cat.xojan.random1.injection.component.RadioPlayerComponent;
 import cat.xojan.random1.injection.module.RadioPlayerModule;
 import cat.xojan.random1.service.RadioPlayerService;
 import cat.xojan.random1.ui.BaseActivity;
-import cat.xojan.random1.ui.controller.NotificationController;
 import cat.xojan.random1.ui.view.CroppedImageView;
 import icepick.Icepick;
 import icepick.State;
@@ -35,10 +32,7 @@ import icepick.State;
 public class RadioPlayerActivity extends BaseActivity implements RadioPlayerService.Listener {
 
     public static final String EXTRA_PODCAST = "PODCAST";
-    private static final int NOTIFICATION_ID = 0;
     private static final String TAG = RadioPlayerActivity.class.getSimpleName();
-
-    @Inject NotificationController mNotificationController;
 
     @BindView(R.id.buffer_bar) ProgressBar mBufferBar;
     @BindView(R.id.seek_bar) SeekBar mSeekBar;
@@ -83,10 +77,10 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     };
     private Intent mServiceIntent;
 
-    private Intent getRadioPlayerServiceIntent(String url) {
+    private Intent getRadioPlayerServiceIntent(Podcast podcast) {
         Intent intent = new Intent(this, RadioPlayerService.class);
         intent.addCategory(RadioPlayerService.TAG);
-        intent.putExtra(RadioPlayerService.EXTRA_URL, url);
+        intent.putExtra(RadioPlayerService.EXTRA_PODCAST, podcast);
         return intent;
     }
 
@@ -105,11 +99,9 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
         // Bind to the service
         Log.d(TAG, "BindService");
-        mServiceIntent = getRadioPlayerServiceIntent(mPodcast.link());
+        mServiceIntent = getRadioPlayerServiceIntent(mPodcast);
         bindService(new Intent(this, RadioPlayerService.class), mConnection,
                 Context.BIND_AUTO_CREATE);
-
-        showActionBarNotification(mPodcast);
     }
 
     @Override
@@ -128,9 +120,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             unbindService(mConnection);
             mBound = false;
         }
-
-        dismissActionBarNotification();
-        mNotificationController.destroy();
     }
 
     @Override
@@ -174,15 +163,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
                 .radioPlayerModule(new RadioPlayerModule())
                 .build();
         mComponent.inject(this);
-    }
-
-    private void showActionBarNotification(Podcast podcast) {
-        mNotificationController.showNotification(HomeActivity.class, NOTIFICATION_ID, this,
-                podcast);
-    }
-
-    private void dismissActionBarNotification() {
-        mNotificationController.dissmissNotification(NOTIFICATION_ID);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package cat.xojan.random1.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -25,6 +26,16 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        final Intent intent = getIntent();
+        if ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0
+                && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+                && intent.getAction() != null
+                && intent.getAction().equals(Intent.ACTION_MAIN)) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_home);
 
         ButterKnife.bind(this);

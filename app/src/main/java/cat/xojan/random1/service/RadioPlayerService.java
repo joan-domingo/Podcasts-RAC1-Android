@@ -1,5 +1,7 @@
 package cat.xojan.random1.service;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -8,6 +10,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,11 +19,14 @@ import java.io.IOException;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PlayerUtil;
+import cat.xojan.random1.domain.entity.Podcast;
+import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 
 public class RadioPlayerService extends Service {
 
     public static final String TAG = RadioPlayerService.class.getSimpleName();
-    public static final String EXTRA_URL = "extra_url";
+    public static final String EXTRA_PODCAST = "extra_podcast";
+    private static final int NOTIFICATION_ID = 1;
 
     private MediaPlayer mMediaPlayer;
     private Handler mHandler;
@@ -71,11 +77,34 @@ public class RadioPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
-        String url = intent.getStringExtra(EXTRA_URL);
+        Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
         if (mMediaPlayer == null) {
-            startMediaPlayer(url);
+            Notification notification = getNotification(RadioPlayerActivity.class, podcast);
+            startForeground(NOTIFICATION_ID, notification);
+            startMediaPlayer(podcast.link());
         }
-        return START_NOT_STICKY;
+
+        return START_STICKY;
+    }
+
+    protected Notification getNotification(Class clazz, Podcast podcast) {
+        final NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext());
+
+        builder.setSmallIcon(R.drawable.ic_podcast_notification)
+                .setContentTitle(getApplicationContext().getString(R.string.app_name))
+                .setContentText(podcast.category() + " " + podcast.description());
+
+        Intent foregroundIntent = new Intent(getApplicationContext(), clazz);
+
+        foregroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                foregroundIntent, 0);
+
+        builder.setContentIntent(contentIntent);
+        return builder.build();
     }
 
     @Nullable
@@ -95,6 +124,7 @@ public class RadioPlayerService extends Service {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         stopMediaPlayer();
+        stopForeground(true);
     }
 
     /**
