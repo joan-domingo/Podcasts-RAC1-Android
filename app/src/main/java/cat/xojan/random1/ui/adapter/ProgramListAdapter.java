@@ -7,13 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
+import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.domain.entity.Program;
 
 public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.ViewHolder>  {
@@ -38,9 +37,7 @@ public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.
         Program program = mProgramList.get(position);
 
         holder.title.setText(program.category());
-        Picasso.with(holder.itemView.getContext())
-                .load(program.imageUrl())
-                .into(holder.image);
+        PicassoUtil.loadImage(holder.itemView.getContext(), program.imageUrl(), holder.image);
     }
 
     @Override

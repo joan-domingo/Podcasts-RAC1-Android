@@ -13,11 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
+import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.entity.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
@@ -137,9 +136,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
         mCategory.setText(podcast.category());
         mDescription.setText(podcast.description());
-        Picasso.with(this)
-                .load(podcast.imageUrl())
-                .into(mImage);
+        PicassoUtil.loadImage(this, podcast.imageUrl(), mImage);
 
         updateViewAfterRotation();
     }
