@@ -1,7 +1,5 @@
 package cat.xojan.random1.commons;
 
-import java.util.concurrent.TimeUnit;
-
 public class PlayerUtil {
 
     public static int progressToTimer(int progress, int totalDuration) {

@@ -1,5 +1,6 @@
 package cat.xojan.random1.ui.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -50,7 +51,12 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        setLayoutManager(getResources().getConfiguration().orientation);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        setLayoutManager(newConfig.orientation);
     }
 
     @Override
@@ -87,5 +93,13 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
         PodcastListFragment podcastListFragment = PodcastListFragment.newInstance(program.param());
         ((BaseActivity) getActivity()).addFragment(R.id.container_fragment,
                 podcastListFragment, PodcastListFragment.TAG, true);
+    }
+
+    private void setLayoutManager(int orientation) {
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        } else {
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        }
     }
 }
