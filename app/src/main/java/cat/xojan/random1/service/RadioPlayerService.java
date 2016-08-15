@@ -84,7 +84,7 @@ public class RadioPlayerService extends Service {
             startMediaPlayer(podcast.link());
         }
 
-        return START_NOT_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     protected Notification getNotification(Class clazz, Podcast podcast) {

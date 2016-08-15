@@ -110,8 +110,32 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart()");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume()");
+        if (mService != null) {
+            if (mService.isPlaying()) {
+                mPlayerButtonDrawable = R.drawable.ic_pause;
+                mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+            } else {
+                mPlayerButtonDrawable = R.drawable.ic_play_arrow;
+                mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+            }
+        } else {
+            mLoader.setVisibility(View.VISIBLE);
+            mPlayer.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        Log.d(TAG, "onDestroy()");
         super.onDestroy();
         // Unbind from the service
         if (mBound) {

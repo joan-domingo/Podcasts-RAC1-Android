@@ -105,7 +105,6 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public void onPodcastsLoaded(List<Podcast> podcasts) {
         mPodcasts = podcasts;
-        mSwipeRefresh.setRefreshing(false);
         mAdapter = new PodcastListAdapter(podcasts, this);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -113,6 +112,10 @@ public class PodcastListFragment extends BaseFragment implements
             mEmptyList.setVisibility(View.VISIBLE);
         } else {
             mEmptyList.setVisibility(View.GONE);
+        }
+
+        if (mSwipeRefresh != null) {
+            mSwipeRefresh.setRefreshing(false);
         }
     }
 
