@@ -105,6 +105,12 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public void onPodcastsLoaded(List<Podcast> podcasts) {
         mPodcasts = podcasts;
+        if (mSwipeRefresh == null) {
+            mSwipeRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
+        }
+        if (mRecyclerView == null) {
+            mRecyclerView = (RecyclerView) getView().findViewById(R.id.list);
+        }
         mSwipeRefresh.setRefreshing(false);
         mAdapter = new PodcastListAdapter(podcasts, this);
         mRecyclerView.setAdapter(mAdapter);
