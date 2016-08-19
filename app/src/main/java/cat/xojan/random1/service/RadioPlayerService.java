@@ -156,14 +156,13 @@ public class RadioPlayerService extends Service {
         mMediaPlayer.setOnPreparedListener(new MediaPlayerPreparedListener());
         mMediaPlayer.setOnBufferingUpdateListener(new BufferingUpdateListener());
         mMediaPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());
+        mMediaPlayer.setOnErrorListener(new MediaPlayerErrorListener());
     }
 
     private void stopMediaPlayer() {
         if (mMediaPlayer != null) {
             Log.d(TAG, "stopMediaPlayer");
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.stop();
-            }
+            mMediaPlayer.stop();
             mHandler.removeCallbacks(mUpdateTimeTask);
             mMediaPlayer.release();
         }
@@ -220,5 +219,13 @@ public class RadioPlayerService extends Service {
         void updateBufferProgress(int percent);
 
         void updateButton(int ic_play_arrow);
+    }
+
+    private class MediaPlayerErrorListener implements MediaPlayer.OnErrorListener {
+        @Override
+        public boolean onError(MediaPlayer mp, int what, int extra) {
+            Crashlytics.log("Media player error listener: " + what + ", " + extra);
+            return false;
+        }
     }
 }
