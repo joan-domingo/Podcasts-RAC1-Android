@@ -162,9 +162,13 @@ public class RadioPlayerService extends Service {
     private void stopMediaPlayer() {
         if (mMediaPlayer != null) {
             Log.d(TAG, "stopMediaPlayer");
-            mMediaPlayer.stop();
+            try {
+                mMediaPlayer.stop();
+                mMediaPlayer.release();
+            } catch (IllegalStateException e) {
+                //TODO bug reproducable after killing app and starting radio player again
+            }
             mHandler.removeCallbacks(mUpdateTimeTask);
-            mMediaPlayer.release();
         }
     }
 
@@ -225,6 +229,7 @@ public class RadioPlayerService extends Service {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             Crashlytics.log("Media player error listener: " + what + ", " + extra);
+            Log.e(TAG, "Media player error listener: " + what + ", " + extra);
             return false;
         }
     }
