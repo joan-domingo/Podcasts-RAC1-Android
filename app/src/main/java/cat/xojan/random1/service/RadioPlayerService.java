@@ -161,7 +161,9 @@ public class RadioPlayerService extends Service {
     private void stopMediaPlayer() {
         if (mMediaPlayer != null) {
             Log.d(TAG, "stopMediaPlayer");
-            mMediaPlayer.stop();
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
             mHandler.removeCallbacks(mUpdateTimeTask);
             mMediaPlayer.release();
         }
