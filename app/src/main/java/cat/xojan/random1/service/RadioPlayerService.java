@@ -77,12 +77,15 @@ public class RadioPlayerService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // The service is starting, due to a call to startService()
-        Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
-        if (mMediaPlayer == null) {
-            Notification notification = getNotification(RadioPlayerActivity.class, podcast);
-            startForeground(NOTIFICATION_ID, notification);
-            startMediaPlayer(podcast.link());
+        if (mListener == null) {
+            stopSelf();
         }
+        Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
+
+        Notification notification = getNotification(RadioPlayerActivity.class, podcast);
+        startForeground(NOTIFICATION_ID, notification);
+
+        startMediaPlayer(podcast.link());
 
         return START_REDELIVER_INTENT;
     }
@@ -160,16 +163,10 @@ public class RadioPlayerService extends Service {
     }
 
     private void stopMediaPlayer() {
-        if (mMediaPlayer != null) {
-            Log.d(TAG, "stopMediaPlayer");
-            try {
-                mMediaPlayer.stop();
-                mMediaPlayer.release();
-            } catch (IllegalStateException e) {
-                //TODO bug reproducable after killing app and starting radio player again
-            }
-            mHandler.removeCallbacks(mUpdateTimeTask);
-        }
+        Log.d(TAG, "stopMediaPlayer");
+        mMediaPlayer.stop();
+        mMediaPlayer.release();
+        mHandler.removeCallbacks(mUpdateTimeTask);
     }
 
     /**
