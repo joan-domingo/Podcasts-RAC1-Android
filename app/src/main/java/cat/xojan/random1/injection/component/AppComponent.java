@@ -1,7 +1,5 @@
 package cat.xojan.random1.injection.component;
 
-import android.app.NotificationManager;
-
 import javax.inject.Singleton;
 
 import cat.xojan.random1.injection.module.AppModule;
