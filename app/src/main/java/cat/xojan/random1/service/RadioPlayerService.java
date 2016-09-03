@@ -133,8 +133,10 @@ public class RadioPlayerService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        onUnbind(rootIntent);
-        onDestroy();
+        if (mListener != null) {
+            onUnbind(rootIntent);
+            onDestroy();
+        }
     }
 
     /**
@@ -188,9 +190,13 @@ public class RadioPlayerService extends Service {
         @Override
         public void onPrepared(MediaPlayer mp) {
             Log.d(TAG, "onPrepared");
-            mListener.onPrepared(mMediaPlayer.getDuration());
-            mMediaPlayer.start();
-            updateSeekBar();
+            if (mListener == null) {
+                stopSelf();
+            } else {
+                mListener.onPrepared(mMediaPlayer.getDuration());
+                mMediaPlayer.start();
+                updateSeekBar();
+            }
         }
     }
 

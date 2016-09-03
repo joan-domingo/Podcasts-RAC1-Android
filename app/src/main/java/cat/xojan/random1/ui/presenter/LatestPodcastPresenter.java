@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.domain.entity.Podcast;
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
@@ -78,7 +79,9 @@ public class LatestPodcastPresenter implements BasePresenter {
 
         @Override
         public void onError(Throwable e) {
-            Crashlytics.logException(e);
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.logException(e);
+            }
             mListener.onPodcastsLoaded(new ArrayList<Podcast>());
         }
 
