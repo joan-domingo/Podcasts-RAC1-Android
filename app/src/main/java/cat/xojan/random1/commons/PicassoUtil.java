@@ -16,7 +16,7 @@ public class PicassoUtil {
 
     public static void loadImage(Context ctx, String url, ImageView imageView) {
         Picasso.with(ctx)
-                .load(url + "?week=" + getWeekOfTheYear())
+                .load(url + "?w=" + getWeekOfTheYear())
                 .into(imageView);
     }
 

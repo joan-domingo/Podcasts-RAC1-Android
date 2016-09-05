@@ -16,10 +16,10 @@ public class StaticProgramRepository implements ProgramRepository {
         programs.add(Program.create("LA COMPETENCIA", "la_competencia"));
         programs.add(Program.create("LA SEGONA HORA", "la_segona_hora"));
         programs.add(Program.create("14 15", "14_15"));
-        programs.add(Program.create("100 METRES", "100_metres"));
+        programs.add(Program.create("PRIMER TOC", "primer_toc"));
         programs.add(Program.create("TOT ES POSSIBLE", "tot_es_possible"));
         programs.add(Program.create("VERSIO RAC1", "versio_rac1"));
-        programs.add(Program.create("PRIMER TOC", "primer_toc"));
+        programs.add(Program.create("ISLANDIA", "islandia"));
         programs.add(Program.create("NO HO SE", "no_ho_se"));
         programs.add(Program.create("TU DIRAS", "tu_diras"));
         programs.add(Program.create("LA PRIMERA PEDRA", "la_primera_pedra"));
@@ -31,6 +31,7 @@ public class StaticProgramRepository implements ProgramRepository {
         programs.add(Program.create("ULTRAESPORTS", "ultraesports"));
         programs.add(Program.create("MISTERIS", "misteris"));
         programs.add(Program.create("NO HI SOM PER FESTES", "no_hi_som_per_festes"));
+        //programs.add(Program.create("RAC1NCENTRAT", "rac1ncentrat"));
 
         return programs;
     }
