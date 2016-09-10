@@ -106,7 +106,7 @@ public class PodcastListFragment extends BaseFragment implements
     public void onPodcastsLoaded(List<Podcast> podcasts) {
         mPodcasts = podcasts;
         if (mSwipeRefresh == null) {
-            mSwipeRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
+            findSwipeRefreshView();
         }
         if (mRecyclerView == null) {
             mRecyclerView = (RecyclerView) getView().findViewById(R.id.list);
@@ -146,12 +146,19 @@ public class PodcastListFragment extends BaseFragment implements
         mSwipeRefresh.post(new Runnable() {
             @Override
             public void run() {
+                if (mSwipeRefresh == null) {
+                    findSwipeRefreshView();
+                }
                 mSwipeRefresh.setRefreshing(true);
                 Bundle args = getArguments();
                 mPodcasts = null;
                 mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
             }
         });
+    }
+
+    private void findSwipeRefreshView() {
+        mSwipeRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
     }
 
     private void logEvent(Podcast podcast) {
