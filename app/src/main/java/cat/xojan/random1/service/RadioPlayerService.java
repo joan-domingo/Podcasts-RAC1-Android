@@ -203,8 +203,8 @@ public class RadioPlayerService extends Service {
     private class BufferingUpdateListener implements MediaPlayer.OnBufferingUpdateListener {
         @Override
         public void onBufferingUpdate(MediaPlayer mp, int percent) {
-            if (mMediaPlayer.isPlaying()) {
-                mListener.updateBufferProgress(percent);;
+            if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+                mListener.updateBufferProgress(percent);
             }
         }
     }
