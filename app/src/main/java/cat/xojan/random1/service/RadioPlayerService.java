@@ -76,8 +76,7 @@ public class RadioPlayerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // The service is starting, due to a call to startService()
-        if (mListener == null) {
+        if (mListener == null || intent == null || !intent.hasExtra(EXTRA_PODCAST)) {
             stopSelf();
         }
         Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
