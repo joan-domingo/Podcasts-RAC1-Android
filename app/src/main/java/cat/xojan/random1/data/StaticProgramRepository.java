@@ -31,7 +31,7 @@ public class StaticProgramRepository implements ProgramRepository {
         programs.add(Program.create("ULTRAESPORTS", "ultraesports"));
         programs.add(Program.create("MISTERIS", "misteris"));
         programs.add(Program.create("NO HI SOM PER FESTES", "no_hi_som_per_festes"));
-        //programs.add(Program.create("RAC1NCENTRAT", "rac1ncentrat"));
+        programs.add(Program.create("RAC1NCENTRAT", "rac1ncentrat"));
 
         return programs;
     }
