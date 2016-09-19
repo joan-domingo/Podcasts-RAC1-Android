@@ -38,11 +38,12 @@ public class ImageUtil {
                 return "http://www.rac1.org/images/reproductor/rac1ncentrat.jpg";
             case "NO HI SOM PER FESTES":
                 return "http://www.rac1.org/images/reproductor/no_hi_som_per_festes.jpg";
+            case "AMB MOLT DE GUST":
+                return "http://www.rac1.org/images/reproductor/amb_molt_de_gust.jpg";
             case "LESPANYOL JUGA A RAC1":
             case "L'ESPANYOL JUGA A RAC1":
             case "ULTRAESPORTS":
             case "MISTERIS":
-            case "AMB MOLT DE GUST":
             default:
                 return "http://www.rac1.org/images/reproductor/default.jpg";
         }
