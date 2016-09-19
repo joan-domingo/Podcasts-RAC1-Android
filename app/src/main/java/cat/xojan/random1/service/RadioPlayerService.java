@@ -17,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.io.IOException;
 
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.entity.Podcast;
@@ -230,7 +231,9 @@ public class RadioPlayerService extends Service {
     private class MediaPlayerErrorListener implements MediaPlayer.OnErrorListener {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            Crashlytics.log("Media player error listener: " + what + ", " + extra);
+            if (!BuildConfig.DEBUG) {
+                Crashlytics.log("Media player error listener: " + what + ", " + extra);
+            }
             Log.e(TAG, "Media player error listener: " + what + ", " + extra);
             return false;
         }

@@ -44,6 +44,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     @BindView(R.id.progress_bar) ProgressBar mLoader;
 
     @State int mPlayerDuration = -1;
+    @State boolean mPlayerStarted = false;
     @State int mPlayerButtonDrawable = -1;
     @State Podcast mPodcast;
 
@@ -62,9 +63,10 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             mService.registerClient(RadioPlayerActivity.this);
             mBound = true;
 
-            if (mPlayerDuration == -1) {
+            if (mPlayerDuration == -1 && !mPlayerStarted) {
                 Log.d(TAG, "StartService");
                 startService(mServiceIntent);
+                mPlayerStarted = true;
             }
         }
 
