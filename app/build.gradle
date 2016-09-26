@@ -10,8 +10,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 12
-        versionName "1.7.0"
+        versionCode 13
+        versionName "1.8.0"
     }
     buildTypes {
         release {
