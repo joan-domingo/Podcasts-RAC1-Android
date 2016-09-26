@@ -10,7 +10,8 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"/>
+        android:layout_marginRight="16dp"
+        android:background="@drawable/gradient_background_oval"/>
 
     <LinearLayout
         android:id="@+id/text_container"

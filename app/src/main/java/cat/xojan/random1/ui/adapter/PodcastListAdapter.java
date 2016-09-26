@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -13,7 +14,6 @@ import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.domain.entity.Podcast;
-import cat.xojan.random1.ui.view.CircleImageView;
 
 public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.ViewHolder> {
 
@@ -54,7 +54,7 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
 
         @BindView(R.id.title) TextView title;
         @BindView(R.id.description) TextView description;
-        @BindView(R.id.circle_image) CircleImageView image;
+        @BindView(R.id.circle_image) ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
