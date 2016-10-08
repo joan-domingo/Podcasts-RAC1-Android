@@ -1,4 +1,4 @@
-package cat.xojan.random1.domain.entity.rss;
+package cat.xojan.random1.domain.model.rss;
 
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;

@@ -18,12 +18,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cat.xojan.random1.R;
-import cat.xojan.random1.domain.entity.Program;
+import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.adapter.ProgramListAdapter;
-import cat.xojan.random1.ui.presenter.ProgramsPresenter;
+import cat.xojan.random1.presenter.ProgramsPresenter;
 
 public class ProgramFragment extends BaseFragment implements ProgramsPresenter.ProgramListener,
         ProgramListAdapter.RecyclerViewListener {
@@ -57,6 +57,7 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         setLayoutManager(newConfig.orientation);
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -90,7 +91,8 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
 
     @Override
     public void onClick(Program program) {
-        PodcastListFragment podcastListFragment = PodcastListFragment.newInstance(program.param());
+        PodcastListFragment podcastListFragment = PodcastListFragment
+                .newInstance(program.getParam());
         ((BaseActivity) getActivity()).addFragment(R.id.container_fragment,
                 podcastListFragment, PodcastListFragment.TAG, true);
     }

@@ -14,6 +14,7 @@ import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.injection.module.HomeModule;
 import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.adapter.HomePagerAdapter;
+import cat.xojan.random1.ui.fragment.DownloadsFragment;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
 
@@ -21,6 +22,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
 
     @BindView(R.id.viewpager) ViewPager mViewPager;
     @BindView(R.id.tabs) TabLayout mTabLayout;
+
     private HomeComponent mComponent;
 
     @Override
@@ -37,7 +39,6 @@ public class HomeActivity extends BaseActivity implements HasComponent {
         }
 
         setContentView(R.layout.activity_home);
-
         ButterKnife.bind(this);
         initView();
         initInjector();
@@ -47,21 +48,19 @@ public class HomeActivity extends BaseActivity implements HasComponent {
         mComponent = DaggerHomeComponent.builder()
                 .appComponent(getApplicationComponent())
                 .baseActivityModule(getActivityModule())
-                .homeModule(new HomeModule())
+                .homeModule(new HomeModule(this))
                 .build();
         mComponent.inject(this);
     }
 
     private void initView() {
-        HomePagerAdapter adapter = new HomePagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ProgramFragment());
-        adapter.addFragment(new PodcastListFragment());
+        HomePagerAdapter mFragmentAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
+        mFragmentAdapter.addFragment(new ProgramFragment());
+        mFragmentAdapter.addFragment(new PodcastListFragment());
+        mFragmentAdapter.addFragment(new DownloadsFragment());
 
-        mViewPager.setAdapter(adapter);
+        mViewPager.setAdapter(mFragmentAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
-
-        mTabLayout.getTabAt(0).setText(R.string.podcasts_programs);
-        mTabLayout.getTabAt(1).setText(R.string.podcasts_latest);
     }
 
     @Override

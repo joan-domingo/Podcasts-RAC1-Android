@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Podcasts RAC1 - No Oficial</string>
-    <string name="error_loading_podcasts">Error al carregar els podcasts</string>
-    <string name="no_podcasts_available">Podcasts no disponibles</string>
+    <string name="no_podcasts_available">Podcasts no disponibles. Mira si estàs connectat a internet i torna-ho a intentar.</string>
     <string name="podcasts_latest">Últims</string>
     <string name="podcasts_programs">Programes</string>
+    <string name="podcasts_downloaded">Descàrregues</string>
+    <string name="download_program">Descarregar programa</string>
+    <string name="download_failed">Descàrrega fallida</string>
+    <string name="download_cancelled">Descàrrega cancel·lada</string>
+    <string name="download_successful">Descàrrega completa</string>
+    <string name="no_downloaded_podcasts">Cap podcast descarregat</string>
 </resources>

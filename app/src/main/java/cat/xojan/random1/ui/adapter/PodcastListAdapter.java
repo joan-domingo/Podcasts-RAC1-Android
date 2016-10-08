@@ -1,5 +1,6 @@
 package cat.xojan.random1.ui.adapter;
 
+import android.graphics.drawable.Animatable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
-import cat.xojan.random1.domain.entity.Podcast;
+import cat.xojan.random1.commons.PodcastUtil;
+import cat.xojan.random1.domain.model.Podcast;
 
 public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.ViewHolder> {
 
@@ -36,9 +38,26 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
         holder.itemView.setOnClickListener(new ItemClickListener(position));
         Podcast podcast = mPodcastList.get(position);
 
-        holder.title.setText(podcast.category());
-        holder.description.setText(podcast.description());
-        PicassoUtil.loadImage(holder.itemView.getContext(), podcast.imageUrl(), holder.image);
+        holder.title.setText(podcast.getCategory());
+        holder.description.setText(podcast.getDescription());
+        PicassoUtil.loadImage(holder.itemView.getContext(), podcast.getImageDrawable(),
+                holder.image, true);
+
+        switch (podcast.getState()) {
+            case LOADED:
+                holder.icon.setImageResource(R.drawable.ic_arrow_down);
+                break;
+            case DOWNLOADING:
+                holder.icon.setImageResource(R.drawable.animated_arrow);
+                if (holder.icon.getDrawable() instanceof Animatable) {
+                    ((Animatable) holder.icon.getDrawable()).start();
+                }
+                break;
+            case DOWNLOADED:
+                holder.icon.setImageResource(R.drawable.ic_delete);
+                break;
+        }
+        holder.icon.setOnClickListener(new IconClickListener(position));
     }
 
     @Override
@@ -50,32 +69,68 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
         mListener = null;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public void updateDownloadedPodcasts(List<Podcast> downloadedPodcasts) {
+        PodcastUtil.updateDownloadedPodcasts(mPodcastList, downloadedPodcasts);
+        notifyDataSetChanged();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.title) TextView title;
         @BindView(R.id.description) TextView description;
         @BindView(R.id.circle_image) ImageView image;
+        @BindView(R.id.icon) ImageView icon;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
     }
 
     public interface RecyclerViewListener {
+        /** Podcast item was clicked */
         void onClick(Podcast podcast);
+        /** Download icon was clicked*/
+        void download(Podcast podcast);
+        /** Delete icon was clicked*/
+        void delete(Podcast podcast);
     }
 
     private class ItemClickListener implements View.OnClickListener {
         private final int mPosition;
 
-        public ItemClickListener(int position) {
+        ItemClickListener(int position) {
             mPosition = position;
         }
 
         @Override
         public void onClick(View v) {
             mListener.onClick(mPodcastList.get(mPosition));
+        }
+    }
+
+    private class IconClickListener implements View.OnClickListener {
+        private final int mPosition;
+
+        IconClickListener(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onClick(View view) {
+            Podcast podcast = mPodcastList.get(mPosition);
+            switch (podcast.getState()) {
+                case LOADED:
+                    mListener.download(podcast);
+                    break;
+
+                case DOWNLOADING:
+                    break;
+
+                case DOWNLOADED:
+                    mListener.delete(podcast);
+                    break;
+            }
         }
     }
 }

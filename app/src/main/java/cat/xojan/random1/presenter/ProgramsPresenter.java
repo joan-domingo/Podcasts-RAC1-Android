@@ -1,8 +1,8 @@
-package cat.xojan.random1.ui.presenter;
+package cat.xojan.random1.presenter;
 
 import java.util.List;
 
-import cat.xojan.random1.domain.entity.Program;
+import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
 

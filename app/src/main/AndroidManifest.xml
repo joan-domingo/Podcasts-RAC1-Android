@@ -29,6 +29,15 @@
             android:exported="false"
             android:stopWithTask="false"/>
 
+        <receiver android:name=".receiver.DownloadCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE">
+                </action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

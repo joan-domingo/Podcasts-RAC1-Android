@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
-import cat.xojan.random1.domain.entity.Program;
+import cat.xojan.random1.domain.model.Program;
 
 public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.ViewHolder>  {
 
@@ -36,8 +36,9 @@ public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.
         holder.itemView.setOnClickListener(new ItemClickListener(position));
         Program program = mProgramList.get(position);
 
-        holder.title.setText(program.category());
-        PicassoUtil.loadImage(holder.itemView.getContext(), program.imageUrl(), holder.image);
+        holder.title.setText(program.getCategory());
+        PicassoUtil.loadImage(holder.itemView.getContext(), program.getImageDrawable(),
+                holder.image, false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package cat.xojan.random1.domain.entity.rss;
+package cat.xojan.random1.domain.model.rss;
 
 import android.text.TextUtils;
 
@@ -11,20 +11,14 @@ import org.simpleframework.xml.Root;
 @Root(strict = false)
 public class FeedItem {
     @Element
-    private String title;
-    @Element
     private String description;
     @Element
     private String link;
     @Element(required = false)
     private String category;
 
-    public String getTitle() {
-        return title;
-    }
-
     public String getDescription() {
-        return description;
+        return description.replace(":", "");
     }
 
     public String getLink() {

@@ -1,7 +1,9 @@
 package cat.xojan.random1.ui.fragment;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -22,24 +21,26 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
-import cat.xojan.random1.domain.entity.Podcast;
+import cat.xojan.random1.commons.EventUtil;
+import cat.xojan.random1.domain.model.Podcast;
 import cat.xojan.random1.injection.component.HomeComponent;
+import cat.xojan.random1.presenter.DownloadsPresenter;
+import cat.xojan.random1.presenter.PodcastListPresenter;
 import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
-import cat.xojan.random1.ui.presenter.LatestPodcastPresenter;
 
 public class PodcastListFragment extends BaseFragment implements
-        LatestPodcastPresenter.PodcastsListener,
+        PodcastListPresenter.PodcastsListener,
         PodcastListAdapter.RecyclerViewListener {
 
     public static final String TAG = PodcastListFragment.class.getSimpleName();
     private static final String ARG_PARAM = "program_param";
 
     @Inject
-    LatestPodcastPresenter mPresenter;
+    DownloadsPresenter mHomePresenter;
+    @Inject PodcastListPresenter mPresenter;
 
     @BindView(R.id.list) RecyclerView mRecyclerView;
     @BindView(R.id.empty_list) TextView mEmptyList;
@@ -87,6 +88,18 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.pause();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (mAdapter != null) {
@@ -103,7 +116,7 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     @Override
-    public void onPodcastsLoaded(List<Podcast> podcasts) {
+    public void updateRecyclerView(List<Podcast> podcasts) {
         mPodcasts = podcasts;
         if (mSwipeRefresh == null) {
             findSwipeRefreshView();
@@ -119,7 +132,18 @@ public class PodcastListFragment extends BaseFragment implements
             mEmptyList.setVisibility(View.VISIBLE);
         } else {
             mEmptyList.setVisibility(View.GONE);
+            mPresenter.refreshDownloadedPodcasts();
         }
+    }
+
+    @Override
+    public void updateRecyclerViewWithDownloaded(List<Podcast> podcasts) {
+        mAdapter.updateDownloadedPodcasts(podcasts);
+    }
+
+    @Override
+    public void updateRecyclerView() {
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -128,7 +152,22 @@ public class PodcastListFragment extends BaseFragment implements
         intent.putExtra(RadioPlayerActivity.EXTRA_PODCAST, podcast);
         startActivity(intent);
 
-        logEvent(podcast);
+        EventUtil.logPlayedPodcast(podcast);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void download(Podcast podcast) {
+        mPresenter.download(podcast);
+    }
+
+    @Override
+    public void delete(Podcast podcast) {
+        mPresenter.deletePodcast(podcast);
     }
 
     @Override
@@ -142,8 +181,7 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     private void showPodcasts() {
-        //workaround to show refreshing icon without swipe.
-        mSwipeRefresh.post(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (mSwipeRefresh == null) {
@@ -152,21 +190,13 @@ public class PodcastListFragment extends BaseFragment implements
                 mSwipeRefresh.setRefreshing(true);
                 Bundle args = getArguments();
                 mPodcasts = null;
-                mPresenter.showPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
+                mPresenter.loadPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
             }
-        });
+        }, 0);
     }
 
     private void findSwipeRefreshView() {
         mSwipeRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
-    }
-
-    private void logEvent(Podcast podcast) {
-        if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName(podcast.category())
-                    .putContentType(podcast.description()));
-        }
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {

@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cat.xojan.random1.domain.entity.Podcast;
-import cat.xojan.random1.domain.entity.rss.FeedItem;
-import cat.xojan.random1.domain.entity.rss.RssFeed;
+import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.model.rss.FeedItem;
+import cat.xojan.random1.domain.model.rss.RssFeed;
 import cat.xojan.random1.domain.repository.PodcastRepository;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -38,7 +38,6 @@ public class NetworkPodcastRepository implements PodcastRepository {
     }
 
     @Override
-
     public List<Podcast> getLatestPodcasts(int numPodcasts) throws IOException {
         RAC1Service service = mRetrofit.create(RAC1Service.class);
         Call<RssFeed> feed = service.listPodcasts(String.valueOf(numPodcasts));
@@ -64,8 +63,7 @@ public class NetworkPodcastRepository implements PodcastRepository {
     private List<Podcast> rssFeedToPodcasts(RssFeed rssFeed) {
         List<Podcast> podcasts = new ArrayList<>(rssFeed.getChannel().getItems().size());
         for (FeedItem item : rssFeed.getChannel().getItems()) {
-            podcasts.add(Podcast.create(item.getTitle(), item.getDescription(), item.getLink(),
-                    item.getCategory()));
+            podcasts.add(new Podcast(item.getDescription(), item.getLink(), item.getCategory()));
         }
         return podcasts;
     }

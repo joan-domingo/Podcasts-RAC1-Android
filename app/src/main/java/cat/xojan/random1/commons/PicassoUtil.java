@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.Calendar;
 
@@ -14,10 +15,15 @@ import java.util.Calendar;
  */
 public class PicassoUtil {
 
-    public static void loadImage(Context ctx, String url, ImageView imageView) {
-        Picasso.with(ctx)
-                .load(url + "?w=" + getWeekOfTheYear())
-                .into(imageView);
+    public static void loadImage(Context ctx, int imageResource, ImageView imageView,
+                                 boolean isReduced) {
+        RequestCreator requestCreator = Picasso.with(ctx)
+                //.load(url + "?w=" + getWeekOfTheYear())
+                .load(imageResource);
+        if (isReduced) {
+            requestCreator.resize(200, 200);
+        }
+        requestCreator.into(imageView);
     }
 
     private static int getWeekOfTheYear() {

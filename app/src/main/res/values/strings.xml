@@ -2,6 +2,11 @@
     <string name="app_name">Podcasts RAC1 - No Official</string>
     <string name="podcasts_latest">Latest</string>
     <string name="podcasts_programs">Programs</string>
-    <string name="error_loading_podcasts">Error loading podcasts</string>
-    <string name="no_podcasts_available">No Podcasts Available</string>
+    <string name="no_podcasts_available">No podcasts available. Check your internet connection and try again.</string>
+    <string name="podcasts_downloaded">Downloaded</string>
+    <string name="download_program">Download program</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="download_successful">Download successful</string>
+    <string name="download_failed">Download failed</string>
+    <string name="no_downloaded_podcasts">No downloaded podcasts</string>
 </resources>

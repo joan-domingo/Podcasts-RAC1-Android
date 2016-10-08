@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PlayerUtil;
-import cat.xojan.random1.domain.entity.Podcast;
+import cat.xojan.random1.domain.model.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
 import cat.xojan.random1.injection.module.RadioPlayerModule;
@@ -142,9 +142,9 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mSeekBar.setMax(100);
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
 
-        mCategory.setText(podcast.category());
-        mDescription.setText(podcast.description());
-        PicassoUtil.loadImage(this, podcast.imageUrl(), mImage);
+        mCategory.setText(podcast.getCategory());
+        mDescription.setText(podcast.getDescription());
+        PicassoUtil.loadImage(this, podcast.getImageDrawable(), mImage, false);
 
         updateViewAfterRotation();
     }
@@ -154,7 +154,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             mLoader.setVisibility(View.GONE);
             mPlayer.setVisibility(View.VISIBLE);
             if (mPlayerButtonDrawable != -1) {
-                mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+                mPlayer.setImageResource(mPlayerButtonDrawable);
             }
             mPlayer.setOnClickListener(new PlayerButtonClickListener());
             updateDuration(mPlayerDuration);
@@ -193,7 +193,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     @Override
     public void updateButton(int drawable) {
         mPlayerButtonDrawable = R.drawable.ic_play_arrow;
-        mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+        mPlayer.setImageResource(mPlayerButtonDrawable);
     }
 
     private void updateDuration(int duration) {
@@ -206,10 +206,10 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             if (mService.isPlaying()) {
                 mService.pause();
                 mPlayerButtonDrawable = R.drawable.ic_play_arrow;
-                mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+                mPlayer.setImageResource(mPlayerButtonDrawable);
             } else {
                 mPlayerButtonDrawable = R.drawable.ic_pause;
-                mPlayer.setImageDrawable(getResources().getDrawable(mPlayerButtonDrawable));
+                mPlayer.setImageResource(mPlayerButtonDrawable);
                 mService.start();
             }
         }

@@ -15,12 +15,13 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 
 import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PlayerUtil;
-import cat.xojan.random1.domain.entity.Podcast;
+import cat.xojan.random1.domain.model.Podcast;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 
 public class RadioPlayerService extends Service {
@@ -85,7 +86,7 @@ public class RadioPlayerService extends Service {
         Notification notification = getNotification(RadioPlayerActivity.class, podcast);
         startForeground(NOTIFICATION_ID, notification);
 
-        startMediaPlayer(podcast.link());
+        startMediaPlayer(podcast.getFileUrl(), podcast.getFilePath());
 
         return START_REDELIVER_INTENT;
     }
@@ -94,9 +95,9 @@ public class RadioPlayerService extends Service {
         final NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(getApplicationContext());
 
-        builder.setSmallIcon(R.drawable.ic_podcast_notification)
+        builder.setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle(getApplicationContext().getString(R.string.app_name))
-                .setContentText(podcast.category() + " " + podcast.description());
+                .setContentText(podcast.getCategory() + " " + podcast.getDescription());
 
         Intent foregroundIntent = new Intent(getApplicationContext(), clazz);
 
@@ -146,22 +147,38 @@ public class RadioPlayerService extends Service {
         mHandler.postDelayed(mUpdateTimeTask, 100);
     }
 
-    private void startMediaPlayer(String url) {
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+    private void startMediaPlayer(String fileUrl, String filePath) {
         try {
-            Log.d(TAG, "setDataSource: " + url);
-            mMediaPlayer.setDataSource(url);
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+
+
+            if (filePath != null) {
+                Log.d(TAG, "setDataSource: " + filePath);
+                FileInputStream fileInputStream;
+                fileInputStream = new FileInputStream(filePath);
+                mMediaPlayer.setDataSource(fileInputStream.getFD());
+                fileInputStream.close();
+            } else {
+                Log.d(TAG, "setDataSource: " + fileUrl);
+                mMediaPlayer.setDataSource(fileUrl);
+                mMediaPlayer.setOnBufferingUpdateListener(new BufferingUpdateListener());
+            }
+
+            mMediaPlayer.prepareAsync();
+            Log.d(TAG, "prepareAsync()");
+
+            mMediaPlayer.setOnPreparedListener(new MediaPlayerPreparedListener());
+            mMediaPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());
+            mMediaPlayer.setOnErrorListener(new MediaPlayerErrorListener());
+
         } catch (IOException e) {
-            Crashlytics.logException(e);
-            return;
+            if (BuildConfig.DEBUG) {
+                e.printStackTrace();
+            } else {
+                Crashlytics.logException(e);
+            }
         }
-        mMediaPlayer.prepareAsync();
-        Log.d(TAG, "prepareAsync");
-        mMediaPlayer.setOnPreparedListener(new MediaPlayerPreparedListener());
-        mMediaPlayer.setOnBufferingUpdateListener(new BufferingUpdateListener());
-        mMediaPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());
-        mMediaPlayer.setOnErrorListener(new MediaPlayerErrorListener());
     }
 
     private void stopMediaPlayer() {

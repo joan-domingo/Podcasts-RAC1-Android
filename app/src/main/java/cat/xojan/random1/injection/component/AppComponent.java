@@ -1,8 +1,12 @@
 package cat.xojan.random1.injection.component;
 
+import android.app.DownloadManager;
+
 import javax.inject.Singleton;
 
+import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.injection.module.AppModule;
+import cat.xojan.random1.receiver.DownloadCompleteReceiver;
 import cat.xojan.random1.ui.BaseActivity;
 import dagger.Component;
 
@@ -13,6 +17,9 @@ import dagger.Component;
 @Component(modules = AppModule.class)
 public interface AppComponent {
     void inject(BaseActivity baseActivity);
+    void inject(DownloadCompleteReceiver downloadCompleteReceiver);
 
     //Exposed to sub-graphs.
+    DownloadManager downloadManager();
+    PodcastDataInteractor podcastDataInteractor();
 }

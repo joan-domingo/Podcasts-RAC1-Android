@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import cat.xojan.random1.domain.entity.Program;
+import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.domain.repository.ProgramRepository;
 
 public class ProgramDataInteractor {
