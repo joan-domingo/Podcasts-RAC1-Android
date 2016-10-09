@@ -18,9 +18,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.model.Podcast;
@@ -40,14 +37,14 @@ public class PodcastListFragment extends BaseFragment implements
 
     @Inject
     DownloadsPresenter mHomePresenter;
-    @Inject PodcastListPresenter mPresenter;
+    @Inject
+    PodcastListPresenter mPresenter;
 
-    @BindView(R.id.list) RecyclerView mRecyclerView;
-    @BindView(R.id.empty_list) TextView mEmptyList;
-    @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefresh;
+    RecyclerView mRecyclerView;
+    TextView mEmptyList;
+    SwipeRefreshLayout mSwipeRefresh;
 
     private PodcastListAdapter mAdapter;
-    private Unbinder unbinder;
     private List<Podcast> mPodcasts;
 
     public static PodcastListFragment newInstance(String param) {
@@ -64,12 +61,15 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        setRetainInstance(true);
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
 
-        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshListener());
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mEmptyList = (TextView) view.findViewById(R.id.empty_list);
+
+        mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshListener());
+
         return view;
     }
 
@@ -100,16 +100,6 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mAdapter != null) {
-            mAdapter.destroy();
-        }
-        mRecyclerView.setAdapter(null);
-        unbinder.unbind();
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         mPresenter.destroy();
@@ -118,12 +108,6 @@ public class PodcastListFragment extends BaseFragment implements
     @Override
     public void updateRecyclerView(List<Podcast> podcasts) {
         mPodcasts = podcasts;
-        if (mSwipeRefresh == null) {
-            findSwipeRefreshView();
-        }
-        if (mRecyclerView == null) {
-            mRecyclerView = (RecyclerView) getView().findViewById(R.id.list);
-        }
         mSwipeRefresh.setRefreshing(false);
         mAdapter = new PodcastListAdapter(podcasts, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -184,19 +168,12 @@ public class PodcastListFragment extends BaseFragment implements
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mSwipeRefresh == null) {
-                    findSwipeRefreshView();
-                }
                 mSwipeRefresh.setRefreshing(true);
                 Bundle args = getArguments();
                 mPodcasts = null;
                 mPresenter.loadPodcasts(args != null ? args.getString(ARG_PARAM) : null, mPodcasts);
             }
         }, 0);
-    }
-
-    private void findSwipeRefreshView() {
-        mSwipeRefresh = (SwipeRefreshLayout) getView().findViewById(R.id.swiperefresh);
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
