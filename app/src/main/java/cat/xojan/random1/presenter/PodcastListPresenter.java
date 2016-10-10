@@ -48,25 +48,6 @@ public class PodcastListPresenter implements BasePresenter {
 
     public void setPodcastsListener(PodcastsListener listener) {
         mListener = listener;
-        mSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<List<Podcast>>() {
-                    @Override
-                    public void onCompleted() {
-                        // Ignore
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ErrorUtil.logException(e);
-                    }
-
-                    @Override
-                    public void onNext(List<Podcast> podcasts) {
-                        mListener.updateRecyclerViewWithDownloaded(podcasts);
-                    }
-                });
     }
 
     public void loadPodcasts(String program, List<Podcast> loadedPodcasts) {
@@ -108,7 +89,25 @@ public class PodcastListPresenter implements BasePresenter {
 
     @Override
     public void resume() {
+        mSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new Subscriber<List<Podcast>>() {
+                    @Override
+                    public void onCompleted() {
+                        // Ignore
+                    }
 
+                    @Override
+                    public void onError(Throwable e) {
+                        ErrorUtil.logException(e);
+                    }
+
+                    @Override
+                    public void onNext(List<Podcast> podcasts) {
+                        mListener.updateRecyclerViewWithDownloaded(podcasts);
+                    }
+                });
     }
 
     @Override
