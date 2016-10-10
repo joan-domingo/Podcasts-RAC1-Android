@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
+import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.model.Podcast;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
@@ -173,11 +174,7 @@ public class RadioPlayerService extends Service {
             mMediaPlayer.setOnErrorListener(new MediaPlayerErrorListener());
 
         } catch (IOException e) {
-            if (BuildConfig.DEBUG) {
-                e.printStackTrace();
-            } else {
-                Crashlytics.logException(e);
-            }
+            ErrorUtil.logException(e);
         }
     }
 
