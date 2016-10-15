@@ -5,8 +5,10 @@ import cat.xojan.random1.injection.module.BaseActivityModule;
 import cat.xojan.random1.injection.module.HomeModule;
 import cat.xojan.random1.ui.activity.HomeActivity;
 import cat.xojan.random1.ui.fragment.DownloadsFragment;
+import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
+import cat.xojan.random1.ui.fragment.SectionListFragment;
 import dagger.Component;
 
 @PerActivity
@@ -22,4 +24,6 @@ public interface HomeComponent extends BaseActivityComponent {
     void inject(PodcastListFragment podcastListFragment);
     void inject(ProgramFragment programFragment);
     void inject(DownloadsFragment downloadedPodcastFragment);
+    void inject(SectionListFragment sectionListFragment);
+    void inject(HourByHourListFragment hourByHourListFragment);
 }

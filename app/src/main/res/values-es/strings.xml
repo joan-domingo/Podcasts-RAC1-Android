@@ -10,4 +10,6 @@
     <string name="download_cancelled">Descàrrega cancel·lada</string>
     <string name="download_failed">Descàrrega fallida</string>
     <string name="no_downloaded_podcasts">Cap podcast descarregat</string>
+    <string name="podcasts_sections">Seccions</string>
+    <string name="podcasts_hour_by_hour">Hora a hora</string>
 </resources>

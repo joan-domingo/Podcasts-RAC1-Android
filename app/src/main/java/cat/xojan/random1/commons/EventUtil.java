@@ -12,7 +12,7 @@ public class EventUtil {
     public static void logPlayedPodcast(Podcast podcast) {
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName(podcast.getCategory())
+                    .putContentName(podcast.getProgram())
                     .putContentType(podcast.getDescription()));
         }
     }

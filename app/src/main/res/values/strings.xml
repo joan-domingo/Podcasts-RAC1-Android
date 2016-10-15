@@ -9,4 +9,6 @@
     <string name="download_successful">Download successful</string>
     <string name="download_failed">Download failed</string>
     <string name="no_downloaded_podcasts">No downloaded podcasts</string>
+    <string name="podcasts_sections">Sections</string>
+    <string name="podcasts_hour_by_hour">Hour by hour</string>
 </resources>

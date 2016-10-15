@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/circle_image"
         android:layout_toEndOf="@+id/circle_image"
+        android:layout_toLeftOf="@+id/icon"
+        android:layout_toStartOf="@+id/icon"
         android:layout_marginTop="8dp">
 
         <TextView

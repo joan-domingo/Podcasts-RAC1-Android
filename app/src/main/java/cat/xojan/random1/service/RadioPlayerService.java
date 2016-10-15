@@ -98,7 +98,7 @@ public class RadioPlayerService extends Service {
 
         builder.setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle(getApplicationContext().getString(R.string.app_name))
-                .setContentText(podcast.getCategory() + " " + podcast.getDescription());
+                .setContentText(podcast.getProgram() + " " + podcast.getDescription());
 
         Intent foregroundIntent = new Intent(getApplicationContext(), clazz);
 
@@ -180,8 +180,10 @@ public class RadioPlayerService extends Service {
 
     private void stopMediaPlayer() {
         Log.d(TAG, "stopMediaPlayer");
-        mMediaPlayer.stop();
-        mMediaPlayer.release();
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
+        }
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
 

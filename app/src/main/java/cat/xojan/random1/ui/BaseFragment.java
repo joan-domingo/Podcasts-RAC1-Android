@@ -13,4 +13,11 @@ public abstract class BaseFragment extends Fragment {
     protected <C> C getComponent(Class<C> componentType) {
         return componentType.cast(((HasComponent<C>) getActivity()).getComponent());
     }
+
+    /**
+     * Override for custom support for back button click event.
+     */
+    public boolean handleOnBackPressed() {
+        return false;
+    }
 }

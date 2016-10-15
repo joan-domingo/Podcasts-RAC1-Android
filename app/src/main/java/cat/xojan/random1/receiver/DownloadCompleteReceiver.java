@@ -53,8 +53,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             cursor.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION);
                     String description = cursor.getString(descriptionIndex);
 
+                    int localUriIndex =
+                            cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
+                    String uri = cursor.getString(localUriIndex);
+                    String programTitle = uri.split(PodcastDataInteractor.IMAGE)[1]
+                            .replace("%20", " ");
+
                     EventUtil.logDownloaedPodcast(category, description);
-                    mPodcastDataInteractor.addDownload(category, description);
+                    mPodcastDataInteractor.addDownload(category, description, programTitle);
                     break;
 
                 case DownloadManager.STATUS_FAILED:

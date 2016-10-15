@@ -12,6 +12,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.model.Section;
 import cat.xojan.random1.domain.repository.PodcastRepository;
 import rx.Observable;
 import rx.Subscriber;
@@ -23,6 +25,7 @@ public class PodcastDataInteractor {
     private static final String TAG = PodcastDataInteractor.class.getSimpleName();
     public static final String SEPARATOR = "_";
     public static final String EXTENSION = ".mp3";
+    public static final String IMAGE = "programtitle";
 
     private final PodcastRepository mPodcastRepo;
     private final Context mContext;
@@ -48,13 +51,28 @@ public class PodcastDataInteractor {
         });
     }
 
-    public Observable<List<Podcast>> loadPodcastsByProgram(final String program) {
+    public Observable<List<Podcast>> loadPodcasts(final Program program) {
         return Observable.create(new Observable.OnSubscribe<List<Podcast>>() {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    subscriber.onNext(mPodcastRepo.getLatestPodcastsByProgram(NUM_PODCASTS,
-                            program));
+                    subscriber.onNext(mPodcastRepo.getLatestPodcasts(NUM_PODCASTS,
+                            program.getParam()));
+                    subscriber.onCompleted();
+                } catch (IOException e) {
+                    subscriber.onError(e);
+                }
+            }
+        });
+    }
+
+    public Observable<List<Podcast>> loadPodcasts(final Section section) {
+        return Observable.create(new Observable.OnSubscribe<List<Podcast>>() {
+            @Override
+            public void call(Subscriber<? super List<Podcast>> subscriber) {
+                try {
+                    subscriber.onNext(mPodcastRepo.getLatestSections(NUM_PODCASTS,
+                            section.getParam()));
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);
@@ -79,14 +97,19 @@ public class PodcastDataInteractor {
         };
     }
 
-    public void addDownload(String category, String description) {
+    public void addDownload(String category, String description, String programTitle) {
         File from = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) +
-                File.separator + category + SEPARATOR + description + EXTENSION);
+                File.separator + category + SEPARATOR + description + EXTENSION
+                + IMAGE + programTitle);
         File to = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS) +
-                File.separator + category + SEPARATOR + description + EXTENSION);
+                File.separator + category + SEPARATOR + description + EXTENSION
+                + IMAGE + programTitle);
 
-        Log.d(TAG, "moving download from " + from.getPath() + " to " + to.getPath());
-        from.renameTo(to);
+        if (from.renameTo(to)) {
+            Log.d(TAG, "moving download from " + from.getPath() + " to " + to.getPath());
+        } else {
+            from.delete();
+        }
         refreshDownloadedPodcasts();
     }
 
@@ -102,34 +125,35 @@ public class PodcastDataInteractor {
     }
 
     private void getDownloaded(List<Podcast> podcastList) {
-        File iternalFileDirectory = mContext.getExternalFilesDir(
-                Environment.DIRECTORY_PODCASTS);
-
+        File iternalFileDirectory = mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS);
         for (File podcastFile : iternalFileDirectory.listFiles()) {
-            String[] fileName = podcastFile.getPath()
-                    .split(Environment.DIRECTORY_PODCASTS + "/")[1].split(SEPARATOR);
-            String category = fileName[0];
-            String description = fileName[1].replace(EXTENSION, "");
-
-            Podcast podcast = new Podcast(category, description, podcastFile.getPath(),
+            addPodcastToList(podcastList, podcastFile, Environment.DIRECTORY_PODCASTS,
                     Podcast.State.DOWNLOADED);
-            podcastList.add(podcast);
         }
     }
 
     private void getDownloading(List<Podcast> podcastList) {
-        File iternalFileDirectory = mContext.getExternalFilesDir(
-                Environment.DIRECTORY_DOWNLOADS);
-
+        File iternalFileDirectory = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
         for (File podcastFile : iternalFileDirectory.listFiles()) {
-            String[] fileName = podcastFile.getPath()
-                    .split(Environment.DIRECTORY_DOWNLOADS + "/")[1].split(SEPARATOR);
-            String category = fileName[0];
-            String description = fileName[1].replace(EXTENSION, "");
-
-            Podcast podcast = new Podcast(category, description, podcastFile.getPath(),
+            addPodcastToList(podcastList, podcastFile, Environment.DIRECTORY_DOWNLOADS,
                     Podcast.State.DOWNLOADING);
-            podcastList.add(podcast);
         }
+    }
+
+    private void addPodcastToList(List<Podcast> podcastList, File podcastFile, String directory,
+                                  Podcast.State podcastState) {
+        String[] fileName = podcastFile.getPath()
+                .split(directory + "/")[1].split(SEPARATOR);
+        String category = fileName[0];
+        String description = fileName[1].split(IMAGE)[0].replace(EXTENSION, "");
+
+        String programTitle = null;
+        if (fileName[1].split(IMAGE).length > 1) {
+            programTitle = fileName[1].split(IMAGE)[1];
+        }
+
+        Podcast podcast = new Podcast(category, description, podcastFile.getPath(),
+                podcastState, programTitle);
+        podcastList.add(podcast);
     }
 }

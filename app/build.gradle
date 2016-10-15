@@ -3,13 +3,13 @@ apply plugin: 'io.fabric'
 apply plugin: 'android-apt'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.3"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
 
     defaultConfig {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 15
         versionName "1.9.1"
         vectorDrawables.useSupportLibrary = true
@@ -41,8 +41,8 @@ repositories {
 
 dependencies {
     //Android support
-    compile 'com.android.support:appcompat-v7:24.2.1'
-    compile 'com.android.support:design:24.2.1'
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:design:25.0.0'
 
     //Butter Knife
     compile 'com.jakewharton:butterknife:8.1.0'
@@ -76,9 +76,9 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     //Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:retrofit:2.0.2'
     //retrofit xml converter
-    compile('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+    compile('com.squareup.retrofit2:converter-simplexml:2.0.2') {
         exclude group: 'xpp3', module: 'xpp3'
         exclude group: 'stax', module: 'stax-api'
         exclude group: 'stax', module: 'stax'

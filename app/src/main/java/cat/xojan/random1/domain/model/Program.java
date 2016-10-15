@@ -3,20 +3,25 @@ package cat.xojan.random1.domain.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cat.xojan.random1.commons.ImageUtil;
 
 public class Program implements Parcelable {
 
-    private String mCategory;
+    private List<Section> mSections;
+    private String mTitle;
     private String mParam;
     private String mImageUrl;
     private int mImageDrawable;
 
-    public Program (String category, String param) {
-        mCategory =category;
-        mImageUrl = ImageUtil.getPodcastImageUrl(category);
+    public Program(String title, String param, List<Section> sections) {
+        mTitle = title;
+        mImageUrl = ImageUtil.getPodcastImageUrl(param);
         mParam = param;
-        mImageDrawable = ImageUtil.getPodcastImageDrawable(category);
+        mImageDrawable = ImageUtil.getProgramImageDrawable(param);
+        mSections = sections;
     }
 
     public String getParam() {
@@ -24,15 +29,25 @@ public class Program implements Parcelable {
     }
 
     public String getCategory() {
-        return mCategory;
+        return mTitle;
     }
 
     public int getImageDrawable() {
         return mImageDrawable;
     }
 
+    public List<Section> getSections() {
+        return mSections;
+    }
+
     protected Program(Parcel in) {
-        mCategory = in.readString();
+        if (in.readByte() == 0x01) {
+            mSections = new ArrayList<Section>();
+            in.readList(mSections, Section.class.getClassLoader());
+        } else {
+            mSections = null;
+        }
+        mTitle = in.readString();
         mParam = in.readString();
         mImageUrl = in.readString();
         mImageDrawable = in.readInt();
@@ -45,7 +60,13 @@ public class Program implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mCategory);
+        if (mSections == null) {
+            dest.writeByte((byte) (0x00));
+        } else {
+            dest.writeByte((byte) (0x01));
+            dest.writeList(mSections);
+        }
+        dest.writeString(mTitle);
         dest.writeString(mParam);
         dest.writeString(mImageUrl);
         dest.writeInt(mImageDrawable);

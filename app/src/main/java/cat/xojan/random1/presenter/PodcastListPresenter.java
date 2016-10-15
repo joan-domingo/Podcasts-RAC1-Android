@@ -3,6 +3,7 @@ package cat.xojan.random1.presenter;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 
 import java.util.ArrayList;
@@ -13,7 +14,10 @@ import javax.inject.Inject;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.model.Section;
 import cat.xojan.random1.ui.BasePresenter;
+import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,9 +38,9 @@ public class PodcastListPresenter implements BasePresenter {
 
     private final PodcastDataInteractor mPodcastDataInteractor;
     private final Context mContext;
-    private Subscription mPodcastSubscription;
+    private Subscription mLoadedPodcastSubscription;
     private PodcastsListener mListener;
-    private Subscription mSubscription;
+    private Subscription mDownloadedPodcastSubscription;
 
     @Inject
     public PodcastListPresenter(PodcastDataInteractor podcastDataInteractor,  Context context,
@@ -50,15 +54,22 @@ public class PodcastListPresenter implements BasePresenter {
         mListener = listener;
     }
 
-    public void loadPodcasts(String program, List<Podcast> loadedPodcasts) {
+    public void loadPodcasts(Bundle args, List<Podcast> loadedPodcasts) {
         if (loadedPodcasts == null) {
-            if (program == null) {
-                mPodcastSubscription = mPodcastDataInteractor.loadPodcasts()
+            if (args == null) {
+                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new PodcastSubscriptionObserver());
+            } else if (args.get(PodcastListFragment.ARG_PROGRAM) != null) {
+                Program program = (Program) args.get(PodcastListFragment.ARG_PROGRAM);
+                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts(program)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new PodcastSubscriptionObserver());
             } else {
-                mPodcastSubscription = mPodcastDataInteractor.loadPodcastsByProgram(program)
+                Section section = (Section) args.get(PodcastListFragment.ARG_SECTION);
+                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts(section)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new PodcastSubscriptionObserver());
@@ -75,11 +86,12 @@ public class PodcastListPresenter implements BasePresenter {
     public void download(Podcast podcast) {
         Uri uri = Uri.parse(podcast.getFileUrl());
         DownloadManager.Request request = new DownloadManager.Request(uri)
-                .setTitle(podcast.getCategory())
+                .setTitle(podcast.getProgram())
                 .setDescription(podcast.getDescription())
                 .setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS,
-                        podcast.getCategory() + PodcastDataInteractor.SEPARATOR
-                                + podcast.getDescription() + PodcastDataInteractor.EXTENSION)
+                        podcast.getProgram() + PodcastDataInteractor.SEPARATOR
+                                + podcast.getDescription() + PodcastDataInteractor.EXTENSION
+                                + PodcastDataInteractor.IMAGE + podcast.getProgramTitle())
                 .setVisibleInDownloadsUi(true);
 
         mDownloadManager.enqueue(request);
@@ -89,7 +101,7 @@ public class PodcastListPresenter implements BasePresenter {
 
     @Override
     public void resume() {
-        mSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
+        mDownloadedPodcastSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(new Subscriber<List<Podcast>>() {
@@ -105,7 +117,9 @@ public class PodcastListPresenter implements BasePresenter {
 
                     @Override
                     public void onNext(List<Podcast> podcasts) {
-                        mListener.updateRecyclerViewWithDownloaded(podcasts);
+                        if (mListener != null) {
+                            mListener.updateRecyclerViewWithDownloaded(podcasts);
+                        }
                     }
                 });
     }
@@ -117,11 +131,12 @@ public class PodcastListPresenter implements BasePresenter {
 
     @Override
     public void destroy() {
-        if (mPodcastSubscription != null && !mPodcastSubscription.isUnsubscribed()) {
-            mPodcastSubscription.unsubscribe();
+        if (mLoadedPodcastSubscription != null && !mLoadedPodcastSubscription.isUnsubscribed()) {
+            mLoadedPodcastSubscription.unsubscribe();
         }
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
+        if (mDownloadedPodcastSubscription != null &&
+                !mDownloadedPodcastSubscription.isUnsubscribed()) {
+            mDownloadedPodcastSubscription.unsubscribe();
         }
         mListener = null;
     }

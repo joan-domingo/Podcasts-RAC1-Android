@@ -38,7 +38,7 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
         holder.itemView.setOnClickListener(new ItemClickListener(position));
         Podcast podcast = mPodcastList.get(position);
 
-        holder.title.setText(podcast.getCategory());
+        holder.title.setText(podcast.getProgram());
         holder.description.setText(podcast.getDescription());
         PicassoUtil.loadImage(holder.itemView.getContext(), podcast.getImageDrawable(),
                 holder.image, true);

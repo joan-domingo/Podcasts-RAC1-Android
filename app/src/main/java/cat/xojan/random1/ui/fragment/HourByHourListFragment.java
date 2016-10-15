@@ -5,11 +5,14 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +25,7 @@ import javax.inject.Inject;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.model.Podcast;
-import cat.xojan.random1.domain.model.Section;
+import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.presenter.DownloadsPresenter;
 import cat.xojan.random1.presenter.PodcastListPresenter;
@@ -31,13 +34,12 @@ import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 
-public class PodcastListFragment extends BaseFragment implements
+public class HourByHourListFragment extends BaseFragment implements
         PodcastListPresenter.PodcastsListener,
         PodcastListAdapter.RecyclerViewListener {
 
-    public static final String TAG = PodcastListFragment.class.getSimpleName();
+    public static final String TAG = HourByHourListFragment.class.getSimpleName();
     public static final String ARG_PROGRAM = "program_param";
-    public static final String ARG_SECTION = "section_param";
 
     @Inject
     DownloadsPresenter mHomePresenter;
@@ -52,11 +54,11 @@ public class PodcastListFragment extends BaseFragment implements
     private PodcastListAdapter mAdapter;
     private List<Podcast> mPodcasts;
 
-    public static PodcastListFragment newInstance(Section section) {
+    public static HourByHourListFragment newInstance(Program program) {
         Bundle args = new Bundle();
-        args.putParcelable(ARG_SECTION, section);
+        args.putParcelable(ARG_PROGRAM, program);
 
-        PodcastListFragment podcastListFragment = new PodcastListFragment();
+        HourByHourListFragment podcastListFragment = new HourByHourListFragment();
         podcastListFragment.setArguments(args);
 
         return podcastListFragment;
@@ -91,13 +93,25 @@ public class PodcastListFragment extends BaseFragment implements
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         mPresenter.setPodcastsListener(this);
         showPodcasts();
+        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getCategory());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (((Program) getArguments().get(ARG_PROGRAM)).getSections().size() > 1) {
+            inflater.inflate(R.menu.hour_by_hour, menu);
+        }
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                getActivity().onBackPressed();
+                handleOnBackPressed();
+                return true;
+            case R.id.action_sections:
+                showSections();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -174,6 +188,14 @@ public class PodcastListFragment extends BaseFragment implements
         mPresenter.deletePodcast(podcast);
     }
 
+    @Override
+    public boolean handleOnBackPressed() {
+        getActivity().getSupportFragmentManager()
+                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        getActivity().setTitle(getString(R.string.app_name));
+        return true;
+    }
+
     private void showPodcasts() {
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -190,6 +212,13 @@ public class PodcastListFragment extends BaseFragment implements
             setHasOptionsMenu(show);
             mActionBar.setDisplayHomeAsUpEnabled(show);
         }
+    }
+
+    private void showSections() {
+        SectionListFragment sectionListFragment = SectionListFragment
+                .newInstance((Program) getArguments().getParcelable(ARG_PROGRAM));
+        ((BaseActivity) getActivity()).addFragment(R.id.container_fragment,
+                sectionListFragment, SectionListFragment.TAG, true);
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {

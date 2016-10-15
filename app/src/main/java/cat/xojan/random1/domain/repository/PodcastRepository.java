@@ -9,5 +9,7 @@ public interface PodcastRepository {
 
     List<Podcast> getLatestPodcasts(int numPodcasts) throws IOException;
 
-    List<Podcast> getLatestPodcastsByProgram(int numPodcasts, String program) throws IOException;
+    List<Podcast> getLatestPodcasts(int numPodcasts, String program) throws IOException;
+
+    List<Podcast> getLatestSections(int numPodcasts, String section) throws IOException;
 }

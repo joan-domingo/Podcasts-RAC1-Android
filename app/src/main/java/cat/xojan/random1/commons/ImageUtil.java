@@ -4,7 +4,14 @@ import cat.xojan.random1.R;
 
 public class ImageUtil {
 
-    public static int getPodcastImageDrawable(String category) {
+    public static int getPodcastImageDrawable(String category, String programTitle) {
+        if (programTitle != null && !programTitle.equals("null")) {
+            return getPodcastImageDrawable(programTitle);
+        }
+        return getPodcastImageDrawable(category);
+    }
+
+    private static int getPodcastImageDrawable(String category) {
         switch (category) {
             case "EL MON A RAC1":
                 return R.drawable.el_mon;
@@ -48,6 +55,51 @@ public class ImageUtil {
                 return R.drawable.ultraesports;
             case "MISTERIS":
             case "SUPERDIUMENGE":
+            default:
+                return R.drawable.default_rac1;
+        }
+    }
+
+    public static int getProgramImageDrawable(String param) {
+        switch (param) {
+            case "el_mon_a_rac1":
+                return R.drawable.el_mon;
+            case "la_competencia":
+                return R.drawable.la_competencia;
+            case "la_segona_hora":
+                return R.drawable.la_segona_hora;
+            case "14_15":
+                return R.drawable.catorze_quinze;
+            case "primer_toc":
+                return R.drawable.primer_toc;
+            case "tot_es_possible":
+                return R.drawable.tot_es_possible;
+            case "versio-rac1":
+                return R.drawable.versio;
+            case "islandia":
+                return R.drawable.islandia;
+            case "no_ho_se":
+                return R.drawable.no_ho_se;
+            case "tu_diras":
+                return R.drawable.tu_diras;
+            case "la_primera_pedra":
+                return R.drawable.la_primera_pedra;
+            case "via-lliure":
+                return R.drawable.via_lliure;
+            case "el_barca_juga_a_rac1":
+                return R.drawable.el_barca_juga_a_rac1;
+            case "rac1ncentrat":
+                return R.drawable.rac1ncentrat;
+            case "no_hi_som_per_festes":
+                return R.drawable.no_hi_som_per_festes;
+            case "amb_molt_de_gust":
+                return R.drawable.amb_molt_de_gust;
+            case "l_espanyol_juga_a_rac1":
+                return R.drawable.lespanyol_juga_a_rac1;
+            case "ultraesports":
+                return R.drawable.ultraesports;
+            case "misteris":
+            case "superdiumenge":
             default:
                 return R.drawable.default_rac1;
         }

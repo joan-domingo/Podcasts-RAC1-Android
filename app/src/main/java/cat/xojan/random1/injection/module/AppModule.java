@@ -6,7 +6,7 @@ import android.content.Context;
 import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
-import cat.xojan.random1.data.NetworkPodcastRepository;
+import cat.xojan.random1.data.RAC1PodcastRepository;
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -32,6 +32,6 @@ public class AppModule {
     @Provides
     @Singleton
     PodcastDataInteractor providePodcastDataInteractor() {
-        return new PodcastDataInteractor(new NetworkPodcastRepository(), mApplication);
+        return new PodcastDataInteractor(new RAC1PodcastRepository(), mApplication);
     }
 }

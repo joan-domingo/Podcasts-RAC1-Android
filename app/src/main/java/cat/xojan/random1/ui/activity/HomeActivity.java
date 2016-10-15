@@ -3,6 +3,7 @@ package cat.xojan.random1.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
 import butterknife.BindView;
@@ -13,10 +14,13 @@ import cat.xojan.random1.injection.component.DaggerHomeComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.injection.module.HomeModule;
 import cat.xojan.random1.ui.BaseActivity;
+import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.adapter.HomePagerAdapter;
 import cat.xojan.random1.ui.fragment.DownloadsFragment;
+import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
+import cat.xojan.random1.ui.fragment.SectionListFragment;
 
 public class HomeActivity extends BaseActivity implements HasComponent {
 
@@ -66,5 +70,21 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     @Override
     public HomeComponent getComponent() {
         return mComponent;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            Fragment fragment = getFragment(HourByHourListFragment.TAG);
+            if (fragment == null) fragment = getFragment(SectionListFragment.TAG);
+
+            if (fragment != null && getSupportFragmentManager()
+                    .findFragmentByTag(PodcastListFragment.TAG) == null) {
+                if (((BaseFragment) fragment).handleOnBackPressed()) {
+                    return;
+                }
+            }
+        }
+        super.onBackPressed();
     }
 }
