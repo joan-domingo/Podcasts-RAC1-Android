@@ -10,8 +10,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 15
-        versionName "1.9.1"
+        versionCode 16
+        versionName "1.10.0"
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
