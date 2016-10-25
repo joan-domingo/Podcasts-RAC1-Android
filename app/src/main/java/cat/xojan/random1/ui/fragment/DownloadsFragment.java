@@ -79,7 +79,9 @@ public class DownloadsFragment extends BaseFragment implements
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.destroy();
+        if (mPresenter != null) {
+            mPresenter.destroy();
+        }
     }
 
     @Override

@@ -7,7 +7,9 @@ import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
 import cat.xojan.random1.data.RAC1PodcastRepository;
+import cat.xojan.random1.data.RAC1ProgramRepository;
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import dagger.Module;
 import dagger.Provides;
 
@@ -33,5 +35,11 @@ public class AppModule {
     @Singleton
     PodcastDataInteractor providePodcastDataInteractor() {
         return new PodcastDataInteractor(new RAC1PodcastRepository(), mApplication);
+    }
+
+    @Provides
+    @Singleton
+    ProgramDataInteractor provideProgramDataInteractor() {
+        return new ProgramDataInteractor(new RAC1ProgramRepository(), mApplication);
     }
 }

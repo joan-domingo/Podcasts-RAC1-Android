@@ -1,7 +1,6 @@
 package cat.xojan.random1.ui.fragment;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -39,10 +38,8 @@ public class PodcastListFragment extends BaseFragment implements
     public static final String ARG_PROGRAM = "program_param";
     public static final String ARG_SECTION = "section_param";
 
-    @Inject
-    DownloadsPresenter mHomePresenter;
-    @Inject
-    PodcastListPresenter mPresenter;
+    @Inject DownloadsPresenter mHomePresenter;
+    @Inject PodcastListPresenter mPresenter;
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyList;
@@ -50,7 +47,6 @@ public class PodcastListFragment extends BaseFragment implements
     private ActionBar mActionBar;
 
     private PodcastListAdapter mAdapter;
-    private List<Podcast> mPodcasts;
 
     public static PodcastListFragment newInstance(Section section) {
         Bundle args = new Bundle();
@@ -90,7 +86,7 @@ public class PodcastListFragment extends BaseFragment implements
         getComponent(HomeComponent.class).inject(this);
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         mPresenter.setPodcastsListener(this);
-        showPodcasts();
+        showPodcasts(false);
     }
 
     @Override
@@ -125,7 +121,6 @@ public class PodcastListFragment extends BaseFragment implements
 
     @Override
     public void updateRecyclerView(List<Podcast> podcasts) {
-        mPodcasts = podcasts;
         mSwipeRefresh.setRefreshing(false);
         mAdapter = new PodcastListAdapter(podcasts, this);
         mRecyclerView.setAdapter(mAdapter);
@@ -160,11 +155,6 @@ public class PodcastListFragment extends BaseFragment implements
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void download(Podcast podcast) {
         mPresenter.download(podcast);
     }
@@ -174,13 +164,12 @@ public class PodcastListFragment extends BaseFragment implements
         mPresenter.deletePodcast(podcast);
     }
 
-    private void showPodcasts() {
+    private void showPodcasts(final boolean refresh) {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 mSwipeRefresh.setRefreshing(true);
-                mPodcasts = null;
-                mPresenter.loadPodcasts(getArguments(), mPodcasts);
+                mPresenter.loadPodcasts(getArguments(), refresh);
             }
         }, 0);
     }
@@ -195,7 +184,7 @@ public class PodcastListFragment extends BaseFragment implements
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
         @Override
         public void onRefresh() {
-            showPodcasts();
+            showPodcasts(true);
         }
     }
 }

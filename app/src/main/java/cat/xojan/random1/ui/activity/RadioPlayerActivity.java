@@ -25,13 +25,16 @@ import cat.xojan.random1.injection.module.RadioPlayerModule;
 import cat.xojan.random1.service.RadioPlayerService;
 import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.view.CroppedImageView;
-import icepick.Icepick;
-import icepick.State;
 
 public class RadioPlayerActivity extends BaseActivity implements RadioPlayerService.Listener {
 
     public static final String EXTRA_PODCAST = "PODCAST";
     private static final String TAG = RadioPlayerActivity.class.getSimpleName();
+
+    private static final String KEY_PODCAST = "key_podcast";
+    private static final String KEY_BUTTON_DRAWABLE = "key_button_drawable";
+    private static final String KEY_PLAYER_STARTED = "key_player_started";
+    private static final String KEY_PLAYER_DURATION = "key_player_duration";
 
     @BindView(R.id.buffer_bar) ProgressBar mBufferBar;
     @BindView(R.id.seek_bar) SeekBar mSeekBar;
@@ -43,10 +46,10 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     @BindView(R.id.player) ImageView mPlayer;
     @BindView(R.id.progress_bar) ProgressBar mLoader;
 
-    @State int mPlayerDuration = -1;
-    @State boolean mPlayerStarted = false;
-    @State int mPlayerButtonDrawable = -1;
-    @State Podcast mPodcast;
+    private int mPlayerDuration = -1;
+    private boolean mPlayerStarted = false;
+    private int mPlayerButtonDrawable = -1;
+    private Podcast mPodcast;
 
     private RadioPlayerService mService;
     private boolean mBound;
@@ -88,7 +91,14 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Icepick.restoreInstanceState(this, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mPodcast = savedInstanceState.getParcelable(KEY_PODCAST);
+            mPlayerButtonDrawable = savedInstanceState.getInt(KEY_BUTTON_DRAWABLE);
+            mPlayerStarted = savedInstanceState.getBoolean(KEY_PLAYER_STARTED);
+            mPlayerDuration = savedInstanceState.getInt(KEY_PLAYER_DURATION);
+        }
+
         Log.d(TAG, "onCreate");
         setContentView(R.layout.radio_player_activity);
         ButterKnife.bind(this);
@@ -107,9 +117,13 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(KEY_PODCAST, mPodcast);
+        outState.putInt(KEY_BUTTON_DRAWABLE, mPlayerButtonDrawable);
+        outState.putBoolean(KEY_PLAYER_STARTED, mPlayerStarted);
+        outState.putInt(KEY_PLAYER_DURATION, mPlayerDuration);
         super.onSaveInstanceState(outState);
-        Icepick.saveInstanceState(this, outState);
     }
+
 
     @Override
     protected void onStart() {

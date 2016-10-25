@@ -54,28 +54,28 @@ public class PodcastListPresenter implements BasePresenter {
         mListener = listener;
     }
 
-    public void loadPodcasts(Bundle args, List<Podcast> loadedPodcasts) {
-        if (loadedPodcasts == null) {
-            if (args == null) {
-                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts()
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new PodcastSubscriptionObserver());
-            } else if (args.get(PodcastListFragment.ARG_PROGRAM) != null) {
-                Program program = (Program) args.get(PodcastListFragment.ARG_PROGRAM);
-                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts(program)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new PodcastSubscriptionObserver());
-            } else {
-                Section section = (Section) args.get(PodcastListFragment.ARG_SECTION);
-                mLoadedPodcastSubscription = mPodcastDataInteractor.loadPodcasts(section)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new PodcastSubscriptionObserver());
-            }
+    public void loadPodcasts(Bundle args, boolean refresh) {
+        if (args == null) {
+            mLoadedPodcastSubscription = mPodcastDataInteractor.loadLatestPodcasts(refresh)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PodcastSubscriptionObserver());
+
+        } else if (args.get(PodcastListFragment.ARG_PROGRAM) != null) {
+
+            Program program = (Program) args.get(PodcastListFragment.ARG_PROGRAM);
+            mLoadedPodcastSubscription =
+                    mPodcastDataInteractor.loadPodcastsByProgram(program,refresh)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PodcastSubscriptionObserver());
         } else {
-            mListener.updateRecyclerView(loadedPodcasts);
+            Section section = (Section) args.get(PodcastListFragment.ARG_SECTION);
+            mLoadedPodcastSubscription =
+                    mPodcastDataInteractor.loadPodcastsBySection(section, refresh)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new PodcastSubscriptionObserver());
         }
     }
 

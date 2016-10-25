@@ -30,6 +30,9 @@ public class PodcastDataInteractor {
     private final PodcastRepository mPodcastRepo;
     private final Context mContext;
     private PublishSubject<List<Podcast>> mDownloadedPodcastsSubject = PublishSubject.create();
+    private List<Podcast> mLatestPodcasts;
+    private List<Podcast> mPodcastsByProgram;
+    private List<Podcast> mPodcastsBySection;
 
     @Inject
     public PodcastDataInteractor(PodcastRepository podcastRepository, Context context) {
@@ -37,12 +40,15 @@ public class PodcastDataInteractor {
         mContext = context;
     }
 
-    public Observable<List<Podcast>> loadPodcasts() {
+    public Observable<List<Podcast>> loadLatestPodcasts(final boolean refresh) {
         return Observable.create(new Observable.OnSubscribe<List<Podcast>>() {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    subscriber.onNext(mPodcastRepo.getLatestPodcasts(NUM_PODCASTS));
+                    if (mLatestPodcasts == null || refresh) {
+                        mLatestPodcasts = mPodcastRepo.getLatestPodcasts(NUM_PODCASTS);
+                    }
+                    subscriber.onNext(mLatestPodcasts);
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);
@@ -51,13 +57,17 @@ public class PodcastDataInteractor {
         });
     }
 
-    public Observable<List<Podcast>> loadPodcasts(final Program program) {
+    public Observable<List<Podcast>> loadPodcastsByProgram(final Program program,
+                                                           final boolean refresh) {
         return Observable.create(new Observable.OnSubscribe<List<Podcast>>() {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    subscriber.onNext(mPodcastRepo.getLatestPodcasts(NUM_PODCASTS,
-                            program.getParam()));
+                    if (mPodcastsByProgram == null || refresh) {
+                        mPodcastsByProgram = mPodcastRepo.getLatestPodcasts(NUM_PODCASTS,
+                                program.getParam());
+                    }
+                    subscriber.onNext(mPodcastsByProgram);
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);
@@ -66,13 +76,17 @@ public class PodcastDataInteractor {
         });
     }
 
-    public Observable<List<Podcast>> loadPodcasts(final Section section) {
+    public Observable<List<Podcast>> loadPodcastsBySection(final Section section,
+                                                        final boolean refresh) {
         return Observable.create(new Observable.OnSubscribe<List<Podcast>>() {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    subscriber.onNext(mPodcastRepo.getLatestSections(NUM_PODCASTS,
-                            section.getParam()));
+                    if (mPodcastsBySection == null || refresh) {
+                        mPodcastsBySection = mPodcastRepo.getLatestSections(NUM_PODCASTS,
+                                section.getParam());
+                    }
+                    subscriber.onNext(mPodcastsBySection);
                     subscriber.onCompleted();
                 } catch (IOException e) {
                     subscriber.onError(e);

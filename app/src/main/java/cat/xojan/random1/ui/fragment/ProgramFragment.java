@@ -57,12 +57,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        setLayoutManager(newConfig.orientation);
-        super.onConfigurationChanged(newConfig);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(HomeComponent.class).inject(this);
@@ -83,7 +77,9 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.destroy();
+        if (mPresenter != null) {
+            mPresenter.destroy();
+        }
     }
 
     @Override
