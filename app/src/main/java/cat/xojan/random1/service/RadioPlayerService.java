@@ -13,12 +13,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PlayerUtil;
@@ -153,7 +150,6 @@ public class RadioPlayerService extends Service {
             mMediaPlayer = new MediaPlayer();
             mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
-
             if (filePath != null) {
                 Log.d(TAG, "setDataSource: " + filePath);
                 FileInputStream fileInputStream;
@@ -166,12 +162,12 @@ public class RadioPlayerService extends Service {
                 mMediaPlayer.setOnBufferingUpdateListener(new BufferingUpdateListener());
             }
 
-            mMediaPlayer.prepareAsync();
-            Log.d(TAG, "prepareAsync()");
-
             mMediaPlayer.setOnPreparedListener(new MediaPlayerPreparedListener());
             mMediaPlayer.setOnCompletionListener(new MediaPlayerCompletionListener());
             mMediaPlayer.setOnErrorListener(new MediaPlayerErrorListener());
+
+            mMediaPlayer.prepareAsync();
+            Log.d(TAG, "prepareAsync()");
 
         } catch (IOException e) {
             ErrorUtil.logException(e);
@@ -181,8 +177,12 @@ public class RadioPlayerService extends Service {
     private void stopMediaPlayer() {
         Log.d(TAG, "stopMediaPlayer");
         if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
+            if (mMediaPlayer.isPlaying()) {
+                mMediaPlayer.stop();
+            }
+            mMediaPlayer.reset();
             mMediaPlayer.release();
+            mMediaPlayer = null;
         }
         mHandler.removeCallbacks(mUpdateTimeTask);
     }
@@ -247,9 +247,7 @@ public class RadioPlayerService extends Service {
     private class MediaPlayerErrorListener implements MediaPlayer.OnErrorListener {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            if (!BuildConfig.DEBUG) {
-                Crashlytics.log("Media player error listener: " + what + ", " + extra);
-            }
+            ErrorUtil.logException("Media player error listener: " + what + ", " + extra);
             Log.e(TAG, "Media player error listener: " + what + ", " + extra);
             return false;
         }

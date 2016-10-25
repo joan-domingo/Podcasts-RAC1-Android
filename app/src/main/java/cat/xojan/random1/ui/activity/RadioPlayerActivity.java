@@ -31,7 +31,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     public static final String EXTRA_PODCAST = "PODCAST";
     private static final String TAG = RadioPlayerActivity.class.getSimpleName();
 
-    private static final String KEY_PODCAST = "key_podcast";
     private static final String KEY_BUTTON_DRAWABLE = "key_button_drawable";
     private static final String KEY_PLAYER_STARTED = "key_player_started";
     private static final String KEY_PLAYER_DURATION = "key_player_duration";
@@ -49,7 +48,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private int mPlayerDuration = -1;
     private boolean mPlayerStarted = false;
     private int mPlayerButtonDrawable = -1;
-    private Podcast mPodcast;
 
     private RadioPlayerService mService;
     private boolean mBound;
@@ -93,7 +91,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null) {
-            mPodcast = savedInstanceState.getParcelable(KEY_PODCAST);
             mPlayerButtonDrawable = savedInstanceState.getInt(KEY_BUTTON_DRAWABLE);
             mPlayerStarted = savedInstanceState.getBoolean(KEY_PLAYER_STARTED);
             mPlayerDuration = savedInstanceState.getInt(KEY_PLAYER_DURATION);
@@ -103,21 +100,20 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         setContentView(R.layout.radio_player_activity);
         ButterKnife.bind(this);
 
-        mPodcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
+        Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
 
         initInjector();
-        initView(mPodcast);
+        initView(podcast);
 
         // Bind to the service
         Log.d(TAG, "BindService");
-        mServiceIntent = getRadioPlayerServiceIntent(mPodcast);
+        mServiceIntent = getRadioPlayerServiceIntent(podcast);
         bindService(new Intent(this, RadioPlayerService.class), mConnection,
                 Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(KEY_PODCAST, mPodcast);
         outState.putInt(KEY_BUTTON_DRAWABLE, mPlayerButtonDrawable);
         outState.putBoolean(KEY_PLAYER_STARTED, mPlayerStarted);
         outState.putInt(KEY_PLAYER_DURATION, mPlayerDuration);
