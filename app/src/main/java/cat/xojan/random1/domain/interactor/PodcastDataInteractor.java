@@ -33,6 +33,8 @@ public class PodcastDataInteractor {
     private List<Podcast> mLatestPodcasts;
     private List<Podcast> mPodcastsByProgram;
     private List<Podcast> mPodcastsBySection;
+    private Program mProgram;
+    private Section mSection;
 
     @Inject
     public PodcastDataInteractor(PodcastRepository podcastRepository, Context context) {
@@ -63,7 +65,8 @@ public class PodcastDataInteractor {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    if (mPodcastsByProgram == null || refresh) {
+                    if (mPodcastsByProgram == null || refresh || !mProgram.equals(program)) {
+                        mProgram = program;
                         mPodcastsByProgram = mPodcastRepo.getLatestPodcasts(NUM_PODCASTS,
                                 program.getParam());
                     }
@@ -82,7 +85,8 @@ public class PodcastDataInteractor {
             @Override
             public void call(Subscriber<? super List<Podcast>> subscriber) {
                 try {
-                    if (mPodcastsBySection == null || refresh) {
+                    if (mPodcastsBySection == null || refresh || !mSection.equals(section)) {
+                        mSection = section;
                         mPodcastsBySection = mPodcastRepo.getLatestSections(NUM_PODCASTS,
                                 section.getParam());
                     }
