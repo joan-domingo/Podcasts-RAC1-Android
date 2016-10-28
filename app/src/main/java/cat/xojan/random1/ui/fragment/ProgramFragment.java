@@ -16,9 +16,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cat.xojan.random1.R;
 import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
@@ -28,25 +25,29 @@ import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.adapter.ProgramListAdapter;
 
 public class ProgramFragment extends BaseFragment implements ProgramsPresenter.ProgramListener,
-        ProgramListAdapter.RecyclerViewListener, SwipeRefreshLayout.OnRefreshListener {
+        ProgramListAdapter.RecyclerViewListener {
 
     @Inject ProgramsPresenter mPresenter;
 
-    @BindView(R.id.list) RecyclerView mRecyclerView;
-    @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefresh;
-    @BindView(R.id.empty_list) TextView mEmptyList;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private TextView mEmptyList;
+    private RecyclerView mRecyclerView;
 
     private ProgramListAdapter mAdapter;
-    private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mEmptyList = (TextView) view.findViewById(R.id.empty_list);
+
+        mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
-        mSwipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshListener());
+
         return view;
     }
 
@@ -71,7 +72,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
             mAdapter.destroy();
         }
         mRecyclerView.setAdapter(null);
-        unbinder.unbind();
     }
 
     @Override
@@ -127,8 +127,10 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
         }, 0);
     }
 
-    @Override
-    public void onRefresh() {
-        loadPrograms();
+    private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {
+        @Override
+        public void onRefresh() {
+            loadPrograms();
+        }
     }
 }

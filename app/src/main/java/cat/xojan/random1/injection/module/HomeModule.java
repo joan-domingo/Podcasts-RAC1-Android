@@ -29,6 +29,7 @@ public class HomeModule {
     }
 
     @Provides
+    @PerActivity
     ProgramsPresenter provideProgramsPresenter(ProgramDataInteractor programDataInteractor) {
         return new ProgramsPresenter(programDataInteractor);
     }

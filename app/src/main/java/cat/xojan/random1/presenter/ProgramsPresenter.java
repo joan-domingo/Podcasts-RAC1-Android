@@ -3,11 +3,14 @@ package cat.xojan.random1.presenter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.ui.BasePresenter;
 import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -15,7 +18,9 @@ public class ProgramsPresenter implements BasePresenter {
 
     private final ProgramDataInteractor mProgramDataInteractor;
     private ProgramListener mListener;
+    private Subscription mSubscription;
 
+    @Inject
     public ProgramsPresenter(ProgramDataInteractor programDataInteractor) {
         mProgramDataInteractor = programDataInteractor;
     }
@@ -32,6 +37,9 @@ public class ProgramsPresenter implements BasePresenter {
 
     @Override
     public void destroy() {
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
         mListener = null;
     }
 
@@ -40,26 +48,10 @@ public class ProgramsPresenter implements BasePresenter {
     }
 
     public void showPrograms() {
-        mProgramDataInteractor.loadPrograms()
-                .observeOn(AndroidSchedulers.mainThread())
+        mSubscription = mProgramDataInteractor.loadPrograms()
                 .subscribeOn(Schedulers.newThread())
-                .subscribe(new Subscriber<List<Program>>() {
-                    @Override
-                    public void onCompleted() {
-                        // Ignore
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        ErrorUtil.logException(e);
-                        mListener.onProgramsLoaded(new ArrayList<Program>());
-                    }
-
-                    @Override
-                    public void onNext(List<Program> itemPrograms) {
-                        mListener.onProgramsLoaded(itemPrograms);
-                    }
-                });
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new ProgramSubscriptionObserver());
     }
 
     public boolean showSections() {
@@ -68,5 +60,23 @@ public class ProgramsPresenter implements BasePresenter {
 
     public interface ProgramListener {
         void onProgramsLoaded(List<Program> programs);
+    }
+
+    private class ProgramSubscriptionObserver extends Subscriber<List<Program>> {
+        @Override
+        public void onCompleted() {
+            // Ignore
+        }
+
+        @Override
+        public void onError(Throwable e) {
+            ErrorUtil.logException(e);
+            mListener.onProgramsLoaded(new ArrayList<Program>());
+        }
+
+        @Override
+        public void onNext(List<Program> programs) {
+            mListener.onProgramsLoaded(programs);
+        }
     }
 }
