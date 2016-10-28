@@ -101,6 +101,9 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         ButterKnife.bind(this);
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
+        if (podcast == null) {
+            finish();
+        }
 
         initInjector();
         initView(podcast);
