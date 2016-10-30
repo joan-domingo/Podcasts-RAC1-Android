@@ -36,8 +36,8 @@ public class PodcastListPresenter implements BasePresenter {
         void updateRecyclerView();
     }
 
-    private final PodcastDataInteractor mPodcastDataInteractor;
-    private final Context mContext;
+    private PodcastDataInteractor mPodcastDataInteractor;
+    private Context mContext;
     private Subscription mLoadedPodcastSubscription;
     private PodcastsListener mListener;
     private Subscription mDownloadedPodcastSubscription;
@@ -139,6 +139,7 @@ public class PodcastListPresenter implements BasePresenter {
             mDownloadedPodcastSubscription.unsubscribe();
         }
         mListener = null;
+        mContext = null;
     }
 
     public void deletePodcast(Podcast podcast) {
