@@ -6,8 +6,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.injection.HasComponent;
 import cat.xojan.random1.injection.component.DaggerHomeComponent;
@@ -24,10 +22,9 @@ import cat.xojan.random1.ui.fragment.SectionListFragment;
 
 public class HomeActivity extends BaseActivity implements HasComponent {
 
-    @BindView(R.id.viewpager) ViewPager mViewPager;
-    @BindView(R.id.tabs) TabLayout mTabLayout;
-
     private HomeComponent mComponent;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +40,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
         }
 
         setContentView(R.layout.activity_home);
-        ButterKnife.bind(this);
+        findView();
         initView();
         initInjector();
     }
@@ -55,6 +52,11 @@ public class HomeActivity extends BaseActivity implements HasComponent {
                 .homeModule(new HomeModule(this))
                 .build();
         mComponent.inject(this);
+    }
+
+    private void findView() {
+        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
     }
 
     private void initView() {

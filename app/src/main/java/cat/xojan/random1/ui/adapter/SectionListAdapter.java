@@ -9,8 +9,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.domain.model.Section;
@@ -52,12 +50,13 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.circle_image) ImageView image;
+        TextView title;
+        ImageView image;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            title = (TextView) itemView.findViewById(R.id.title);
+            image = (ImageView) itemView.findViewById(R.id.circle_image);
         }
     }
 

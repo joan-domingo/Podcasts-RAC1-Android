@@ -15,9 +15,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.model.Podcast;
@@ -34,11 +31,10 @@ public class DownloadsFragment extends BaseFragment implements
     @Inject
     DownloadsPresenter mPresenter;
 
-    @BindView(R.id.list) RecyclerView mRecyclerView;
-    @BindView(R.id.empty_list) TextView mEmptyList;
-    @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefresh;
+    private RecyclerView mRecyclerView;
+    private TextView mEmptyList;
+    private SwipeRefreshLayout mSwipeRefresh;
 
-    private Unbinder unbinder;
     private PodcastListAdapter mAdapter;
 
     @Override
@@ -54,7 +50,9 @@ public class DownloadsFragment extends BaseFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        unbinder = ButterKnife.bind(this, view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mEmptyList = (TextView) view.findViewById(R.id.empty_list);
+        mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         return view;
     }
 
@@ -73,7 +71,6 @@ public class DownloadsFragment extends BaseFragment implements
             mAdapter.destroy();
         }
         mRecyclerView.setAdapter(null);
-        unbinder.unbind();
     }
 
     @Override

@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PlayerUtil;
@@ -35,15 +33,15 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private static final String KEY_PLAYER_STARTED = "key_player_started";
     private static final String KEY_PLAYER_DURATION = "key_player_duration";
 
-    @BindView(R.id.buffer_bar) ProgressBar mBufferBar;
-    @BindView(R.id.seek_bar) SeekBar mSeekBar;
-    @BindView(R.id.image) CroppedImageView mImage;
-    @BindView(R.id.category) TextView mCategory;
-    @BindView(R.id.description) TextView mDescription;
-    @BindView(R.id.timer) TextView mTimer;
-    @BindView(R.id.duration) TextView mDuration;
-    @BindView(R.id.player) ImageView mPlayer;
-    @BindView(R.id.progress_bar) ProgressBar mLoader;
+    private ProgressBar mBufferBar;
+    private SeekBar mSeekBar;
+    private CroppedImageView mImage;
+    private TextView mCategory;
+    private TextView mDescription;
+    private TextView mTimer;
+    private TextView mDuration;
+    private ImageView mPlayer;
+    private ProgressBar mLoader;
 
     private int mPlayerDuration = -1;
     private boolean mPlayerStarted = false;
@@ -98,7 +96,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
         Log.d(TAG, "onCreate");
         setContentView(R.layout.radio_player_activity);
-        ButterKnife.bind(this);
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
         if (podcast == null) {
@@ -106,6 +103,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         }
 
         initInjector();
+
+        findView();
         initView(podcast);
 
         // Bind to the service
@@ -113,6 +112,18 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mServiceIntent = getRadioPlayerServiceIntent(podcast);
         bindService(new Intent(this, RadioPlayerService.class), mConnection,
                 Context.BIND_AUTO_CREATE);
+    }
+
+    private void findView() {
+        mBufferBar = (ProgressBar) findViewById(R.id.buffer_bar);
+        mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
+        mImage = (CroppedImageView) findViewById(R.id.image);
+        mCategory = (TextView) findViewById(R.id.category);
+        mDescription = (TextView) findViewById(R.id.description);
+        mTimer = (TextView) findViewById(R.id.timer);
+        mDuration = (TextView) findViewById(R.id.duration);
+        mPlayer = (ImageView) findViewById(R.id.player);
+        mLoader = (ProgressBar) findViewById(R.id.progress_bar);
     }
 
     @Override

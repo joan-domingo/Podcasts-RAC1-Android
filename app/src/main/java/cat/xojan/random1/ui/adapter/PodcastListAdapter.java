@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PodcastUtil;
@@ -76,14 +74,17 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.description) TextView description;
-        @BindView(R.id.circle_image) ImageView image;
-        @BindView(R.id.icon) ImageView icon;
+        TextView title;
+        TextView description;
+        ImageView image;
+        ImageView icon;
 
         ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            title = (TextView) itemView.findViewById(R.id.title);
+            description = (TextView) itemView.findViewById(R.id.description);
+            image = (ImageView) itemView.findViewById(R.id.circle_image);
+            icon = (ImageView) itemView.findViewById(R.id.icon);
         }
     }
 

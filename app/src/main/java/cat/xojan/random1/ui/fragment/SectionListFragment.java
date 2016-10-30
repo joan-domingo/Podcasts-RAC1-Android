@@ -18,9 +18,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import cat.xojan.random1.R;
 import cat.xojan.random1.domain.model.Program;
 import cat.xojan.random1.domain.model.Section;
@@ -38,11 +35,9 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
 
     @Inject SectionPresenter mPresenter;
 
-    @BindView(R.id.list) RecyclerView mRecyclerView;
-    @BindView(R.id.swiperefresh) SwipeRefreshLayout mSwipeRefresh;
-
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefresh;
     private ActionBar mActionBar;
-    private Unbinder mUnbinder;
 
     public static SectionListFragment newInstance(Program program) {
         Bundle args = new Bundle();
@@ -59,7 +54,8 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
-        mUnbinder = ButterKnife.bind(this, view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mSwipeRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swiperefresh);
         mSwipeRefresh.setEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return view;
@@ -108,12 +104,6 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
         super.onPause();
         mPresenter.pause();
         showBackArrow(false);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mUnbinder.unbind();
     }
 
     @Override
