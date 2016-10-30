@@ -49,6 +49,7 @@ dependencies {
 
     //Crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
+        exclude module:'beta'
         transitive = true;
     }
 
