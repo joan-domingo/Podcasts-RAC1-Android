@@ -78,13 +78,14 @@ public class RadioPlayerService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (mListener == null || intent == null || !intent.hasExtra(EXTRA_PODCAST)) {
             stopSelf();
+        } else {
+            Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
+
+            Notification notification = getNotification(RadioPlayerActivity.class, podcast);
+            startForeground(NOTIFICATION_ID, notification);
+
+            startMediaPlayer(podcast.getFileUrl(), podcast.getFilePath());
         }
-        Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
-
-        Notification notification = getNotification(RadioPlayerActivity.class, podcast);
-        startForeground(NOTIFICATION_ID, notification);
-
-        startMediaPlayer(podcast.getFileUrl(), podcast.getFilePath());
 
         return START_REDELIVER_INTENT;
     }
@@ -228,7 +229,9 @@ public class RadioPlayerService extends Service {
     private class MediaPlayerCompletionListener implements MediaPlayer.OnCompletionListener {
         @Override
         public void onCompletion(MediaPlayer mp) {
-            mListener.updateButton(R.drawable.ic_play_arrow);
+            if (mListener != null) {
+                mListener.updateButton(R.drawable.ic_play_arrow);
+            }
             mMediaPlayer.seekTo(0);
         }
     }

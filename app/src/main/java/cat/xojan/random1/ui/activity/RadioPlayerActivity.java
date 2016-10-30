@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import cat.xojan.random1.R;
+import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.model.Podcast;
@@ -87,6 +89,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        initInjector();
 
         if (savedInstanceState != null) {
             mPlayerButtonDrawable = savedInstanceState.getInt(KEY_BUTTON_DRAWABLE);
@@ -99,19 +102,19 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
         if (podcast == null) {
+            ErrorUtil.logException("Podcast cannot be null. Started: " + mPlayerStarted +
+            ", duration: " + mPlayerDuration + ", drawable: " + mPlayerButtonDrawable);
             finish();
+        } else {
+            findView();
+            initView(podcast);
+
+            // Bind to the service
+            Log.d(TAG, "BindService");
+            mServiceIntent = getRadioPlayerServiceIntent(podcast);
+            bindService(new Intent(this, RadioPlayerService.class), mConnection,
+                    Context.BIND_AUTO_CREATE);
         }
-
-        initInjector();
-
-        findView();
-        initView(podcast);
-
-        // Bind to the service
-        Log.d(TAG, "BindService");
-        mServiceIntent = getRadioPlayerServiceIntent(podcast);
-        bindService(new Intent(this, RadioPlayerService.class), mConnection,
-                Context.BIND_AUTO_CREATE);
     }
 
     private void findView() {
