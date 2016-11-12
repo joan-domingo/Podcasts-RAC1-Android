@@ -23,7 +23,6 @@ import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.model.Podcast;
 import cat.xojan.random1.domain.model.Section;
 import cat.xojan.random1.injection.component.HomeComponent;
-import cat.xojan.random1.presenter.DownloadsPresenter;
 import cat.xojan.random1.presenter.PodcastListPresenter;
 import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.BaseFragment;
@@ -38,7 +37,6 @@ public class PodcastListFragment extends BaseFragment implements
     public static final String ARG_PROGRAM = "program_param";
     public static final String ARG_SECTION = "section_param";
 
-    @Inject DownloadsPresenter mHomePresenter;
     @Inject PodcastListPresenter mPresenter;
 
     private RecyclerView mRecyclerView;

@@ -71,12 +71,16 @@ public class ProgramsPresenter implements BasePresenter {
         @Override
         public void onError(Throwable e) {
             ErrorUtil.logException(e);
-            mListener.onProgramsLoaded(new ArrayList<Program>());
+            if (mListener != null) {
+                mListener.onProgramsLoaded(new ArrayList<Program>());
+            }
         }
 
         @Override
         public void onNext(List<Program> programs) {
-            mListener.onProgramsLoaded(programs);
+            if (mListener != null) {
+                mListener.onProgramsLoaded(programs);
+            }
         }
     }
 }
