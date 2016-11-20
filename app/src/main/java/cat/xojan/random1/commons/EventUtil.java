@@ -5,7 +5,7 @@ import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.CustomEvent;
 
 import cat.xojan.random1.BuildConfig;
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 
 public class EventUtil {
 

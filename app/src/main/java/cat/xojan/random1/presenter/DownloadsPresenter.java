@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.ui.BasePresenter;
 import rx.Subscriber;
 import rx.Subscription;

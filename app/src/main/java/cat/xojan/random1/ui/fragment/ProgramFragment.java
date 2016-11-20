@@ -17,7 +17,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.presenter.ProgramsPresenter;
 import cat.xojan.random1.ui.BaseActivity;

@@ -13,7 +13,7 @@ import java.util.List;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PodcastUtil;
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 
 public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.ViewHolder> {
 

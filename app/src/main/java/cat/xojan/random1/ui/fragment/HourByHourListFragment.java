@@ -23,8 +23,8 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.EventUtil;
-import cat.xojan.random1.domain.model.Podcast;
-import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.presenter.DownloadsPresenter;
 import cat.xojan.random1.presenter.PodcastListPresenter;

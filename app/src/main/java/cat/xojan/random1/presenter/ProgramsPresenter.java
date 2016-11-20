@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.ui.BasePresenter;
 import rx.Subscriber;
 import rx.Subscription;

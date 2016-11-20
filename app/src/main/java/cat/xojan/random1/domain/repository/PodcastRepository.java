@@ -3,7 +3,7 @@ package cat.xojan.random1.domain.repository;
 import java.io.IOException;
 import java.util.List;
 
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 
 public interface PodcastRepository {
 

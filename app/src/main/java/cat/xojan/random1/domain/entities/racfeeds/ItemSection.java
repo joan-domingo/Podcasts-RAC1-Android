@@ -1,4 +1,4 @@
-package cat.xojan.random1.domain.model.racfeeds;
+package cat.xojan.random1.domain.entities.racfeeds;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;

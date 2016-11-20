@@ -19,7 +19,7 @@ import java.io.IOException;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PlayerUtil;
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 
 public class RadioPlayerService extends Service {
@@ -251,7 +251,6 @@ public class RadioPlayerService extends Service {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             ErrorUtil.logException("Media player error listener: " + what + ", " + extra);
-            Log.e(TAG, "Media player error listener: " + what + ", " + extra);
             return false;
         }
     }

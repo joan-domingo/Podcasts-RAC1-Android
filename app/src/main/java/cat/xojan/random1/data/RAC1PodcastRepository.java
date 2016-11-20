@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cat.xojan.random1.domain.model.Podcast;
-import cat.xojan.random1.domain.model.rss.FeedItem;
-import cat.xojan.random1.domain.model.rss.RssFeed;
+import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.entities.rss.FeedItem;
+import cat.xojan.random1.domain.entities.rss.RssFeed;
 import cat.xojan.random1.domain.repository.PodcastRepository;
 import retrofit2.Call;
 import retrofit2.Response;

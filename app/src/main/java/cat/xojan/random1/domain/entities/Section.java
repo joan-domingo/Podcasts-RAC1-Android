@@ -1,4 +1,4 @@
-package cat.xojan.random1.domain.model;
+package cat.xojan.random1.domain.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;

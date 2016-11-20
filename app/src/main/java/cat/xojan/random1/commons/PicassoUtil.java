@@ -26,6 +26,7 @@ public class PicassoUtil {
         requestCreator.into(imageView);
     }
 
+    // Not used since the "offline version" was introduced
     private static int getWeekOfTheYear() {
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.WEEK_OF_YEAR);

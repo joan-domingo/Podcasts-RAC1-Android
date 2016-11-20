@@ -2,7 +2,7 @@ package cat.xojan.random1.commons;
 
 import java.util.List;
 
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.entities.Podcast;
 
 public class PodcastUtil {
 

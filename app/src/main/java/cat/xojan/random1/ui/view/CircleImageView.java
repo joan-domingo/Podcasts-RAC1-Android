@@ -55,7 +55,8 @@ public class CircleImageView extends ImageView {
         if (bmp.getWidth() != radius || bmp.getHeight() != radius) {
             float smallest = Math.min(bmp.getWidth(), bmp.getHeight());
             float factor = smallest / radius;
-            sbmp = Bitmap.createScaledBitmap(bmp, (int)(bmp.getWidth() / factor), (int)(bmp.getHeight() / factor), false);
+            sbmp = Bitmap.createScaledBitmap(bmp, (int)(bmp.getWidth() / factor),
+                    (int)(bmp.getHeight() / factor), false);
         } else {
             sbmp = bmp;
         }
@@ -64,7 +65,6 @@ public class CircleImageView extends ImageView {
                 Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
-        final int color = 0xffa19774;
         final Paint paint = new Paint();
         final Rect rect = new Rect(0, 0, radius, radius);
 

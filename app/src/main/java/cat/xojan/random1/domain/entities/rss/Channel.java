@@ -1,4 +1,4 @@
-package cat.xojan.random1.domain.model.rss;
+package cat.xojan.random1.domain.entities.rss;
 
 import android.support.annotation.Nullable;
 

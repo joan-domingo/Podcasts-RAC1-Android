@@ -11,7 +11,7 @@ import java.util.List;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
-import cat.xojan.random1.domain.model.Program;
+import cat.xojan.random1.domain.entities.Program;
 
 public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.ViewHolder>  {
 

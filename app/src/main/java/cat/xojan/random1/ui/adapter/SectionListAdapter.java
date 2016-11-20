@@ -11,7 +11,7 @@ import java.util.List;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.PicassoUtil;
-import cat.xojan.random1.domain.model.Section;
+import cat.xojan.random1.domain.entities.Section;
 
 public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.ViewHolder>  {
 
