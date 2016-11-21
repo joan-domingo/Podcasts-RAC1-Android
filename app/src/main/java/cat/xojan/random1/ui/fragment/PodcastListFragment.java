@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.presenter.PodcastListPresenter;
@@ -46,9 +47,10 @@ public class PodcastListFragment extends BaseFragment implements
 
     private PodcastListAdapter mAdapter;
 
-    public static PodcastListFragment newInstance(Section section) {
+    public static PodcastListFragment newInstance(Section section, Program program) {
         Bundle args = new Bundle();
         args.putParcelable(ARG_SECTION, section);
+        args.putParcelable(ARG_PROGRAM, program);
 
         PodcastListFragment podcastListFragment = new PodcastListFragment();
         podcastListFragment.setArguments(args);

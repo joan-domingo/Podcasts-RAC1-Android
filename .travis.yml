@@ -1,0 +1,25 @@
+language: android
+sudo: false
+jdk: oraclejdk8
+
+android:
+  components:
+    - platform-tools
+    - tools
+    - tools
+    - build-tools-25.0.2
+    - android-25
+    - extra-android-m2repository
+
+script:
+    - ./gradlew build
+    - ./gradlew jacocoTestReport
+
+before_install:
+    - chmod +x gradlew
+
+#after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+
+after_success:
+    - "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
+    - bash <(curl -s https://codecov.io/bash)

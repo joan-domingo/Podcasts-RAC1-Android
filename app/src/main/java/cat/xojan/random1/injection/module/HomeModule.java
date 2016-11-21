@@ -3,7 +3,6 @@ package cat.xojan.random1.injection.module;
 import android.app.Activity;
 import android.app.DownloadManager;
 
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.PerActivity;
 import cat.xojan.random1.presenter.DownloadsPresenter;
@@ -23,21 +22,19 @@ public class HomeModule {
     }
 
     @Provides
-    PodcastListPresenter provideLatestPodcastPresenter(PodcastDataInteractor podcastDataInteractor,
+    PodcastListPresenter provideLatestPodcastPresenter(ProgramDataInteractor programDataInteractor,
                                                        DownloadManager downloadManager) {
-        return new PodcastListPresenter(podcastDataInteractor, mActivity, downloadManager);
+        return new PodcastListPresenter(programDataInteractor, mActivity, downloadManager);
     }
 
-    @Provides
-    @PerActivity
+    @Provides @PerActivity
     ProgramsPresenter provideProgramsPresenter(ProgramDataInteractor programDataInteractor) {
         return new ProgramsPresenter(programDataInteractor);
     }
 
-    @Provides
-    @PerActivity
-    DownloadsPresenter provideHomePresenter(PodcastDataInteractor podcastDataInteractor) {
-        return new DownloadsPresenter(podcastDataInteractor);
+    @Provides @PerActivity
+    DownloadsPresenter provideHomePresenter(ProgramDataInteractor programDataInteractor) {
+        return new DownloadsPresenter(programDataInteractor);
     }
 
     @Provides

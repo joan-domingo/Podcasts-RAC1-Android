@@ -4,7 +4,6 @@ import android.app.DownloadManager;
 
 import javax.inject.Singleton;
 
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.module.AppModule;
 import cat.xojan.random1.receiver.DownloadCompleteReceiver;
@@ -22,6 +21,5 @@ public interface AppComponent {
 
     //Exposed to sub-graphs.
     DownloadManager downloadManager();
-    PodcastDataInteractor podcastDataInteractor();
     ProgramDataInteractor programDataInteractor();
 }

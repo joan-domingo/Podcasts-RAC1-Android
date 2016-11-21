@@ -3,36 +3,38 @@ package cat.xojan.random1.domain.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import cat.xojan.random1.commons.ImageUtil;
-
 public class Section implements Parcelable {
 
-    private final String mTitle;
-    private final String mParam;
-    private final int mImageDrawable;
+    private String id;
+    private String title;
+    private String mImageUrl;
+    private boolean active;
 
-    public Section(String title, String param, String programParam) {
-        mTitle = title;
-        mParam = param;
-        mImageDrawable = ImageUtil.getProgramImageDrawable(programParam);
+    public String getId() {
+        return id;
     }
 
     public String getTitle() {
-        return mTitle;
+        return title;
     }
 
-    public String getParam() {
-        return mParam;
+    public void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
     }
 
-    public int getImageDrawable() {
-        return mImageDrawable;
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     protected Section(Parcel in) {
-        mTitle = in.readString();
-        mParam = in.readString();
-        mImageDrawable = in.readInt();
+        id = in.readString();
+        title = in.readString();
+        mImageUrl = in.readString();
+        active = in.readByte() != 0x00;
     }
 
     @Override
@@ -42,9 +44,10 @@ public class Section implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mTitle);
-        dest.writeString(mParam);
-        dest.writeInt(mImageDrawable);
+        dest.writeString(id);
+        dest.writeString(title);
+        dest.writeString(mImageUrl);
+        dest.writeByte((byte) (active ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

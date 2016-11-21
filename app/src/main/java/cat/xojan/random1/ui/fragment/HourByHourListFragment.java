@@ -26,7 +26,6 @@ import cat.xojan.random1.commons.EventUtil;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.injection.component.HomeComponent;
-import cat.xojan.random1.presenter.DownloadsPresenter;
 import cat.xojan.random1.presenter.PodcastListPresenter;
 import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.BaseFragment;
@@ -40,7 +39,6 @@ public class HourByHourListFragment extends BaseFragment implements
     public static final String TAG = HourByHourListFragment.class.getSimpleName();
     public static final String ARG_PROGRAM = "program_param";
 
-    @Inject DownloadsPresenter mHomePresenter;
     @Inject PodcastListPresenter mPresenter;
 
     private RecyclerView mRecyclerView;
@@ -89,7 +87,7 @@ public class HourByHourListFragment extends BaseFragment implements
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         mPresenter.setPodcastsListener(this);
         showPodcasts(false);
-        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getCategory());
+        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getTitle());
     }
 
     @Override

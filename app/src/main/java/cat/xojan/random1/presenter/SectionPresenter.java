@@ -11,6 +11,7 @@ import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.ui.BasePresenter;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SectionPresenter implements BasePresenter {
@@ -33,8 +34,15 @@ public class SectionPresenter implements BasePresenter {
 
     public void loadSections(Program program) {
         mProgramInteractor.loadSections(program)
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
+                .filter(new Func1<Section, Boolean>() {
+                    @Override
+                    public Boolean call(Section section) {
+                        return section.isActive();
+                    }
+                })
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<List<Section>>() {
                     @Override
                     public void onCompleted() {

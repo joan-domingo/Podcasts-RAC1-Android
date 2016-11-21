@@ -6,9 +6,8 @@ import android.content.Context;
 import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
-import cat.xojan.random1.data.RAC1PodcastRepository;
-import cat.xojan.random1.data.RAC1ProgramRepository;
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
+import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
+import cat.xojan.random1.data.RemoteProgramRepository;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -25,21 +24,15 @@ public class AppModule {
         mApplication = application;
     }
 
-    @Provides
-    @Singleton
+    @Provides @Singleton
     DownloadManager provideDownloadManager() {
         return (DownloadManager) mApplication.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
-    @Provides
-    @Singleton
-    PodcastDataInteractor providePodcastDataInteractor() {
-        return new PodcastDataInteractor(new RAC1PodcastRepository(), mApplication);
-    }
-
-    @Provides
-    @Singleton
+    @Provides @Singleton
     ProgramDataInteractor provideProgramDataInteractor() {
-        return new ProgramDataInteractor(new RAC1ProgramRepository(), mApplication);
+        return new ProgramDataInteractor(new RemoteProgramRepository(),
+                new PreferencesDownloadPodcastRepository(mApplication),
+                mApplication);
     }
 }

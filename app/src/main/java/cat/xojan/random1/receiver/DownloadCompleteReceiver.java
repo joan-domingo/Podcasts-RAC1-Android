@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,13 +15,13 @@ import cat.xojan.random1.Application;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.EventUtil;
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     private static final String TAG = DownloadCompleteReceiver.class.getSimpleName();
 
-    @Inject PodcastDataInteractor mPodcastDataInteractor;
+    @Inject ProgramDataInteractor mProgramDataInteractor;
     @Inject DownloadManager mDownloadManager;
 
     @Override
@@ -44,23 +45,17 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             context.getString(R.string.download_successful),
                             Toast.LENGTH_SHORT).show();
 
-                    // get title of the download
-                    int categoryIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE);
-                    String category = cursor.getString(categoryIndex);
-
-                    // get description of the download
-                    int descriptionIndex =
-                            cursor.getColumnIndex(DownloadManager.COLUMN_DESCRIPTION);
-                    String description = cursor.getString(descriptionIndex);
+                    int titleIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE);
+                    String title = cursor.getString(titleIndex);
 
                     int localUriIndex =
                             cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
                     String uri = cursor.getString(localUriIndex);
-                    String programTitle = uri.split(PodcastDataInteractor.IMAGE)[1]
-                            .replace("%20", " ");
+                    String audioId = uri.split(Environment.DIRECTORY_DOWNLOADS + "/")[1]
+                            .replace(ProgramDataInteractor.EXTENSION, "");
 
-                    EventUtil.logDownloaedPodcast(category, description);
-                    mPodcastDataInteractor.addDownload(category, description, programTitle);
+                    EventUtil.logDownloadedPodcast(title);
+                    mProgramDataInteractor.addDownload(audioId);
                     break;
 
                 case DownloadManager.STATUS_FAILED:
@@ -103,14 +98,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     Toast.makeText(context,
                             context.getString(R.string.download_failed),
                             Toast.LENGTH_SHORT).show();
-                    mPodcastDataInteractor.refreshDownloadedPodcasts();
+                    mProgramDataInteractor.refreshDownloadedPodcasts();
                     break;
             }
             cursor.close();
         } else {
             Toast.makeText(context, context.getString(R.string.download_cancelled),
                     Toast.LENGTH_SHORT).show();
-            mPodcastDataInteractor.refreshDownloadedPodcasts();
+            mProgramDataInteractor.refreshDownloadedPodcasts();
         }
     }
 

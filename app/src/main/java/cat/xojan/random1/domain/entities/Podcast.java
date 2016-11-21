@@ -3,103 +3,76 @@ package cat.xojan.random1.domain.entities;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import cat.xojan.random1.commons.ImageUtil;
+import java.util.Date;
 
 public class Podcast implements Parcelable {
 
-    private String mDescription;
-    private String mFileUrl;
-    private String mImageUrl;
-    private String mProgram;
+    private Audio audio;
+    private String path;
     private String mFilePath;
+    private Date datetime;
+    private long durationSeconds;
+    private String mProgramId;
+    private String mImageUrl;
     private State mState;
-    private int mImageDrawable;
-    private String mProgramTitle;
+    private String appMobileTitle;
 
-    public Podcast(String description, String fileUrl, String program, String programTitle) {
-        mDescription = description;
-        mFileUrl = fileUrl;
-        mImageUrl = ImageUtil.getPodcastImageUrl(program);
-        mProgram = program;
-        mState = State.LOADED;
-        mImageDrawable = ImageUtil.getPodcastImageDrawable(program, programTitle);
-        mProgramTitle = programTitle;
-    }
-
-    public Podcast(String program, String description, String filePath, State state,
-                   String programTitle) {
-        mProgram = program;
-        mDescription = description;
-        mFilePath = filePath;
-        mImageUrl = ImageUtil.getPodcastImageUrl(program);
+    public Podcast(String title, State state, String filePath) {
+        appMobileTitle = title;
         mState = state;
-        mImageDrawable = ImageUtil.getPodcastImageDrawable(program, programTitle);
+        mFilePath = filePath;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public String getTitle() {
+        return appMobileTitle;
     }
 
-    public String getFileUrl() {
-        return mFileUrl;
+    public void setProgramId(String programId) {
+        mProgramId = programId;
     }
 
-    public int getImageDrawable() {
-        return mImageDrawable;
+    public void setImageUrl(String imageUrl) {
+        mImageUrl = imageUrl;
     }
 
-    public String getProgram() {
-        return mProgram;
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public State getState() {
+        return mState == null ? State.LOADED : mState;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setState(State downloading) {
+        mState = downloading;
     }
 
     public String getFilePath() {
         return mFilePath;
     }
 
-    public State getState() {
-        return mState;
-    }
-
     public void setFilePath(String filePath) {
         mFilePath = filePath;
     }
 
-    public void setState(State state) {
-        mState = state;
-    }
-
-    public String getProgramTitle() {
-        return mProgramTitle;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Podcast)) {
-            return false;
-        }
-        Podcast podcast = (Podcast) o;
-        return mDescription.equals(podcast.mDescription) &&
-                mProgram.equals(podcast.mProgram);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = 17;
-        result = 31 * result + mDescription.hashCode();
-        result = 31 * result + mProgram.hashCode();
-        return result;
+    public String getAudioId() {
+        return audio.getId();
     }
 
     protected Podcast(Parcel in) {
-        mDescription = in.readString();
-        mFileUrl = in.readString();
-        mImageUrl = in.readString();
-        mProgram = in.readString();
+        audio = (Audio) in.readValue(Audio.class.getClassLoader());
+        path = in.readString();
         mFilePath = in.readString();
-        mState = (State) in.readValue(State.class.getClassLoader());
-        mImageDrawable = in.readInt();
-        mProgramTitle = in.readString();
+        long tmpDatetime = in.readLong();
+        datetime = tmpDatetime != -1 ? new Date(tmpDatetime) : null;
+        durationSeconds = in.readLong();
+        mProgramId = in.readString();
+        mImageUrl = in.readString();
+        appMobileTitle = in.readString();
     }
 
     @Override
@@ -109,14 +82,14 @@ public class Podcast implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(mDescription);
-        dest.writeString(mFileUrl);
-        dest.writeString(mImageUrl);
-        dest.writeString(mProgram);
+        dest.writeValue(audio);
+        dest.writeString(path);
         dest.writeString(mFilePath);
-        dest.writeValue(mState);
-        dest.writeInt(mImageDrawable);
-        dest.writeString(mProgramTitle);
+        dest.writeLong(datetime != null ? datetime.getTime() : -1L);
+        dest.writeLong(durationSeconds);
+        dest.writeString(mProgramId);
+        dest.writeString(mImageUrl);
+        dest.writeString(appMobileTitle);
     }
 
     @SuppressWarnings("unused")
@@ -136,5 +109,26 @@ public class Podcast implements Parcelable {
         LOADED,
         DOWNLOADING,
         DOWNLOADED
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Podcast podcast = (Podcast) o;
+
+        if (!path.equals(podcast.path)) return false;
+        if (!mProgramId.equals(podcast.mProgramId)) return false;
+        return appMobileTitle != null ? appMobileTitle.equals(podcast.appMobileTitle) : podcast.appMobileTitle == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = path.hashCode();
+        result = 31 * result + mProgramId.hashCode();
+        result = 31 * result + (appMobileTitle != null ? appMobileTitle.hashCode() : 0);
+        return result;
     }
 }

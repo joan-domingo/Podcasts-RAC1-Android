@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <cat.xojan.random1.ui.view.CircleImageView
+    <ImageView
         android:id="@+id/circle_image"
         android:layout_width="60dp"
         android:layout_height="60dp"

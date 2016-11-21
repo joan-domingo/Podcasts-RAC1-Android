@@ -1,27 +1,30 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 apply plugin: 'android-apt'
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.0"
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 18
-        versionName "1.11.1"
+        versionCode 19
+        versionName "2.0.0"
         vectorDrawables.useSupportLibrary = true
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    aaptOptions {
-        cruncherEnabled = false
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -44,11 +47,11 @@ repositories {
 
 dependencies {
     //Android support
-    compile 'com.android.support:appcompat-v7:25.0.0'
-    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.1.0'
 
     //Crashlytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.4@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
         exclude module:'beta'
         transitive = true;
     }
@@ -61,23 +64,18 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     //Leak canary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4'
 
     //Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     //Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.0.2'
-    //retrofit xml converter
-    compile('com.squareup.retrofit2:converter-simplexml:2.0.2') {
-        exclude group: 'xpp3', module: 'xpp3'
-        exclude group: 'stax', module: 'stax-api'
-        exclude group: 'stax', module: 'stax'
-    }
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.5.0'
 
     //Rx
     compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'io.reactivex:rxjava:1.1.6'
 }

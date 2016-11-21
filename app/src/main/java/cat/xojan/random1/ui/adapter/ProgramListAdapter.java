@@ -34,8 +34,8 @@ public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.
         holder.itemView.setOnClickListener(new ItemClickListener(position));
         Program program = mProgramList.get(position);
 
-        holder.title.setText(program.getCategory());
-        PicassoUtil.loadImage(holder.itemView.getContext(), program.getImageDrawable(),
+        holder.title.setText(program.getTitle());
+        PicassoUtil.loadImage(holder.itemView.getContext(), program.getImageUrl(),
                 holder.image, false);
     }
 

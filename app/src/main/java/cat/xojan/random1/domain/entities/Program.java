@@ -6,51 +6,52 @@ import android.os.Parcelable;
 import java.util.ArrayList;
 import java.util.List;
 
-import cat.xojan.random1.commons.ImageUtil;
-
 public class Program implements Parcelable {
 
-    private List<Section> mSections;
-    private String mTitle;
-    private String mParam;
-    private String mImageUrl;
-    private int mImageDrawable;
+    private String id;
+    private String methodSelectionId;
+    private String title;
+    private String subtitle;
+    private String description;
+    private List<Section> sections;
+    private int pillAdsId;
+    private Images images;
+    private boolean active;
 
-    public Program(String title, String param, List<Section> sections) {
-        mTitle = title;
-        mImageUrl = ImageUtil.getPodcastImageUrl(param);
-        mParam = param;
-        mImageDrawable = ImageUtil.getProgramImageDrawable(param);
-        mSections = sections;
+    public String getId() {
+        return id;
     }
 
-    public String getParam() {
-        return mParam;
-    }
-
-    public String getCategory() {
-        return mTitle;
-    }
-
-    public int getImageDrawable() {
-        return mImageDrawable;
+    public String getTitle() {
+        return title;
     }
 
     public List<Section> getSections() {
-        return mSections;
+        return sections;
+    }
+
+    public String getImageUrl() {
+        return images.getImageUrl();
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     protected Program(Parcel in) {
+        id = in.readString();
+        methodSelectionId = in.readString();
+        title = in.readString();
+        subtitle = in.readString();
+        description = in.readString();
         if (in.readByte() == 0x01) {
-            mSections = new ArrayList<Section>();
-            in.readList(mSections, Section.class.getClassLoader());
+            sections = new ArrayList<Section>();
+            in.readList(sections, Section.class.getClassLoader());
         } else {
-            mSections = null;
+            sections = null;
         }
-        mTitle = in.readString();
-        mParam = in.readString();
-        mImageUrl = in.readString();
-        mImageDrawable = in.readInt();
+        pillAdsId = in.readInt();
+        active = in.readByte() != 0x00;
     }
 
     @Override
@@ -60,16 +61,19 @@ public class Program implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (mSections == null) {
+        dest.writeString(id);
+        dest.writeString(methodSelectionId);
+        dest.writeString(title);
+        dest.writeString(subtitle);
+        dest.writeString(description);
+        if (sections == null) {
             dest.writeByte((byte) (0x00));
         } else {
             dest.writeByte((byte) (0x01));
-            dest.writeList(mSections);
+            dest.writeList(sections);
         }
-        dest.writeString(mTitle);
-        dest.writeString(mParam);
-        dest.writeString(mImageUrl);
-        dest.writeInt(mImageDrawable);
+        dest.writeInt(pillAdsId);
+        dest.writeByte((byte) (active ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

@@ -7,15 +7,15 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
 import rx.Subscriber;
 import rx.Subscription;
 
 public class DownloadsPresenter implements BasePresenter {
 
-    private final PodcastDataInteractor mPodcastDataInteractor;
+    private final ProgramDataInteractor mProgramDataInteractor;
     private Subscription mSubscription;
     private DownloadsUI mListener;
 
@@ -27,12 +27,12 @@ public class DownloadsPresenter implements BasePresenter {
     }
 
     @Inject
-    public DownloadsPresenter(PodcastDataInteractor podcastDataInteractor) {
-        mPodcastDataInteractor = podcastDataInteractor;
+    public DownloadsPresenter(ProgramDataInteractor programDataInteractor) {
+        mProgramDataInteractor = programDataInteractor;
     }
 
     public void deletePodcast(Podcast podcast) {
-        mPodcastDataInteractor.deleteDownload(podcast);
+        mProgramDataInteractor.deleteDownload(podcast);
         mListener.updateRecyclerView();
     }
 
@@ -48,11 +48,13 @@ public class DownloadsPresenter implements BasePresenter {
 
     @Override
     public void destroy() {
-        mSubscription.unsubscribe();
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
     }
 
     public void loadDownloadedPodcasts() {
-        mSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
+        mSubscription = mProgramDataInteractor.getDownloadedPodcasts()
                 .subscribe(new Subscriber<List<Podcast>>() {
                     @Override
                     public void onCompleted() {
@@ -69,7 +71,7 @@ public class DownloadsPresenter implements BasePresenter {
                         mListener.updateRecyclerView(filterOnlyDownloadedPodcasts(podcasts));
                     }
                 });
-        mPodcastDataInteractor.refreshDownloadedPodcasts();
+        mProgramDataInteractor.refreshDownloadedPodcasts();
     }
 
     private List<Podcast> filterOnlyDownloadedPodcasts(List<Podcast> podcasts) {

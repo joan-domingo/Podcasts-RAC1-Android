@@ -12,10 +12,10 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import rx.Subscriber;
@@ -36,16 +36,16 @@ public class PodcastListPresenter implements BasePresenter {
         void updateRecyclerView();
     }
 
-    private PodcastDataInteractor mPodcastDataInteractor;
+    private ProgramDataInteractor mProgramDataInteractor;
     private Context mContext;
     private Subscription mLoadedPodcastSubscription;
     private PodcastsListener mListener;
     private Subscription mDownloadedPodcastSubscription;
 
     @Inject
-    public PodcastListPresenter(PodcastDataInteractor podcastDataInteractor,  Context context,
+    public PodcastListPresenter(ProgramDataInteractor programDataInteractor, Context context,
                                 DownloadManager downloadManager) {
-        mPodcastDataInteractor = podcastDataInteractor;
+        mProgramDataInteractor = programDataInteractor;
         mContext = context;
         mDownloadManager = downloadManager;
     }
@@ -55,53 +55,38 @@ public class PodcastListPresenter implements BasePresenter {
     }
 
     public void loadPodcasts(Bundle args, boolean refresh) {
-        if (args == null) {
-            mLoadedPodcastSubscription = mPodcastDataInteractor.loadLatestPodcasts(refresh)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new PodcastSubscriptionObserver());
+        Program program = (Program) args.get(PodcastListFragment.ARG_PROGRAM);
+        Section section = (Section) args.get(PodcastListFragment.ARG_SECTION);
 
-        } else if (args.get(PodcastListFragment.ARG_PROGRAM) != null) {
-
-            Program program = (Program) args.get(PodcastListFragment.ARG_PROGRAM);
-            mLoadedPodcastSubscription =
-                    mPodcastDataInteractor.loadPodcastsByProgram(program,refresh)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new PodcastSubscriptionObserver());
-        } else {
-            Section section = (Section) args.get(PodcastListFragment.ARG_SECTION);
-            mLoadedPodcastSubscription =
-                    mPodcastDataInteractor.loadPodcastsBySection(section, refresh)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new PodcastSubscriptionObserver());
-        }
+        mLoadedPodcastSubscription =
+                mProgramDataInteractor.loadPodcastsByProgram(program, section, refresh)
+                        .subscribeOn(Schedulers.newThread())
+                        .toList()
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new PodcastSubscriptionObserver());
     }
 
     public void refreshDownloadedPodcasts() {
-        mPodcastDataInteractor.refreshDownloadedPodcasts();
+        mProgramDataInteractor.refreshDownloadedPodcasts();
     }
 
     public void download(Podcast podcast) {
-        Uri uri = Uri.parse(podcast.getFileUrl());
+        Uri uri = Uri.parse(podcast.getPath());
         DownloadManager.Request request = new DownloadManager.Request(uri)
-                .setTitle(podcast.getProgram())
-                .setDescription(podcast.getDescription())
+                .setTitle(podcast.getTitle())
                 .setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS,
-                        podcast.getProgram() + PodcastDataInteractor.SEPARATOR
-                                + podcast.getDescription() + PodcastDataInteractor.EXTENSION
-                                + PodcastDataInteractor.IMAGE + podcast.getProgramTitle())
+                        podcast.getAudioId() + ProgramDataInteractor.EXTENSION)
                 .setVisibleInDownloadsUi(true);
 
         mDownloadManager.enqueue(request);
-        podcast.setState(Podcast.State.DOWNLOADING);
-        mListener.updateRecyclerView();
+        mProgramDataInteractor.addDownloadingPodcast(podcast);
+
+        refreshDownloadedPodcasts();
     }
 
     @Override
     public void resume() {
-        mDownloadedPodcastSubscription = mPodcastDataInteractor.getDownloadedPodcasts()
+        mDownloadedPodcastSubscription = mProgramDataInteractor.getDownloadedPodcasts()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(new Subscriber<List<Podcast>>() {
@@ -143,7 +128,7 @@ public class PodcastListPresenter implements BasePresenter {
     }
 
     public void deletePodcast(Podcast podcast) {
-        mPodcastDataInteractor.deleteDownload(podcast);
+        mProgramDataInteractor.deleteDownload(podcast);
     }
 
     private class PodcastSubscriptionObserver extends Subscriber<List<Podcast>> {

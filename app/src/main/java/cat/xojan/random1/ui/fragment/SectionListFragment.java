@@ -76,7 +76,7 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
         Program program = (Program) getArguments().get(ARG_PROGRAM);
         mPresenter.loadSections(program);
         mPresenter.selectedSection(true);
-        getActivity().setTitle(program.getCategory());
+        getActivity().setTitle(program.getTitle());
     }
 
     @Override
@@ -115,7 +115,7 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
     @Override
     public void onClick(Section section) {
         PodcastListFragment podcastListFragment = PodcastListFragment
-                .newInstance(section);
+                .newInstance(section, (Program) getArguments().getParcelable(ARG_PROGRAM));
         ((BaseActivity) getActivity()).addFragment(R.id.container_fragment,
                 podcastListFragment, PodcastListFragment.TAG, true);
     }

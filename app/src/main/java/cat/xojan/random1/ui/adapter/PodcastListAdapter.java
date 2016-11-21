@@ -36,9 +36,8 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
         holder.itemView.setOnClickListener(new ItemClickListener(position));
         Podcast podcast = mPodcastList.get(position);
 
-        holder.title.setText(podcast.getProgram());
-        holder.description.setText(podcast.getDescription());
-        PicassoUtil.loadImage(holder.itemView.getContext(), podcast.getImageDrawable(),
+        holder.title.setText(podcast.getTitle());
+        PicassoUtil.loadImage(holder.itemView.getContext(), podcast.getImageUrl(),
                 holder.image, true);
 
         switch (podcast.getState()) {
@@ -75,14 +74,12 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView title;
-        TextView description;
         ImageView image;
         ImageView icon;
 
         ViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);
-            description = (TextView) itemView.findViewById(R.id.description);
             image = (ImageView) itemView.findViewById(R.id.circle_image);
             icon = (ImageView) itemView.findViewById(R.id.icon);
         }

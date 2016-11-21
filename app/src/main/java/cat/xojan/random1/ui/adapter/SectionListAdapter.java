@@ -35,8 +35,8 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         Section section = mSectionList.get(position);
 
         holder.title.setText(section.getTitle());
-        PicassoUtil.loadImage(holder.itemView.getContext(), section.getImageDrawable(),
-                holder.image, false);
+        PicassoUtil.loadImage(holder.itemView.getContext(), section.getImageUrl(),
+                holder.image, true);
     }
 
     @Override

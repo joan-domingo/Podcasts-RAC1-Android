@@ -40,8 +40,6 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return mContext.getString(R.string.podcasts_programs);
             case 1:
-                return mContext.getString(R.string.podcasts_latest);
-            case 2:
                 return mContext.getString(R.string.podcasts_downloaded);
             default:
                 throw new IllegalArgumentException("Invalid position: " + position);

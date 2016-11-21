@@ -12,16 +12,14 @@ public class EventUtil {
     public static void logPlayedPodcast(Podcast podcast) {
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logContentView(new ContentViewEvent()
-                    .putContentName(podcast.getProgram())
-                    .putContentType(podcast.getDescription()));
+                    .putContentName(podcast.getTitle()));
         }
     }
 
-    public static void logDownloaedPodcast(String category, String description) {
+    public static void logDownloadedPodcast(String title) {
         if (!BuildConfig.DEBUG) {
             Answers.getInstance().logCustom(new CustomEvent("Downloads")
-                    .putCustomAttribute("Category", category)
-                    .putCustomAttribute("Description", description));
+                    .putCustomAttribute("title", title));
         }
     }
 }

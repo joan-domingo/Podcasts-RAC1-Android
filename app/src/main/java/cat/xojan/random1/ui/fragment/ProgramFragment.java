@@ -24,8 +24,9 @@ import cat.xojan.random1.ui.BaseActivity;
 import cat.xojan.random1.ui.BaseFragment;
 import cat.xojan.random1.ui.adapter.ProgramListAdapter;
 
-public class ProgramFragment extends BaseFragment implements ProgramsPresenter.ProgramListener,
-        ProgramListAdapter.RecyclerViewListener {
+import static cat.xojan.random1.ui.adapter.ProgramListAdapter.*;
+
+public class ProgramFragment extends BaseFragment implements RecyclerViewListener {
 
     @Inject ProgramsPresenter mPresenter;
 
@@ -61,7 +62,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(HomeComponent.class).inject(this);
-        mPresenter.setPodcastsListener(this);
         loadPrograms();
     }
 
@@ -79,19 +79,6 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
         super.onDestroy();
         if (mPresenter != null) {
             mPresenter.destroy();
-        }
-    }
-
-    @Override
-    public void onProgramsLoaded(List<Program> programs) {
-        mAdapter = new ProgramListAdapter(programs, this);
-        mRecyclerView.setAdapter(mAdapter);
-        mSwipeRefresh.setRefreshing(false);
-
-        if (programs.isEmpty()) {
-            mEmptyList.setVisibility(View.VISIBLE);
-        } else {
-            mEmptyList.setVisibility(View.GONE);
         }
     }
 
@@ -122,7 +109,20 @@ public class ProgramFragment extends BaseFragment implements ProgramsPresenter.P
             @Override
             public void run() {
                 mSwipeRefresh.setRefreshing(true);
-                mPresenter.showPrograms();
+                mPresenter.showPrograms(new ProgramsPresenter.ProgramListener() {
+                    @Override
+                    public void onProgramsLoaded(List<Program> programs) {
+                        mAdapter = new ProgramListAdapter(programs, ProgramFragment.this);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mSwipeRefresh.setRefreshing(false);
+
+                        if (programs.isEmpty()) {
+                            mEmptyList.setVisibility(View.VISIBLE);
+                        } else {
+                            mEmptyList.setVisibility(View.GONE);
+                        }
+                    }
+                });
             }
         }, 0);
     }

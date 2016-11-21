@@ -84,7 +84,7 @@ public class RadioPlayerService extends Service {
             Notification notification = getNotification(RadioPlayerActivity.class, podcast);
             startForeground(NOTIFICATION_ID, notification);
 
-            startMediaPlayer(podcast.getFileUrl(), podcast.getFilePath());
+            startMediaPlayer(podcast.getPath(), podcast.getFilePath());
         }
 
         return START_REDELIVER_INTENT;
@@ -96,7 +96,7 @@ public class RadioPlayerService extends Service {
 
         builder.setSmallIcon(R.mipmap.ic_notification)
                 .setContentTitle(getApplicationContext().getString(R.string.app_name))
-                .setContentText(podcast.getProgram() + " " + podcast.getDescription());
+                .setContentText(podcast.getTitle());
 
         Intent foregroundIntent = new Intent(getApplicationContext(), clazz);
 

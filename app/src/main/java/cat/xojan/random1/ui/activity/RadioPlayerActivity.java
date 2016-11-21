@@ -37,8 +37,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private ProgressBar mBufferBar;
     private SeekBar mSeekBar;
     private CroppedImageView mImage;
-    private TextView mCategory;
-    private TextView mDescription;
+    private TextView mTitle;
     private TextView mTimer;
     private TextView mDuration;
     private ImageView mPlayer;
@@ -120,8 +119,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mBufferBar = (ProgressBar) findViewById(R.id.buffer_bar);
         mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
         mImage = (CroppedImageView) findViewById(R.id.image);
-        mCategory = (TextView) findViewById(R.id.category);
-        mDescription = (TextView) findViewById(R.id.description);
+        mTitle = (TextView) findViewById(R.id.title);
         mTimer = (TextView) findViewById(R.id.timer);
         mDuration = (TextView) findViewById(R.id.duration);
         mPlayer = (ImageView) findViewById(R.id.player);
@@ -168,9 +166,9 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mSeekBar.setMax(100);
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
 
-        mCategory.setText(podcast.getProgram());
-        mDescription.setText(podcast.getDescription());
-        PicassoUtil.loadImage(this, podcast.getImageDrawable(), mImage, false);
+        mTitle.setText(podcast.getTitle());
+        //mDescription.setText(podcast.getDescription());
+        PicassoUtil.loadImage(this, podcast.getImageUrl(), mImage, false);
 
         updateViewAfterRotation();
     }

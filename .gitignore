@@ -1,16 +1,10 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
 .DS_Store
 /build
 /captures
 .idea/
 app/app-release.apk
 app/fabric.properties
-app/.gitignore
-gradlew.bat
-gradlew
-gradle/
-build
+app/build

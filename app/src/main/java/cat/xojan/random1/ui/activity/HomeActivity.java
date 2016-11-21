@@ -62,7 +62,6 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     private void initView() {
         HomePagerAdapter mFragmentAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
         mFragmentAdapter.addFragment(new ProgramFragment());
-        mFragmentAdapter.addFragment(new PodcastListFragment());
         mFragmentAdapter.addFragment(new DownloadsFragment());
 
         mViewPager.setAdapter(mFragmentAdapter);
