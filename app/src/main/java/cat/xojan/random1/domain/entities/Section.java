@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 
 public class Section implements Parcelable {
 
@@ -9,6 +10,11 @@ public class Section implements Parcelable {
     private String title;
     private String mImageUrl;
     private boolean active;
+
+    @VisibleForTesting
+    public Section(String id) {
+        this.id = id;
+    }
 
     public String getId() {
         return id;
@@ -62,4 +68,20 @@ public class Section implements Parcelable {
             return new Section[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Section section = (Section) o;
+
+        return id.equals(section.id);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }

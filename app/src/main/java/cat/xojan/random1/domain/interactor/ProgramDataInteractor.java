@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.interactor;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import java.io.File;
@@ -60,7 +61,7 @@ public class ProgramDataInteractor {
                         subscriber.onNext(program);
                     }
                     subscriber.onCompleted();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     subscriber.onError(e);
                 }
             }
@@ -72,7 +73,7 @@ public class ProgramDataInteractor {
             @Override
             public void call(Subscriber<? super Section> subscriber) {
                 try {
-                    List<Section> sections = new ArrayList<Section>(program.getSections());
+                    List<Section> sections = new ArrayList<>(program.getSections());
                     sections.remove(0);
                     for (Section section : sections) {
                         section.setImageUrl(program.getImageUrl());
@@ -185,5 +186,15 @@ public class ProgramDataInteractor {
 
     public boolean addDownloadingPodcast(Podcast podcast) {
         return mDownloadRepo.addDownloadingPodcast(podcast);
+    }
+
+    @VisibleForTesting
+    public void setProgramsData(List<Program> programs) {
+        mPrograms = programs;
+    }
+
+    @VisibleForTesting
+    public List<Program> getProgramData() {
+        return mPrograms;
     }
 }

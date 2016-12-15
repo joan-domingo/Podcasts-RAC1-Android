@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,11 @@ public class Program implements Parcelable {
     private int pillAdsId;
     private Images images;
     private boolean active;
+
+    @VisibleForTesting
+    public Program(String id) {
+        this.id = id;
+    }
 
     public String getId() {
         return id;
@@ -88,4 +94,30 @@ public class Program implements Parcelable {
             return new Program[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Program program = (Program) o;
+
+        return id != null ? id.equals(program.id) : program.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
+
+    @VisibleForTesting
+    public void setImageUrl(String imageUrl) {
+        images = new Images(imageUrl);
+    }
+
+    @VisibleForTesting
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
+    }
 }

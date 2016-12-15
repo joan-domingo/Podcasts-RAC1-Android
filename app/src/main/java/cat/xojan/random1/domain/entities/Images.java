@@ -10,6 +10,10 @@ public class Images implements Parcelable {
     @SerializedName("person-small")
     private String mPersonSmall;
 
+    public Images(String imageUrl) {
+        mPersonSmall = imageUrl;
+    }
+
     public String getImageUrl() {
         return mPersonSmall;
     }
