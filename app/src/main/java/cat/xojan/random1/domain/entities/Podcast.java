@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.VisibleForTesting;
 
 import java.util.Date;
 
@@ -17,10 +18,11 @@ public class Podcast implements Parcelable {
     private State mState;
     private String appMobileTitle;
 
-    public Podcast(String title, State state, String filePath) {
+    @VisibleForTesting
+    public Podcast(String path, String programId, String title) {
+        this.path = path;
+        mProgramId = programId;
         appMobileTitle = title;
-        mState = state;
-        mFilePath = filePath;
     }
 
     public String getTitle() {

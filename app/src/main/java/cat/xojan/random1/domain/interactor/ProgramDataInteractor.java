@@ -6,7 +6,6 @@ import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -97,7 +96,7 @@ public class ProgramDataInteractor {
                 .putBoolean(PREF_SECTION, selected).apply();
     }
 
-    public Observable loadPodcastsByProgram(final Program program, final Section section,
+    public Observable<Podcast> loadPodcastsByProgram(final Program program, final Section section,
                                             final boolean refresh) {
         if (section != null) {
             return Observable.create(new Observable.OnSubscribe<Podcast>() {
@@ -114,7 +113,7 @@ public class ProgramDataInteractor {
                             subscriber.onNext(podcast);
                         }
                         subscriber.onCompleted();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         subscriber.onError(e);
                     }
                 }
@@ -133,7 +132,7 @@ public class ProgramDataInteractor {
                             subscriber.onNext(podcast);
                         }
                         subscriber.onCompleted();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         subscriber.onError(e);
                     }
                 }

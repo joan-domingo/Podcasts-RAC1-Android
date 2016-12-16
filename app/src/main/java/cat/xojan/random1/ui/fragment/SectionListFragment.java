@@ -71,12 +71,16 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(HomeComponent.class).inject(this);
+
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
-        mPresenter.setListener(this);
+        showBackArrow(true);
+
         Program program = (Program) getArguments().get(ARG_PROGRAM);
+        getActivity().setTitle(program.getTitle());
+
+        mPresenter.setListener(this);
         mPresenter.loadSections(program);
         mPresenter.selectedSection(true);
-        getActivity().setTitle(program.getTitle());
     }
 
     @Override
@@ -96,14 +100,12 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
     public void onResume() {
         super.onResume();
         mPresenter.resume();
-        showBackArrow(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mPresenter.pause();
-        showBackArrow(false);
     }
 
     @Override
@@ -125,6 +127,8 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
         getActivity().getSupportFragmentManager()
                 .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getActivity().setTitle(getString(R.string.app_name));
+        ((BaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        setHasOptionsMenu(false);
         return true;
     }
 

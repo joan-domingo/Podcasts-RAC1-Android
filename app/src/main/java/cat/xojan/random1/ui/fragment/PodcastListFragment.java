@@ -103,14 +103,13 @@ public class PodcastListFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
         mPresenter.resume();
-        showBackArrow(true);
+        showBackArrow();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mPresenter.pause();
-        showBackArrow(false);
     }
 
     @Override
@@ -174,11 +173,9 @@ public class PodcastListFragment extends BaseFragment implements
         }, 0);
     }
 
-    private void showBackArrow(boolean show) {
-        if (getArguments() != null) {
-            setHasOptionsMenu(show);
-            mActionBar.setDisplayHomeAsUpEnabled(show);
-        }
+    private void showBackArrow() {
+        setHasOptionsMenu(true);
+        mActionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private class SwipeRefreshListener implements SwipeRefreshLayout.OnRefreshListener {

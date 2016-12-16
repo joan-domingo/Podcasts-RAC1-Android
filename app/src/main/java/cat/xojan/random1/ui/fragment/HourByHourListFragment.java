@@ -84,7 +84,10 @@ public class HourByHourListFragment extends BaseFragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getComponent(HomeComponent.class).inject(this);
+
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
+        showBackArrow(true);
+
         mPresenter.setPodcastsListener(this);
         showPodcasts(false);
         getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getTitle());
@@ -115,14 +118,12 @@ public class HourByHourListFragment extends BaseFragment implements
     public void onResume() {
         super.onResume();
         mPresenter.resume();
-        showBackArrow(true);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mPresenter.pause();
-        showBackArrow(false);
     }
 
     @Override
@@ -183,6 +184,8 @@ public class HourByHourListFragment extends BaseFragment implements
         getActivity().getSupportFragmentManager()
                 .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getActivity().setTitle(getString(R.string.app_name));
+        ((BaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        setHasOptionsMenu(false);
         return true;
     }
 
@@ -197,10 +200,8 @@ public class HourByHourListFragment extends BaseFragment implements
     }
 
     private void showBackArrow(boolean show) {
-        if (getArguments() != null) {
-            setHasOptionsMenu(show);
-            mActionBar.setDisplayHomeAsUpEnabled(show);
-        }
+        setHasOptionsMenu(show);
+        mActionBar.setDisplayHomeAsUpEnabled(show);
     }
 
     private void showSections() {
