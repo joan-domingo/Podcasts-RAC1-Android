@@ -56,13 +56,12 @@ public class Application extends android.app.Application {
         boolean arePodcastsRemoved = getSharedPreferences("preferences", Context.MODE_PRIVATE)
                 .getBoolean("old_downloaded_podcasts", false);
         if (!arePodcastsRemoved) {
+            getSharedPreferences("preferences", Context.MODE_PRIVATE).edit()
+                    .putBoolean("old_downloaded_podcasts", true).apply();
             Log.d(TAG, "removing old podcasts");
 
             removeDownloaded();
             removeDownloading();
-
-            getSharedPreferences("preferences", Context.MODE_PRIVATE).edit()
-                    .putBoolean("old_downloaded_podcasts", true).apply();
         }
     }
 

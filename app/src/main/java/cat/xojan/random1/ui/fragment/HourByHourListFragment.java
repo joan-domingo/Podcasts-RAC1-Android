@@ -98,6 +98,7 @@ public class HourByHourListFragment extends BaseFragment implements
         if (((Program) getArguments().get(ARG_PROGRAM)).getSections().size() > 1) {
             inflater.inflate(R.menu.hour_by_hour, menu);
         }
+        menu.findItem(R.id.action_export_podcasts).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

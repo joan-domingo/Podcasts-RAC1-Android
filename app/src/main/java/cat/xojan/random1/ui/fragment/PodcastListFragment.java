@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +89,12 @@ public class PodcastListFragment extends BaseFragment implements
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         mPresenter.setPodcastsListener(this);
         showPodcasts(false);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.findItem(R.id.action_export_podcasts).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

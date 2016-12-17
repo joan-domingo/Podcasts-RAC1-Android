@@ -17,4 +17,6 @@ public interface DownloadPodcastRepository {
     Set<Podcast> getDownloadedPodcasts();
 
     void deleteDownloadedPodcast(Podcast podcast);
+
+    String getDownloadedPodcastTitle(String audioId);
 }

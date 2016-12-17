@@ -2,6 +2,7 @@ package cat.xojan.random1.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -74,6 +75,17 @@ public class PreferencesDownloadPodcastRepository implements DownloadPodcastRepo
         mPreferences.edit()
                 .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
                 .apply();
+    }
+
+    @Override @Nullable
+    public String getDownloadedPodcastTitle(String audioId) {
+        Set<Podcast> podcasts = getDownloadedPodcasts();
+        for (Podcast podcast : podcasts) {
+            if (podcast.getAudioId().equals(audioId)) {
+                return podcast.getTitle();
+            }
+        }
+        return null;
     }
 
     private void addDownloadedPodcast(Podcast podcast) {

@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.interactor;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
@@ -195,5 +196,10 @@ public class ProgramDataInteractor {
     @VisibleForTesting
     public List<Program> getProgramData() {
         return mPrograms;
+    }
+
+    @Nullable
+    public String getDownloadedPodcastTitle(String audioId) {
+        return mDownloadRepo.getDownloadedPodcastTitle(audioId);
     }
 }

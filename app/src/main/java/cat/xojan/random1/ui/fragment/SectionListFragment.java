@@ -64,6 +64,7 @@ public class SectionListFragment extends BaseFragment implements SectionPresente
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sections, menu);
+        menu.findItem(R.id.action_export_podcasts).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
