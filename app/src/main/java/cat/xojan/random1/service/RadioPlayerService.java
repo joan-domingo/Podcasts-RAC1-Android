@@ -3,6 +3,7 @@ package cat.xojan.random1.service;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -22,7 +23,7 @@ import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
 
-public class RadioPlayerService extends Service {
+public class RadioPlayerService extends Service implements AudioManager.OnAudioFocusChangeListener {
 
     public static final String TAG = RadioPlayerService.class.getSimpleName();
     public static final String EXTRA_PODCAST = "extra_podcast";
@@ -32,6 +33,7 @@ public class RadioPlayerService extends Service {
     private Handler mHandler;
     private IBinder mBinder;
     private Listener mListener;
+    private AudioManager mAudioManager;
 
     public void registerClient(Listener listener) {
         mListener = listener;
@@ -61,6 +63,35 @@ public class RadioPlayerService extends Service {
         mMediaPlayer.seekTo(currentPosition);
     }
 
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+        switch (focusChange) {
+            case AudioManager.AUDIOFOCUS_GAIN:
+                Log.d("onAudioFocusChange()", "resume playback");
+                if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.start();
+                    mMediaPlayer.setVolume(1.0f, 1.0f);
+                }
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                Log.d("onAudioFocusChange()", "Stop playback and release media player");
+                if (mMediaPlayer.isPlaying()) mMediaPlayer.stop();
+                stopMediaPlayer();
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                Log.d("onAudioFocusChange()", "Stop playback but don't release media player");
+                pause();
+                mListener.updateButton(R.drawable.ic_play_arrow);
+                break;
+
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                Log.d("onAudioFocusChange()", "keep playing at an attenuated level");
+                if (mMediaPlayer.isPlaying()) mMediaPlayer.setVolume(0.1f, 0.1f);
+                break;
+        }
+    }
+
     public class RadioPlayerServiceBinder extends Binder {
         public RadioPlayerService getServiceInstance(){
             return RadioPlayerService.this;
@@ -72,6 +103,16 @@ public class RadioPlayerService extends Service {
         // The service is being created
         mHandler = new Handler();
         mBinder = new RadioPlayerServiceBinder();
+
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN);
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.d(TAG, "Got audio focus");
+        } else {
+            Log.d(TAG, "Could not get audio focus");
+        }
     }
 
     @Override
@@ -129,6 +170,7 @@ public class RadioPlayerService extends Service {
         stopMediaPlayer();
         stopForeground(true);
         mListener = null;
+        mAudioManager.abandonAudioFocus(this);
     }
 
     @Override
@@ -244,7 +286,7 @@ public class RadioPlayerService extends Service {
 
         void updateBufferProgress(int percent);
 
-        void updateButton(int ic_play_arrow);
+        void updateButton(int drawable);
     }
 
     private class MediaPlayerErrorListener implements MediaPlayer.OnErrorListener {

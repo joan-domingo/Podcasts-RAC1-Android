@@ -167,7 +167,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
 
         mTitle.setText(podcast.getTitle());
-        //mDescription.setText(podcast.getDescription());
         PicassoUtil.loadImage(this, podcast.getImageUrl(), mImage, false);
 
         updateViewAfterRotation();
