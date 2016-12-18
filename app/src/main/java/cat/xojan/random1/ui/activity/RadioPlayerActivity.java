@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import cat.xojan.random1.Log;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PicassoUtil;

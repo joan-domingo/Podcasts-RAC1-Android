@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -134,8 +133,8 @@ public class ProgramDataInteractorTest {
         assertNotNull(podcasts.get(1).getImageUrl());
     }
 
-    @Test @Ignore
-    public void add_downloaded_podcast_and_refresh_list() {
+    @Test
+    public void add_downloaded_podcast_and_refresh_list_fail() {
         // Given a subscription to the downloads publisher
         TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
         mProgramDataInteractor.getDownloadedPodcasts().subscribe(testSubscriber);
@@ -148,7 +147,7 @@ public class ProgramDataInteractorTest {
         mProgramDataInteractor.addDownload("audioId1");
 
         // Then
-        testSubscriber.assertValue(null);
+        testSubscriber.assertValue(new ArrayList<Podcast>());
     }
 
     private List<Program> getDummyProgramList() {

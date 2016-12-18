@@ -2,7 +2,6 @@ package cat.xojan.random1;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;

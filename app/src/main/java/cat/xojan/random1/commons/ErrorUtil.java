@@ -1,26 +1,24 @@
 package cat.xojan.random1.commons;
 
-import android.util.Log;
-
 import com.crashlytics.android.Crashlytics;
 
-import cat.xojan.random1.BuildConfig;
+import cat.xojan.random1.Log;
 
 public class ErrorUtil {
 
     public static void logException(Throwable e) {
-        if (BuildConfig.DEBUG) {
-            e.printStackTrace();
-        } else {
+        try {
             Crashlytics.logException(e);
+        } catch (IllegalStateException exception) {
+            e.printStackTrace();
         }
     }
 
     public static void logException(String message) {
-        if (BuildConfig.DEBUG) {
-            Log.w("DownloadManager", message);
-        } else {
+        try {
             Crashlytics.log(message);
+        } catch (IllegalStateException e) {
+            Log.w("DownloadManager", message);
         }
     }
 }

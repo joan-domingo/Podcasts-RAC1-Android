@@ -18,10 +18,8 @@ public class PreferencesDownloadPodcastRepository implements DownloadPodcastRepo
     private static final String DOWNLOAD_PODCASTS = "dowload_podcasts_repo";
     private static final String DOWNLOADING_PODCASTS = "downloading_podcasts";
     private static final String DOWNLOADED_PODCASTS = "downloaded_podcasts";
-    private static final String TAG = PreferencesDownloadPodcastRepository.class.getSimpleName();
 
     private final Gson mGson;
-
     private SharedPreferences mPreferences;
 
     public PreferencesDownloadPodcastRepository(Context context) {

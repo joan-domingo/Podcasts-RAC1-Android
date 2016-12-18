@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import cat.xojan.random1.Log;
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
