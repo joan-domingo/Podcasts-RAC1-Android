@@ -92,7 +92,7 @@ public class ProgramDataInteractor {
                 .getBoolean(PREF_SECTION, false);
     }
 
-    public void getSectionSelected(boolean selected) {
+    public void setSectionSelected(boolean selected) {
         mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
                 .putBoolean(PREF_SECTION, selected).apply();
     }

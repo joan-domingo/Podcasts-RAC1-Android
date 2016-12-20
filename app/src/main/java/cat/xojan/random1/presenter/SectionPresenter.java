@@ -77,6 +77,6 @@ public class SectionPresenter implements BasePresenter {
     }
 
     public void selectedSection(boolean selected) {
-        mProgramInteractor.getSectionSelected(selected);
+        mProgramInteractor.setSectionSelected(selected);
     }
 }
