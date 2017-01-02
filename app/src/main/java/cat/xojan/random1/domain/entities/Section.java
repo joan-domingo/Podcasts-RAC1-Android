@@ -36,6 +36,10 @@ public class Section implements Parcelable {
         return active;
     }
 
+    public void setIsActive(boolean isActive) {
+        active = isActive;
+    }
+
     protected Section(Parcel in) {
         id = in.readString();
         title = in.readString();

@@ -1,5 +1,6 @@
 package cat.xojan.random1.presenter;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +29,11 @@ public class DownloadsPresenterTest {
         mPresenter.setUpUiListener(mMockUiListener);
     }
 
+    @After
+    public void tearDown() {
+        mPresenter.destroy();
+    }
+
     @Test
     public void load_downloaded_podcasts_success() {
         //Given a list of podcasts
@@ -52,6 +58,19 @@ public class DownloadsPresenterTest {
         mPresenter.loadDownloadedPodcasts();
 
         // Then we caught an exception
+    }
+
+    @Test
+    public void should_delete_podcasts() {
+        // Given a podcast
+        Podcast podcast = new Podcast("path", "programId", "title");
+
+        // When we delete it
+        mPresenter.deletePodcast(podcast);
+
+        // Then the podcasts is deleted and the recycler view is updated
+        verify(mProgramDataInteractor).deleteDownload(podcast);
+        mMockUiListener.updateRecyclerView();
     }
 
     private List<Podcast> getDummyPodcastList() {

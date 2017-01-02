@@ -18,36 +18,37 @@ import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class PodcastListPresenter implements BasePresenter {
 
     private final DownloadManager mDownloadManager;
-
-    public interface PodcastsListener {
-        /** update podcast list*/
-        void updateRecyclerView(List<Podcast> podcasts);
-        /** update podcasts with downloaded*/
-        void updateRecyclerViewWithDownloaded(List<Podcast> podcasts);
-        /** refresh recycler view*/
-        void updateRecyclerView();
-    }
-
+    private final Scheduler mIoScheduler;
+    private final Scheduler mMainThreadScheduler;
     private ProgramDataInteractor mProgramDataInteractor;
     private Context mContext;
     private Subscription mLoadedPodcastSubscription;
     private PodcastsListener mListener;
     private Subscription mDownloadedPodcastSubscription;
 
+    public interface PodcastsListener {
+        /** update podcast list*/
+        void updateRecyclerView(List<Podcast> podcasts);
+        /** update podcasts with downloaded*/
+        void updateRecyclerViewWithDownloaded(List<Podcast> podcasts);
+    }
+
     @Inject
     public PodcastListPresenter(ProgramDataInteractor programDataInteractor, Context context,
-                                DownloadManager downloadManager) {
+                                DownloadManager downloadManager, Scheduler ioScheduler,
+                                Scheduler mainScheduler) {
         mProgramDataInteractor = programDataInteractor;
         mContext = context;
         mDownloadManager = downloadManager;
+        mIoScheduler = ioScheduler;
+        mMainThreadScheduler = mainScheduler;
     }
 
     public void setPodcastsListener(PodcastsListener listener) {
@@ -60,9 +61,9 @@ public class PodcastListPresenter implements BasePresenter {
 
         mLoadedPodcastSubscription =
                 mProgramDataInteractor.loadPodcastsByProgram(program, section, refresh)
-                        .subscribeOn(Schedulers.newThread())
+                        .subscribeOn(mIoScheduler)
                         .toList()
-                        .observeOn(AndroidSchedulers.mainThread())
+                        .observeOn(mMainThreadScheduler)
                         .subscribe(new PodcastSubscriptionObserver());
     }
 
@@ -87,8 +88,8 @@ public class PodcastListPresenter implements BasePresenter {
     @Override
     public void resume() {
         mDownloadedPodcastSubscription = mProgramDataInteractor.getDownloadedPodcasts()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(mIoScheduler)
+                .observeOn(mMainThreadScheduler)
                 .subscribe(new Subscriber<List<Podcast>>() {
                     @Override
                     public void onCompleted() {

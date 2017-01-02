@@ -157,11 +157,6 @@ public class HourByHourListFragment extends BaseFragment implements
     }
 
     @Override
-    public void updateRecyclerView() {
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onClick(Podcast podcast) {
         Intent intent = new Intent(getActivity(), RadioPlayerActivity.class);
         intent.putExtra(RadioPlayerActivity.EXTRA_PODCAST, podcast);

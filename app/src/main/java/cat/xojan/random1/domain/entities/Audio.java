@@ -14,6 +14,8 @@ public class Audio implements Parcelable {
     private long length;
     private Date publicationDate;
 
+    public Audio() {}
+
     public String getId() {
         return id;
     }
@@ -24,6 +26,10 @@ public class Audio implements Parcelable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setId(String audioId) {
+        this.id = audioId;
     }
 
     protected Audio(Parcel in) {

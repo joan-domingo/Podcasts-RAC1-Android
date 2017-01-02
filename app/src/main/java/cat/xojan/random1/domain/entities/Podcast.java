@@ -65,6 +65,14 @@ public class Podcast implements Parcelable {
         return audio.getId();
     }
 
+    @VisibleForTesting
+    public void setAudioId(String audioId) {
+        if (audio == null) {
+            audio = new Audio();
+        }
+        audio.setId(audioId);
+    }
+
     protected Podcast(Parcel in) {
         audio = (Audio) in.readValue(Audio.class.getClassLoader());
         path = in.readString();

@@ -44,6 +44,10 @@ public class Program implements Parcelable {
         return active;
     }
 
+    public void setIsActive(boolean isActive) {
+        active = isActive;
+    }
+
     protected Program(Parcel in) {
         id = in.readString();
         methodSelectionId = in.readString();

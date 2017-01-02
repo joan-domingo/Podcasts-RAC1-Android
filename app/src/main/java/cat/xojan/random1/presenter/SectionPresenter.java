@@ -5,18 +5,19 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
+import rx.Scheduler;
 import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class SectionPresenter implements BasePresenter {
 
     private final ProgramDataInteractor mProgramInteractor;
+    private final Scheduler mIoScheduler;
+    private final Scheduler mMainThreadScheduler;
     private SectionListUi mListener;
 
     public interface SectionListUi {
@@ -24,8 +25,10 @@ public class SectionPresenter implements BasePresenter {
     }
 
     @Inject
-    public SectionPresenter(ProgramDataInteractor programDataInteractor) {
-        mProgramInteractor = programDataInteractor;
+    public SectionPresenter(ProgramDataInteractor interactor, Scheduler io, Scheduler main) {
+        mProgramInteractor = interactor;
+        mIoScheduler = io;
+        mMainThreadScheduler = main;
     }
 
     public void setListener(SectionListUi listener) {
@@ -34,7 +37,7 @@ public class SectionPresenter implements BasePresenter {
 
     public void loadSections(Program program) {
         mProgramInteractor.loadSections(program)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(mIoScheduler)
                 .filter(new Func1<Section, Boolean>() {
                     @Override
                     public Boolean call(Section section) {
@@ -42,7 +45,7 @@ public class SectionPresenter implements BasePresenter {
                     }
                 })
                 .toList()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(mMainThreadScheduler)
                 .subscribe(new Subscriber<List<Section>>() {
                     @Override
                     public void onCompleted() {

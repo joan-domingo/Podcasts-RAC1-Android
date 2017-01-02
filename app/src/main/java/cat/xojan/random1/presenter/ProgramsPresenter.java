@@ -6,23 +6,27 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.entities.Program;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.BasePresenter;
+import rx.Scheduler;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 public class ProgramsPresenter implements BasePresenter {
 
     private final ProgramDataInteractor mProgramDataInteractor;
+    private final Scheduler mIoScheduler;
+    private final Scheduler mMainThreadScheduler;
     private Subscription mSubscription;
 
     @Inject
-    public ProgramsPresenter(ProgramDataInteractor programDataInteractor) {
+    public ProgramsPresenter(ProgramDataInteractor programDataInteractor, Scheduler io,
+                             Scheduler main) {
         mProgramDataInteractor = programDataInteractor;
+        mIoScheduler = io;
+        mMainThreadScheduler = main;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class ProgramsPresenter implements BasePresenter {
 
     public void showPrograms(ProgramListener listener) {
         mSubscription = mProgramDataInteractor.loadPrograms()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(mIoScheduler)
                 .filter(new Func1<Program, Boolean>() {
                     @Override
                     public Boolean call(Program program) {
@@ -52,7 +56,7 @@ public class ProgramsPresenter implements BasePresenter {
                     }
                 })
                 .toList()
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(mMainThreadScheduler)
                 .subscribe(new ProgramSubscriptionObserver(listener));
     }
 
