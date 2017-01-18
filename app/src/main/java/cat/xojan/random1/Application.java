@@ -2,6 +2,7 @@ package cat.xojan.random1;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.VisibleForTesting;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -45,7 +46,8 @@ public class Application extends android.app.Application {
         }
     }
 
-    private void initCrashlytics() {
+    @VisibleForTesting
+    void initCrashlytics() {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Answers(), new Crashlytics());
         }
