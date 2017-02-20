@@ -9,13 +9,7 @@ public class PodcastData {
     @SerializedName("result")
     private List<Podcast> podcasts;
 
-    private String success;
-
     public List<Podcast> getPodcasts() {
         return podcasts;
-    }
-
-    public String getSuccess() {
-        return success;
     }
 }

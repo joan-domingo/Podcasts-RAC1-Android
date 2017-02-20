@@ -1,42 +1,47 @@
 package cat.xojan.random1.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
-import cat.xojan.random1.R;
-import cat.xojan.random1.commons.PicassoUtil;
+import cat.xojan.random1.databinding.SectionItemBinding;
+import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.viewmodel.SectionViewModel;
 
-public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.ViewHolder>  {
+public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.SectionItemViewHolder>  {
 
-    private final List<Section> mSectionList;
-    private RecyclerViewListener mListener;
+    private List<Section> mSectionList;
+    private final Program mProgram;
+    private Context mContext;
 
-    public SectionListAdapter(List<Section> sections, RecyclerViewListener listener) {
+    public SectionListAdapter(Context context, Program program) {
+        mSectionList = Collections.emptyList();
+        mContext = context;
+        mProgram = program;
+    }
+
+    public void updateData(List<Section> sections) {
         mSectionList = sections;
-        mListener = listener;
+        notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.section_list_item, parent, false));
+    public SectionItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        SectionItemBinding sectionItemBinding = SectionItemBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new SectionItemViewHolder(sectionItemBinding);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new ItemClickListener(position));
+    public void onBindViewHolder(SectionItemViewHolder holder, int position) {
         Section section = mSectionList.get(position);
-
-        holder.title.setText(section.getTitle());
-        PicassoUtil.loadImage(holder.itemView.getContext(), section.getImageUrl(),
-                holder.image, true);
+        holder.binding.setViewModel(new SectionViewModel(mContext, section, mProgram));
+        holder.binding.executePendingBindings();
     }
 
     @Override
@@ -44,36 +49,13 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
         return mSectionList.size();
     }
 
-    public void destroy() {
-        mListener = null;
-    }
+    static class SectionItemViewHolder extends RecyclerView.ViewHolder {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private SectionItemBinding binding;
 
-        TextView title;
-        ImageView image;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            image = (ImageView) itemView.findViewById(R.id.circle_image);
-        }
-    }
-
-    public interface RecyclerViewListener {
-        void onClick(Section program);
-    }
-
-    private class ItemClickListener implements View.OnClickListener {
-        private final int mPosition;
-
-        public ItemClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(mSectionList.get(mPosition));
+        SectionItemViewHolder(SectionItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

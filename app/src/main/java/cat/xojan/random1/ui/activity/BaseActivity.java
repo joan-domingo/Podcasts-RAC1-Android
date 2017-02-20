@@ -1,4 +1,4 @@
-package cat.xojan.random1.ui;
+package cat.xojan.random1.ui.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import cat.xojan.random1.Application;
+import cat.xojan.random1.R;
 import cat.xojan.random1.injection.component.AppComponent;
 import cat.xojan.random1.injection.module.BaseActivityModule;
 
@@ -37,14 +38,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /**
      * Adds a {@link Fragment} to this activity's layout.
-     *
-     * @param containerViewId The container view to where add the fragment.
-     * @param fragment The fragment to be added.
      */
-    public void addFragment(int containerViewId, Fragment fragment, String tag,
+    public void addFragment(Fragment fragment, String tag,
                             boolean addToBackSTack) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(containerViewId, fragment, tag);
+        fragmentTransaction.replace(R.id.container_fragment, fragment, tag);
         if (addToBackSTack) fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }

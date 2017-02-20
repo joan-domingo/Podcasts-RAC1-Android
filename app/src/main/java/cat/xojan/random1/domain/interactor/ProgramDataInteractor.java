@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -13,14 +14,13 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-import cat.xojan.random1.Log;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.repository.ProgramRepository;
 import rx.Observable;
-import rx.Subscriber;
 import rx.subjects.PublishSubject;
 
 public class ProgramDataInteractor {
@@ -33,12 +33,12 @@ public class ProgramDataInteractor {
     private final ProgramRepository mProgramRepo;
     private final Context mContext;
     private final PreferencesDownloadPodcastRepository mDownloadRepo;
-    private List<Program> mPrograms;
-    private List<Podcast> mPodcastsByProgram;
+    private Observable<List<Program>> mPrograms;
+    private Observable<List<Podcast>> mPodcastsByProgram;
     private Program mProgram;
-    private List<Podcast> mPodcastsBySection;
+    private Observable<List<Podcast>> mPodcastsBySection;
     private Section mSection;
-    private PublishSubject<List<Podcast>> mDownloadedPodcastsSubject = PublishSubject.create();
+    private PublishSubject<List<Podcast>> mDownloadedPodcastsSubject;
 
     @Inject
     public ProgramDataInteractor(ProgramRepository programRepository,
@@ -47,47 +47,25 @@ public class ProgramDataInteractor {
         mProgramRepo = programRepository;
         mDownloadRepo = downloadRepository;
         mContext = context;
+        mDownloadedPodcastsSubject = PublishSubject.create();
     }
 
-    public Observable<Program> loadPrograms() {
-        return Observable.create(new Observable.OnSubscribe<Program>() {
-            @Override
-            public void call(Subscriber<? super Program> subscriber) {
-                try {
-                    if (mPrograms == null) {
-                        mPrograms = mProgramRepo.getProgramList();
-                    }
-                    for (Program program : mPrograms) {
-                        subscriber.onNext(program);
-                    }
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
+    public Observable<List<Program>> loadPrograms() {
+        try {
+            if (mPrograms == null) {
+                mPrograms = mProgramRepo.getProgramListObservable();
             }
-        });
+            return mPrograms;
+        } catch (IOException e) {
+            return Observable.error(e);
+        }
     }
 
-    public Observable<Section> loadSections(final Program program) {
-        return Observable.create(new Observable.OnSubscribe<Section>() {
-            @Override
-            public void call(Subscriber<? super Section> subscriber) {
-                try {
-                    List<Section> sections = new ArrayList<>(program.getSections());
-                    sections.remove(0);
-                    for (Section section : sections) {
-                        section.setImageUrl(program.getImageUrl());
-                        subscriber.onNext(section);
-                    }
-                    subscriber.onCompleted();
-                } catch (Exception e) {
-                    subscriber.onError(e);
-                }
-            }
-        });
+    public Observable<List<Section>> loadSections(Program program) {
+        return Observable.just(program.getSections());
     }
 
-    public boolean getSectionSelected() {
+    public boolean isSectionSelected() {
         return mContext.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE)
                 .getBoolean(PREF_SECTION, false);
     }
@@ -97,47 +75,25 @@ public class ProgramDataInteractor {
                 .putBoolean(PREF_SECTION, selected).apply();
     }
 
-    public Observable<Podcast> loadPodcastsByProgram(final Program program, final Section section,
-                                            final boolean refresh) {
-        if (section != null) {
-            return Observable.create(new Observable.OnSubscribe<Podcast>() {
-                @Override
-                public void call(Subscriber<? super Podcast> subscriber) {
-                    try {
-                        if (mPodcastsBySection == null || refresh || !mSection.equals(section)) {
-                            mSection = section;
-                            mPodcastsBySection = mProgramRepo.getPodcastBySection(program.getId(),
-                                    section.getId());
-                        }
-                        for (Podcast podcast : mPodcastsBySection) {
-                            podcast.setImageUrl(program.getImageUrl());
-                            subscriber.onNext(podcast);
-                        }
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
+    public Observable<List<Podcast>> loadPodcasts(final Program program, final Section section,
+                                                  final boolean refresh) {
+        try {
+            if (section != null) {
+                if (mPodcastsBySection == null || refresh || !mSection.equals(section)) {
+                    mSection = section;
+                    mPodcastsBySection = mProgramRepo.getPodcastBySection(program.getId(),
+                            section.getId());
                 }
-            });
-        } else {
-            return Observable.create(new Observable.OnSubscribe<Podcast>() {
-                @Override
-                public void call(Subscriber<? super Podcast> subscriber) {
-                    try {
-                        if (mPodcastsByProgram == null || refresh || !mProgram.equals(program)) {
-                            mProgram = program;
-                            mPodcastsByProgram = mProgramRepo.getPodcastByProgram(program.getId());
-                        }
-                        for (Podcast podcast : mPodcastsByProgram) {
-                            podcast.setImageUrl(program.getImageUrl());
-                            subscriber.onNext(podcast);
-                        }
-                        subscriber.onCompleted();
-                    } catch (Exception e) {
-                        subscriber.onError(e);
-                    }
+                return mPodcastsBySection;
+            } else {
+                if (mPodcastsByProgram == null || refresh || !mProgram.equals(program)) {
+                    mProgram = program;
+                    mPodcastsByProgram = mProgramRepo.getPodcastByProgram(program.getId());
                 }
-            });
+                return mPodcastsByProgram;
+            }
+        } catch (IOException e) {
+            return Observable.error(e);
         }
     }
 
@@ -154,33 +110,35 @@ public class ProgramDataInteractor {
             from.delete();
             to.delete();
         }
-        refreshDownloadedPodcasts();
     }
 
     public Observable<List<Podcast>> getDownloadedPodcasts() {
+        return Observable.just(fetchDownloadedPodcasts());
+    }
+
+    public Observable<List<Podcast>> getDownloadedPodcastsUpdates() {
         return mDownloadedPodcastsSubject;
     }
 
     public void refreshDownloadedPodcasts() {
-        try {
-            Set<Podcast> podcastList = new HashSet<>();
-            Set<Podcast> downloading = mDownloadRepo.getDownloadingPodcasts();
-            Set<Podcast> downloaded = mDownloadRepo.getDownloadedPodcasts();
-            podcastList.addAll(downloading);
-            podcastList.addAll(downloaded);
+        mDownloadedPodcastsSubject.onNext(fetchDownloadedPodcasts());
+    }
 
-            Log.d(TAG, "Downloading: " + downloading.size() + ", downloaded: " + downloaded.size());
-            mDownloadedPodcastsSubject.onNext(new ArrayList<>(podcastList));
-        } catch (Exception e) {
-            mDownloadedPodcastsSubject.onError(e);
-        }
+    private List<Podcast> fetchDownloadedPodcasts() {
+        Set<Podcast> podcastList = new HashSet<>();
+        Set<Podcast> downloading = mDownloadRepo.getDownloadingPodcasts();
+        Set<Podcast> downloaded = mDownloadRepo.getDownloadedPodcasts();
+        podcastList.addAll(downloading);
+        podcastList.addAll(downloaded);
+
+        Log.d(TAG, "Downloading: " + downloading.size() + ", downloaded: " + downloaded.size());
+        return new ArrayList<>(podcastList);
     }
 
     public void deleteDownload(Podcast podcast) {
         File file = new File(podcast.getFilePath());
         if (file.delete()) {
             mDownloadRepo.deleteDownloadedPodcast(podcast);
-            refreshDownloadedPodcasts();
         }
     }
 
@@ -189,13 +147,8 @@ public class ProgramDataInteractor {
     }
 
     @VisibleForTesting
-    public void setProgramsData(List<Program> programs) {
+    public void setProgramsData(Observable<List<Program>> programs) {
         mPrograms = programs;
-    }
-
-    @VisibleForTesting
-    public List<Program> getProgramData() {
-        return mPrograms;
     }
 
     @Nullable

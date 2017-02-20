@@ -1,4 +1,6 @@
-package cat.xojan.random1;
+package cat.xojan.random1.commons;
+
+import cat.xojan.random1.BuildConfig;
 
 /** Android Log wrapper class. */
 public class Log {

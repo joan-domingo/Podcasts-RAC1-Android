@@ -1,23 +1,13 @@
 package cat.xojan.random1.presenter;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import cat.xojan.random1.domain.entities.Podcast;
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class DownloadsPresenterTest {
 
-    private ProgramDataInteractor mProgramDataInteractor;
+    /*private ProgramDataInteractor mProgramDataInteractor;
     private DownloadsPresenter mPresenter;
     private DownloadsPresenter.DownloadsUI mMockUiListener;
 
@@ -71,7 +61,7 @@ public class DownloadsPresenterTest {
         // Then the podcasts is deleted and the recycler view is updated
         verify(mProgramDataInteractor).deleteDownload(podcast);
         mMockUiListener.updateRecyclerView();
-    }
+    }*/
 
     private List<Podcast> getDummyPodcastList() {
         List<Podcast> podcasts = new ArrayList<>();

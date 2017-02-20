@@ -7,7 +7,7 @@ import javax.inject.Singleton;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.module.AppModule;
 import cat.xojan.random1.receiver.DownloadCompleteReceiver;
-import cat.xojan.random1.ui.BaseActivity;
+import cat.xojan.random1.ui.activity.BaseActivity;
 import dagger.Component;
 
 /**

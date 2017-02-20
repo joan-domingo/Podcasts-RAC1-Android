@@ -5,7 +5,7 @@ import android.content.Context;
 
 import cat.xojan.random1.injection.PerActivity;
 import cat.xojan.random1.injection.module.BaseActivityModule;
-import cat.xojan.random1.ui.BaseActivity;
+import cat.xojan.random1.ui.activity.BaseActivity;
 import dagger.Component;
 
 /**

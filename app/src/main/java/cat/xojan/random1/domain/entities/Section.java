@@ -10,10 +10,13 @@ public class Section implements Parcelable {
     private String title;
     private String mImageUrl;
     private boolean active;
+    private Type type;
 
     @VisibleForTesting
-    public Section(String id) {
+    public Section(String id, boolean isActive, Type type) {
         this.id = id;
+        this.active = isActive;
+        this.type = type;
     }
 
     public String getId() {
@@ -22,6 +25,10 @@ public class Section implements Parcelable {
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public void setImageUrl(String imageUrl) {
@@ -36,8 +43,8 @@ public class Section implements Parcelable {
         return active;
     }
 
-    public void setIsActive(boolean isActive) {
-        active = isActive;
+    public Type getType() {
+        return type;
     }
 
     protected Section(Parcel in) {
@@ -72,6 +79,12 @@ public class Section implements Parcelable {
             return new Section[size];
         }
     };
+
+    public enum Type {
+        HOUR,
+        SECTION,
+        GENERIC
+    }
 
     @Override
     public boolean equals(Object o) {

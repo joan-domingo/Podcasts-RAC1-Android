@@ -1,12 +1,16 @@
 package cat.xojan.random1.domain.entities;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 
 import java.util.Date;
 
-public class Podcast implements Parcelable {
+import cat.xojan.random1.BR;
+
+public class Podcast extends BaseObservable implements Parcelable {
 
     private Audio audio;
     private String path;
@@ -25,6 +29,7 @@ public class Podcast implements Parcelable {
         appMobileTitle = title;
     }
 
+    @Bindable
     public String getTitle() {
         return appMobileTitle;
     }
@@ -35,12 +40,15 @@ public class Podcast implements Parcelable {
 
     public void setImageUrl(String imageUrl) {
         mImageUrl = imageUrl;
+        notifyPropertyChanged(BR.imageUrl);
     }
 
+    @Bindable
     public String getImageUrl() {
         return mImageUrl;
     }
 
+    @Bindable
     public State getState() {
         return mState == null ? State.LOADED : mState;
     }
@@ -49,8 +57,9 @@ public class Podcast implements Parcelable {
         return path;
     }
 
-    public void setState(State downloading) {
-        mState = downloading;
+    public void setState(State state) {
+        mState = state;
+        notifyPropertyChanged(BR.state);
     }
 
     public String getFilePath() {

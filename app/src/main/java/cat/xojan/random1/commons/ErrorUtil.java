@@ -2,8 +2,6 @@ package cat.xojan.random1.commons;
 
 import com.crashlytics.android.Crashlytics;
 
-import cat.xojan.random1.Log;
-
 public class ErrorUtil {
 
     public static void logException(Throwable e) {

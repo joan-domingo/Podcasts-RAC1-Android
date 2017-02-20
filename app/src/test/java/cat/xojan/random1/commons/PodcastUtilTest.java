@@ -1,17 +1,13 @@
 package cat.xojan.random1.commons;
 
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import cat.xojan.random1.domain.entities.Podcast;
 
-import static org.junit.Assert.assertEquals;
-
 public class PodcastUtilTest {
 
-    @Test
+    /*@Test
     public void test_something() {
         // Given a list of loaded and downloaded podcasts
         List<Podcast> loaded = getLoadedPodcasts();
@@ -24,7 +20,7 @@ public class PodcastUtilTest {
         assertEquals(loaded.get(0).getState(),  Podcast.State.DOWNLOADED);
         assertEquals(loaded.get(1).getState(),  Podcast.State.DOWNLOADED);
         assertEquals(loaded.get(2).getState(),  Podcast.State.LOADED);
-    }
+    }*/
 
     private List<Podcast> getLoadedPodcasts() {
         List<Podcast> podcasts = new ArrayList<>();

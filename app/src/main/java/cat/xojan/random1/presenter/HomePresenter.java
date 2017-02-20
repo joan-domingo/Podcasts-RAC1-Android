@@ -13,9 +13,8 @@ import java.nio.channels.FileChannel;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import cat.xojan.random1.ui.BasePresenter;
 
-public class HomePresenter implements BasePresenter {
+public class HomePresenter {
 
     private final Context mContext;
     private final ProgramDataInteractor mProgramDataInteractor;
@@ -23,21 +22,6 @@ public class HomePresenter implements BasePresenter {
     public HomePresenter(Context context, ProgramDataInteractor programDataInteractor) {
         mContext = context;
         mProgramDataInteractor = programDataInteractor;
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void destroy() {
-
     }
 
     public void exportPodcasts() {

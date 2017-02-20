@@ -1,60 +1,70 @@
 package cat.xojan.random1.ui.adapter;
 
-import android.graphics.drawable.Animatable;
+import android.app.DownloadManager;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
-import cat.xojan.random1.R;
-import cat.xojan.random1.commons.PicassoUtil;
-import cat.xojan.random1.commons.PodcastUtil;
+import cat.xojan.random1.databinding.PodcastItemBinding;
 import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
+import cat.xojan.random1.viewmodel.PodcastViewModel;
 
-public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.ViewHolder> {
+public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter
+        .PodcastItemBindingHolder> {
 
-    private final List<Podcast> mPodcastList;
-    private RecyclerViewListener mListener;
+    private final ProgramDataInteractor mProgramDataInteractor;
+    private final DownloadManager mDownloadManager;
+    private List<Podcast> mPodcastList;
+    private Context mContext;
 
-    public PodcastListAdapter(List<Podcast> podcasts, RecyclerViewListener listener) {
+    public PodcastListAdapter(Context context, ProgramDataInteractor programDataInteractor,
+                              DownloadManager downloadManager) {
+        mPodcastList = Collections.emptyList();
+        mContext = context;
+        mProgramDataInteractor = programDataInteractor;
+        mDownloadManager = downloadManager;
+    }
+
+    public void update(List<Podcast> podcasts) {
         mPodcastList = podcasts;
-        mListener = listener;
+        notifyDataSetChanged();
     }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.podcast_list_item, parent, false));
-    }
-
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new ItemClickListener(position));
-        Podcast podcast = mPodcastList.get(position);
-
-        holder.title.setText(podcast.getTitle());
-        PicassoUtil.loadImage(holder.itemView.getContext(), podcast.getImageUrl(),
-                holder.image, true);
-
-        switch (podcast.getState()) {
-            case LOADED:
-                holder.icon.setImageResource(R.drawable.ic_arrow_down);
-                break;
-            case DOWNLOADING:
-                holder.icon.setImageResource(R.drawable.animated_arrow);
-                if (holder.icon.getDrawable() instanceof Animatable) {
-                    ((Animatable) holder.icon.getDrawable()).start();
-                }
-                break;
-            case DOWNLOADED:
-                holder.icon.setImageResource(R.drawable.ic_delete);
-                break;
+    public void updateWithDownloaded(List<Podcast> downloadedPodcasts) {
+        for (Podcast podcast : mPodcastList) {
+            podcast.setFilePath(null);
+            podcast.setState(Podcast.State.LOADED);
         }
-        holder.icon.setOnClickListener(new IconClickListener(position));
+
+        for (Podcast download : downloadedPodcasts) {
+            int index = mPodcastList.indexOf(download);
+            if (index >= 0) {
+                Podcast podcast = mPodcastList.get(index);
+                podcast.setFilePath(download.getFilePath());
+                podcast.setState(download.getState());
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public PodcastItemBindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        PodcastItemBinding podcastItemBinding = PodcastItemBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new PodcastItemBindingHolder(podcastItemBinding);
+    }
+
+    @Override
+    public void onBindViewHolder(PodcastItemBindingHolder holder, int position) {
+        Podcast podcast = mPodcastList.get(position);
+        holder.binding.setViewModel(new PodcastViewModel(mContext, podcast, mProgramDataInteractor,
+                mDownloadManager));
+        holder.binding.executePendingBindings();
     }
 
     @Override
@@ -62,73 +72,13 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter.
         return mPodcastList.size();
     }
 
-    public void destroy() {
-        mListener = null;
-    }
+    static class PodcastItemBindingHolder extends RecyclerView.ViewHolder {
 
-    public void updateDownloadedPodcasts(List<Podcast> downloadedPodcasts) {
-        PodcastUtil.updateDownloadedPodcasts(mPodcastList, downloadedPodcasts);
-        notifyDataSetChanged();
-    }
+        private PodcastItemBinding binding;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-
-        TextView title;
-        ImageView image;
-        ImageView icon;
-
-        ViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            image = (ImageView) itemView.findViewById(R.id.circle_image);
-            icon = (ImageView) itemView.findViewById(R.id.icon);
-        }
-    }
-
-    public interface RecyclerViewListener {
-        /** Podcast item was clicked */
-        void onClick(Podcast podcast);
-        /** Download icon was clicked*/
-        void download(Podcast podcast);
-        /** Delete icon was clicked*/
-        void delete(Podcast podcast);
-    }
-
-    private class ItemClickListener implements View.OnClickListener {
-        private final int mPosition;
-
-        ItemClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(mPodcastList.get(mPosition));
-        }
-    }
-
-    private class IconClickListener implements View.OnClickListener {
-        private final int mPosition;
-
-        IconClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View view) {
-            Podcast podcast = mPodcastList.get(mPosition);
-            switch (podcast.getState()) {
-                case LOADED:
-                    mListener.download(podcast);
-                    break;
-
-                case DOWNLOADING:
-                    break;
-
-                case DOWNLOADED:
-                    mListener.delete(podcast);
-                    break;
-            }
+        PodcastItemBindingHolder(PodcastItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

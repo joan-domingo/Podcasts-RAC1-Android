@@ -16,7 +16,7 @@ import android.support.v7.app.NotificationCompat;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import cat.xojan.random1.Log;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PlayerUtil;

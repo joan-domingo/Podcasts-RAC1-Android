@@ -1,42 +1,49 @@
 package cat.xojan.random1.ui.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
+import java.util.Collections;
 import java.util.List;
 
-import cat.xojan.random1.R;
-import cat.xojan.random1.commons.PicassoUtil;
+import cat.xojan.random1.databinding.ProgramItemBinding;
 import cat.xojan.random1.domain.entities.Program;
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
+import cat.xojan.random1.viewmodel.ProgramViewModel;
 
-public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.ViewHolder>  {
+public class ProgramListAdapter extends
+        RecyclerView.Adapter<ProgramListAdapter.ProgramItemBindingHolder>  {
 
-    private final List<Program> mProgramList;
-    private RecyclerViewListener mListener;
+    private final ProgramDataInteractor mProgramDataInteractor;
+    private List<Program> mProgramList;
+    private Context mContext;
 
-    public ProgramListAdapter(List<Program> programs, RecyclerViewListener listener) {
+    public ProgramListAdapter(Context context, ProgramDataInteractor programDataInteractor) {
+        mProgramList = Collections.emptyList();
+        mContext = context;
+        mProgramDataInteractor = programDataInteractor;
+    }
+
+    public void updateItems(List<Program> programs) {
         mProgramList = programs;
-        mListener = listener;
+        notifyDataSetChanged();
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.program_list_item, parent, false));
+    public ProgramItemBindingHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ProgramItemBinding programItemBinding = ProgramItemBinding.inflate(
+                LayoutInflater.from(parent.getContext()), parent, false);
+        return new ProgramItemBindingHolder(programItemBinding);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.itemView.setOnClickListener(new ItemClickListener(position));
+    public void onBindViewHolder(ProgramItemBindingHolder holder, int position) {
         Program program = mProgramList.get(position);
-
-        holder.title.setText(program.getTitle());
-        PicassoUtil.loadImage(holder.itemView.getContext(), program.getImageUrl(),
-                holder.image, false);
+        holder.binding.setViewModel(
+                new ProgramViewModel(mContext, program, mProgramDataInteractor));
+        holder.binding.executePendingBindings();
     }
 
     @Override
@@ -44,36 +51,13 @@ public class ProgramListAdapter extends RecyclerView.Adapter<ProgramListAdapter.
         return mProgramList.size();
     }
 
-    public void destroy() {
-        mListener = null;
-    }
+    static class ProgramItemBindingHolder extends RecyclerView.ViewHolder {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+        private ProgramItemBinding binding;
 
-        TextView title;
-        ImageView image;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            title = (TextView) itemView.findViewById(R.id.title);
-            image = (ImageView) itemView.findViewById(R.id.circle_image);
-        }
-    }
-
-    public interface RecyclerViewListener {
-        void onClick(Program program);
-    }
-
-    private class ItemClickListener implements View.OnClickListener {
-        private final int mPosition;
-
-        public ItemClickListener(int position) {
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View v) {
-            mListener.onClick(mProgramList.get(mPosition));
+        ProgramItemBindingHolder(ProgramItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
     }
 }

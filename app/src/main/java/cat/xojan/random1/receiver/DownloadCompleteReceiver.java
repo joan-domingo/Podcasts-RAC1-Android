@@ -11,7 +11,7 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import cat.xojan.random1.Application;
-import cat.xojan.random1.Log;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.EventUtil;
@@ -35,7 +35,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
         Cursor cursor = mDownloadManager.query(query);
 
         if (cursor != null && cursor.moveToFirst()) {
-            // get status of the download
             int statusIndex = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
             int status = cursor.getInt(statusIndex);
 
@@ -59,7 +58,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     break;
 
                 case DownloadManager.STATUS_FAILED:
-                    // get fail reason
                     int reasonIndex = cursor.getColumnIndex(DownloadManager.COLUMN_REASON);
                     int reason = cursor.getInt(reasonIndex);
                     String reasonText = null;
@@ -98,15 +96,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     Toast.makeText(context,
                             context.getString(R.string.download_failed),
                             Toast.LENGTH_SHORT).show();
-                    mProgramDataInteractor.refreshDownloadedPodcasts();
                     break;
             }
             cursor.close();
         } else {
             Toast.makeText(context, context.getString(R.string.download_cancelled),
                     Toast.LENGTH_SHORT).show();
-            mProgramDataInteractor.refreshDownloadedPodcasts();
         }
+        mProgramDataInteractor.refreshDownloadedPodcasts();
     }
 
     private void initInjector(Context context) {

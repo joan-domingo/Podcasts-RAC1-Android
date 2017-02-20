@@ -21,14 +21,13 @@ import cat.xojan.random1.injection.component.DaggerHomeComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.injection.module.HomeModule;
 import cat.xojan.random1.presenter.HomePresenter;
-import cat.xojan.random1.ui.BaseActivity;
-import cat.xojan.random1.ui.BaseFragment;
+import cat.xojan.random1.ui.fragment.BaseFragment;
 import cat.xojan.random1.ui.adapter.HomePagerAdapter;
 import cat.xojan.random1.ui.fragment.DownloadsFragment;
 import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
-import cat.xojan.random1.ui.fragment.SectionListFragment;
+import cat.xojan.random1.ui.fragment.SectionFragment;
 
 public class HomeActivity extends BaseActivity implements HasComponent {
 
@@ -129,7 +128,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             Fragment fragment = getFragment(HourByHourListFragment.TAG);
-            if (fragment == null) fragment = getFragment(SectionListFragment.TAG);
+            if (fragment == null) fragment = getFragment(SectionFragment.TAG);
 
             if (fragment != null && getSupportFragmentManager()
                     .findFragmentByTag(PodcastListFragment.TAG) == null) {

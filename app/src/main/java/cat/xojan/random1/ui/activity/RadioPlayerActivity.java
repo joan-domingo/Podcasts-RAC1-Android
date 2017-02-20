@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.view.View;
@@ -12,18 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import cat.xojan.random1.Log;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.commons.PicassoUtil;
 import cat.xojan.random1.commons.PlayerUtil;
+import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
 import cat.xojan.random1.injection.module.RadioPlayerModule;
 import cat.xojan.random1.service.RadioPlayerService;
-import cat.xojan.random1.ui.BaseActivity;
-import cat.xojan.random1.ui.view.CroppedImageView;
 
 public class RadioPlayerActivity extends BaseActivity implements RadioPlayerService.Listener {
 
@@ -36,8 +35,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
     private ProgressBar mBufferBar;
     private SeekBar mSeekBar;
-    private CroppedImageView mImage;
-    private TextView mTitle;
     private TextView mTimer;
     private TextView mDuration;
     private ImageView mPlayer;
@@ -96,7 +93,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         }
 
         Log.d(TAG, "onCreate");
-        setContentView(R.layout.radio_player_activity);
+        RadioPlayerActivityBinding binding =
+                DataBindingUtil.setContentView(this, R.layout.radio_player_activity);
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
         if (podcast == null) {
@@ -104,8 +102,9 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             ", duration: " + mPlayerDuration + ", drawable: " + mPlayerButtonDrawable);
             finish();
         } else {
+            binding.setPodcast(podcast);
             findView();
-            initView(podcast);
+            initView();
 
             // Bind to the service
             Log.d(TAG, "BindService");
@@ -118,8 +117,6 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private void findView() {
         mBufferBar = (ProgressBar) findViewById(R.id.buffer_bar);
         mSeekBar = (SeekBar) findViewById(R.id.seek_bar);
-        mImage = (CroppedImageView) findViewById(R.id.image);
-        mTitle = (TextView) findViewById(R.id.title);
         mTimer = (TextView) findViewById(R.id.timer);
         mDuration = (TextView) findViewById(R.id.duration);
         mPlayer = (ImageView) findViewById(R.id.player);
@@ -159,15 +156,12 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         super.onBackPressed();
     }
 
-    private void initView(Podcast podcast) {
+    private void initView() {
         mBufferBar.setMax(100);
         mBufferBar.setProgress(0);
         mSeekBar.setProgress(0);
         mSeekBar.setMax(100);
         mSeekBar.setOnSeekBarChangeListener(new SeekBarChangeListener());
-
-        mTitle.setText(podcast.getTitle());
-        PicassoUtil.loadImage(this, podcast.getImageUrl(), mImage, false);
 
         updateViewAfterRotation();
     }

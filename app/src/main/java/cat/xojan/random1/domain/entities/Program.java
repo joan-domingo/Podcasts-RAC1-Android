@@ -20,8 +20,9 @@ public class Program implements Parcelable {
     private boolean active;
 
     @VisibleForTesting
-    public Program(String id) {
+    public Program(String id, boolean active) {
         this.id = id;
+        this.active = active;
     }
 
     public String getId() {
@@ -42,10 +43,6 @@ public class Program implements Parcelable {
 
     public boolean isActive() {
         return active;
-    }
-
-    public void setIsActive(boolean isActive) {
-        active = isActive;
     }
 
     protected Program(Parcel in) {
@@ -121,7 +118,17 @@ public class Program implements Parcelable {
     }
 
     @VisibleForTesting
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @VisibleForTesting
     public void setSections(List<Section> sections) {
         this.sections = sections;
+    }
+
+    @VisibleForTesting
+    public void setIsActive(boolean isActive) {
+        active = isActive;
     }
 }

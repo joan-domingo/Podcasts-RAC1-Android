@@ -10,6 +10,7 @@ import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.injection.component.AppComponent;
 import cat.xojan.random1.injection.component.DaggerAppComponent;
 import cat.xojan.random1.injection.module.AppModule;
