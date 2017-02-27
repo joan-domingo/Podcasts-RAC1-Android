@@ -1,6 +1,5 @@
 package cat.xojan.random1.viewmodel;
 
-import android.content.Context;
 import android.view.View;
 
 import cat.xojan.random1.domain.entities.Program;
@@ -10,23 +9,21 @@ import cat.xojan.random1.ui.fragment.PodcastListFragment;
 
 public class SectionViewModel {
 
-    private final Context mContext;
+    private final BaseActivity mActivity;
     private final Section mSection;
     private final Program mProgram;
 
-    public SectionViewModel(Context context, Section section, Program program) {
-        mContext = context;
+    public SectionViewModel(BaseActivity activity, Section section, Program program) {
+        mActivity = activity;
         mSection = section;
         mProgram = program;
     }
 
-    //TODO test
     public View.OnClickListener onClickSection() {
         return view -> {
             PodcastListFragment podcastListFragment =
                     PodcastListFragment.newInstance(mSection, mProgram);
-            ((BaseActivity) mContext).addFragment(podcastListFragment,
-                    PodcastListFragment.TAG, true);
+            mActivity.addFragment(podcastListFragment, PodcastListFragment.TAG, true);
         };
     }
 

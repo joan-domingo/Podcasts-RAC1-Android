@@ -1,6 +1,5 @@
 package cat.xojan.random1.ui.fragment;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +26,6 @@ public class DownloadsFragment extends BaseFragment {
 
     @Inject PodcastsViewModel mPodcastsViewModel;
     @Inject ProgramDataInteractor mProgramDataInteractor;
-    @Inject DownloadManager mDownloadManager;
 
     private CompositeSubscription mSubscription = new CompositeSubscription();
     private PodcastListAdapter mAdapter;
@@ -44,7 +42,7 @@ public class DownloadsFragment extends BaseFragment {
         mBinding.swiperefresh.setEnabled(false);
         mBinding.emptyList.setText(getString(R.string.no_downloaded_podcasts));
 
-        mAdapter = new PodcastListAdapter(getContext(), mProgramDataInteractor, mDownloadManager);
+        mAdapter = new PodcastListAdapter(getContext(), mProgramDataInteractor);
         mBinding.recyclerView.setAdapter(mAdapter);
 
         return mBinding.getRoot();

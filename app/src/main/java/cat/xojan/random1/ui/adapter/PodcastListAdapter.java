@@ -1,6 +1,5 @@
 package cat.xojan.random1.ui.adapter;
 
-import android.app.DownloadManager;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,16 +17,13 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter
         .PodcastItemBindingHolder> {
 
     private final ProgramDataInteractor mProgramDataInteractor;
-    private final DownloadManager mDownloadManager;
     private List<Podcast> mPodcastList;
     private Context mContext;
 
-    public PodcastListAdapter(Context context, ProgramDataInteractor programDataInteractor,
-                              DownloadManager downloadManager) {
+    public PodcastListAdapter(Context context, ProgramDataInteractor programDataInteractor) {
         mPodcastList = Collections.emptyList();
         mContext = context;
         mProgramDataInteractor = programDataInteractor;
-        mDownloadManager = downloadManager;
     }
 
     public void update(List<Podcast> podcasts) {
@@ -62,8 +58,7 @@ public class PodcastListAdapter extends RecyclerView.Adapter<PodcastListAdapter
     @Override
     public void onBindViewHolder(PodcastItemBindingHolder holder, int position) {
         Podcast podcast = mPodcastList.get(position);
-        holder.binding.setViewModel(new PodcastViewModel(mContext, podcast, mProgramDataInteractor,
-                mDownloadManager));
+        holder.binding.setViewModel(new PodcastViewModel(mContext, podcast, mProgramDataInteractor));
         holder.binding.executePendingBindings();
     }
 

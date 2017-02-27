@@ -13,9 +13,15 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import cat.xojan.random1.commons.Log;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.ContentViewEvent;
+
+import javax.inject.Inject;
+
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.ErrorUtil;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
 import cat.xojan.random1.domain.entities.Podcast;
@@ -32,6 +38,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private static final String KEY_BUTTON_DRAWABLE = "key_button_drawable";
     private static final String KEY_PLAYER_STARTED = "key_player_started";
     private static final String KEY_PLAYER_DURATION = "key_player_duration";
+
+    @Inject Answers mAnswers;
 
     private ProgressBar mBufferBar;
     private SeekBar mSeekBar;
@@ -105,6 +113,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             binding.setPodcast(podcast);
             findView();
             initView();
+            logEvent(podcast);
 
             // Bind to the service
             Log.d(TAG, "BindService");
@@ -211,6 +220,13 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     public void updateButton(int drawable) {
         mPlayerButtonDrawable = R.drawable.ic_play_arrow;
         mPlayer.setImageResource(mPlayerButtonDrawable);
+    }
+
+    private void logEvent(Podcast podcast) {
+        if (!BuildConfig.DEBUG) {
+            Answers.getInstance().logContentView(new ContentViewEvent()
+                    .putContentName(podcast.getTitle()));
+        }
     }
 
     private void updateDuration(int duration) {

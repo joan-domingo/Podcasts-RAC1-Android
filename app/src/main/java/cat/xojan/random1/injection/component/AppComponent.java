@@ -2,6 +2,8 @@ package cat.xojan.random1.injection.component;
 
 import android.app.DownloadManager;
 
+import com.crashlytics.android.answers.Answers;
+
 import javax.inject.Singleton;
 
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
@@ -22,4 +24,5 @@ public interface AppComponent {
     //Exposed to sub-graphs.
     DownloadManager downloadManager();
     ProgramDataInteractor programDataInteractor();
+    Answers answers();
 }

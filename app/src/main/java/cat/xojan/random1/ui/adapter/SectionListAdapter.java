@@ -11,6 +11,7 @@ import java.util.List;
 import cat.xojan.random1.databinding.SectionItemBinding;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.viewmodel.SectionViewModel;
 
 public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.SectionItemViewHolder>  {
@@ -40,7 +41,7 @@ public class SectionListAdapter extends RecyclerView.Adapter<SectionListAdapter.
     @Override
     public void onBindViewHolder(SectionItemViewHolder holder, int position) {
         Section section = mSectionList.get(position);
-        holder.binding.setViewModel(new SectionViewModel(mContext, section, mProgram));
+        holder.binding.setViewModel(new SectionViewModel((BaseActivity) mContext, section, mProgram));
         holder.binding.executePendingBindings();
     }
 

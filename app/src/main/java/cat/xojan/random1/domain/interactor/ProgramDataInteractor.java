@@ -1,6 +1,8 @@
 package cat.xojan.random1.domain.interactor;
 
+import android.app.DownloadManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -33,6 +35,7 @@ public class ProgramDataInteractor {
     private final ProgramRepository mProgramRepo;
     private final Context mContext;
     private final PreferencesDownloadPodcastRepository mDownloadRepo;
+    private final DownloadManager mDownloadManager;
     private Observable<List<Program>> mPrograms;
     private Observable<List<Podcast>> mPodcastsByProgram;
     private Program mProgram;
@@ -43,11 +46,13 @@ public class ProgramDataInteractor {
     @Inject
     public ProgramDataInteractor(ProgramRepository programRepository,
                                  PreferencesDownloadPodcastRepository downloadRepository,
-                                 Context context) {
+                                 Context context,
+                                 DownloadManager downloadManager) {
         mProgramRepo = programRepository;
         mDownloadRepo = downloadRepository;
         mContext = context;
         mDownloadedPodcastsSubject = PublishSubject.create();
+        mDownloadManager = downloadManager;
     }
 
     public Observable<List<Program>> loadPrograms() {
@@ -140,6 +145,18 @@ public class ProgramDataInteractor {
         if (file.delete()) {
             mDownloadRepo.deleteDownloadedPodcast(podcast);
         }
+    }
+
+    public void download(Podcast podcast) {
+        Uri uri = Uri.parse(podcast.getPath());
+        DownloadManager.Request request = new DownloadManager.Request(uri)
+                .setTitle(podcast.getTitle())
+                .setDestinationInExternalFilesDir(mContext, Environment.DIRECTORY_DOWNLOADS,
+                        podcast.getAudioId() + ProgramDataInteractor.EXTENSION)
+                .setVisibleInDownloadsUi(true);
+
+        mDownloadManager.enqueue(request);
+        addDownloadingPodcast(podcast);
     }
 
     public boolean addDownloadingPodcast(Podcast podcast) {

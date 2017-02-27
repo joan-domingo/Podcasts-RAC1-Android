@@ -1,6 +1,5 @@
 package cat.xojan.random1.ui.fragment;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -40,7 +39,6 @@ public class PodcastListFragment extends BaseFragment {
 
     @Inject PodcastsViewModel mPodcastsViewModel;
     @Inject ProgramDataInteractor mProgramDataInteractor;
-    @Inject DownloadManager mDownloadManager;
 
     private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
@@ -68,7 +66,7 @@ public class PodcastListFragment extends BaseFragment {
         mBinding.swiperefresh.setColorSchemeResources(R.color.colorAccent);
         mBinding.swiperefresh.setOnRefreshListener(() -> showPodcasts(true));
         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new PodcastListAdapter(getActivity(), mProgramDataInteractor, mDownloadManager);
+        mAdapter = new PodcastListAdapter(getActivity(), mProgramDataInteractor);
         mBinding.recyclerView.setAdapter(mAdapter);
 
         return mBinding.getRoot();

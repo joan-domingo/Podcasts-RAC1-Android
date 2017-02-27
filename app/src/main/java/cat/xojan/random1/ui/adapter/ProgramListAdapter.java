@@ -11,6 +11,7 @@ import java.util.List;
 import cat.xojan.random1.databinding.ProgramItemBinding;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
+import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.viewmodel.ProgramViewModel;
 
 public class ProgramListAdapter extends
@@ -42,7 +43,7 @@ public class ProgramListAdapter extends
     public void onBindViewHolder(ProgramItemBindingHolder holder, int position) {
         Program program = mProgramList.get(position);
         holder.binding.setViewModel(
-                new ProgramViewModel(mContext, program, mProgramDataInteractor));
+                new ProgramViewModel((BaseActivity) mContext, program, mProgramDataInteractor));
         holder.binding.executePendingBindings();
     }
 

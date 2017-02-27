@@ -3,6 +3,8 @@ package cat.xojan.random1.injection.module;
 import android.app.DownloadManager;
 import android.content.Context;
 
+import com.crashlytics.android.answers.Answers;
+
 import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
@@ -58,8 +60,15 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    ProgramDataInteractor provideProgramDataInteractor(Rac1RetrofitService service) {
+    ProgramDataInteractor provideProgramDataInteractor(Rac1RetrofitService service,
+                                                       DownloadManager downloadManager) {
         return new ProgramDataInteractor(new RemoteProgramRepository(service),
-                new PreferencesDownloadPodcastRepository(mApplication), mApplication);
+                new PreferencesDownloadPodcastRepository(mApplication),
+                mApplication, downloadManager);
+    }
+
+    @Provides @Singleton
+    Answers provideFabricEventLogging() {
+        return Answers.getInstance();
     }
 }

@@ -14,6 +14,7 @@ import rx.observers.TestSubscriber;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SectionsViewModelTest {
@@ -37,6 +38,12 @@ public class SectionsViewModelTest {
         mViewModel.loadSections(program).subscribe(testSubscriber);
 
         testSubscriber.assertValue(getSectionsResult());
+    }
+
+    @Test
+    public void set_selected_mode() {
+        mViewModel.selectedSection(true);
+        verify(mProgramDataInteractor).setSectionSelected(true);
     }
 
     private List<Section> getSections() {

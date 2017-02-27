@@ -8,11 +8,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cat.xojan.random1.domain.entities.Podcast;
+import cat.xojan.random1.domain.entities.PodcastData;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.ProgramData;
 import rx.Observable;
 import rx.observers.TestSubscriber;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,12 +31,30 @@ public class RemoteProgramRepositoryTest {
     }
 
     @Test
-    public void get_program_list_successfully() throws IOException {
+    public void get_program_list() throws IOException {
         when(mService.getProgramData()).thenReturn(Observable.just(getProgramData()));
         TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
 
         mRemoteRepository.getProgramListObservable().subscribe(testSubscriber);
         testSubscriber.assertValue(getProgramList());
+    }
+
+    @Test
+    public void get_podcasts_list_by_program() throws IOException {
+        when(mService.getPodcastData(anyString())).thenReturn(Observable.just(getPodcastData()));
+        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+
+        mRemoteRepository.getPodcastByProgram("programId").subscribe(testSubscriber);
+        testSubscriber.assertValue(getPodcastList());
+    }
+
+    @Test
+    public void get_podcasts_list_by_section() throws IOException {
+        when(mService.getPodcastData(anyString(), anyString())).thenReturn(Observable.just(getPodcastData()));
+        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+
+        mRemoteRepository.getPodcastBySection("programId", "sectionId").subscribe(testSubscriber);
+        testSubscriber.assertValue(getPodcastList());
     }
 
     private ProgramData getProgramData() {
@@ -48,6 +69,20 @@ public class RemoteProgramRepositoryTest {
         programs.add(new Program("program2", true));
         programs.add(new Program("program3", true));
         return programs;
+    }
+
+    private PodcastData getPodcastData() {
+        PodcastData podcastData = new PodcastData();
+        podcastData.setPodcasts(getPodcastList());
+        return podcastData;
+    }
+
+    private List<Podcast> getPodcastList() {
+        List<Podcast> podcasts = new ArrayList<>();
+        podcasts.add(new Podcast("path1", "program1", "title1"));
+        podcasts.add(new Podcast("path2", "program1", "title2"));
+        podcasts.add(new Podcast("path3", "program1", "title3"));
+        return podcasts;
     }
 }
 

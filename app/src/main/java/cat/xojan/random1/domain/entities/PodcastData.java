@@ -12,4 +12,8 @@ public class PodcastData {
     public List<Podcast> getPodcasts() {
         return podcasts;
     }
+
+    public void setPodcasts(List<Podcast> podcasts) {
+        this.podcasts = podcasts;
+    }
 }
