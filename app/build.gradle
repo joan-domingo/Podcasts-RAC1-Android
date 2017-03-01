@@ -14,7 +14,7 @@ android {
         versionCode 19
         versionName "2.0.0"
         vectorDrawables.useSupportLibrary true
-        //jackOptions.enabled true : Data Binding does not support Jack builds yet, instead using retrolambda
+        //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
     }
 
     buildTypes {
@@ -75,7 +75,7 @@ dependencies {
 
     //Dagger 2
     compile 'com.google.dagger:dagger:2.9'
-    compile 'com.google.dagger:dagger-compiler:2.9'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
 
     //JUnit
     testCompile 'junit:junit:4.12'
@@ -102,10 +102,4 @@ dependencies {
 
     //Rx
     compile 'io.reactivex:rxandroid:1.2.1'
-}
-
-configurations.all {
-    resolutionStrategy {
-        force 'com.google.guava:guava:20.0'
-    }
 }

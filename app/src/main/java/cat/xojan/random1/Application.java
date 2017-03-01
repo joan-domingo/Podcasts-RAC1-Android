@@ -2,7 +2,6 @@ package cat.xojan.random1;
 
 import android.content.Context;
 import android.os.Environment;
-import android.support.annotation.VisibleForTesting;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -19,7 +18,7 @@ import io.fabric.sdk.android.Fabric;
 public class Application extends android.app.Application {
 
     private static final String TAG = Application.class.getSimpleName();
-    private AppComponent mAppComponent;
+    protected AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
@@ -82,10 +81,5 @@ public class Application extends android.app.Application {
                 Log.d(TAG, "delete downloading podcast");
             }
         }
-    }
-
-    @VisibleForTesting
-    public void setTestComponent(AppComponent testingComponent) {
-        mAppComponent = testingComponent;
     }
 }

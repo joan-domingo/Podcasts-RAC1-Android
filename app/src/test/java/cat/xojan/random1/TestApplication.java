@@ -1,23 +1,14 @@
 package cat.xojan.random1;
 
-import cat.xojan.random1.injection.AppTestComponent;
-import cat.xojan.random1.injection.AppTestModule;
-import cat.xojan.random1.injection.component.AppComponent;
-import cat.xojan.random1.injection.DaggerAppTestComponent;
+import cat.xojan.random1.injection.component.DaggerAppComponent;
+import cat.xojan.random1.injection.module.AppTestModule;
 
 public class TestApplication extends Application {
 
-    private AppTestComponent mAppTestComponent;
-
     @Override
     public void onCreate() {
-        mAppTestComponent = DaggerAppTestComponent.builder()
-                .appTestModule(new AppTestModule(this))
+        mAppComponent = DaggerAppComponent.builder()
+                .appModule(new AppTestModule(this))
                 .build();
-    }
-
-    @Override
-    public AppComponent getAppComponent() {
-        return mAppTestComponent;
     }
 }
