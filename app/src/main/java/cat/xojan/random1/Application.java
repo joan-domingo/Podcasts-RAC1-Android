@@ -19,7 +19,7 @@ import io.fabric.sdk.android.Fabric;
 public class Application extends android.app.Application {
 
     private static final String TAG = Application.class.getSimpleName();
-    private AppComponent mComponent;
+    private AppComponent mAppComponent;
 
     @Override
     public void onCreate() {
@@ -32,11 +32,11 @@ public class Application extends android.app.Application {
     }
 
     public AppComponent getAppComponent() {
-        return mComponent;
+        return mAppComponent;
     }
 
     private void initInjector() {
-        mComponent = DaggerAppComponent.builder()
+        mAppComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
                 .build();
     }
@@ -47,8 +47,7 @@ public class Application extends android.app.Application {
         }
     }
 
-    @VisibleForTesting
-    void initCrashlytics() {
+    private void initCrashlytics() {
         if (!BuildConfig.DEBUG) {
             Fabric.with(this, new Answers(), new Crashlytics());
         }
@@ -83,5 +82,10 @@ public class Application extends android.app.Application {
                 Log.d(TAG, "delete downloading podcast");
             }
         }
+    }
+
+    @VisibleForTesting
+    public void setTestComponent(AppComponent testingComponent) {
+        mAppComponent = testingComponent;
     }
 }

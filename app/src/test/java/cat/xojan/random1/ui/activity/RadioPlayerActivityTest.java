@@ -24,6 +24,7 @@ public class RadioPlayerActivityTest {
 
     @Test
     public void test_something() {
+
         assertNotNull(mRadioPlayerActivity);
     }
 }

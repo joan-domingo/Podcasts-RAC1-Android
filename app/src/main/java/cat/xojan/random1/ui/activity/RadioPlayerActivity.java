@@ -224,7 +224,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
     private void logEvent(Podcast podcast) {
         if (!BuildConfig.DEBUG) {
-            Answers.getInstance().logContentView(new ContentViewEvent()
+            mAnswers.logContentView(new ContentViewEvent()
                     .putContentName(podcast.getTitle()));
         }
     }
