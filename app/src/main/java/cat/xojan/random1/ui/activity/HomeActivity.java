@@ -38,6 +38,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     private HomeComponent mComponent;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
+    HomePagerAdapter mFragmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +112,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     }
 
     private void initView() {
-        HomePagerAdapter mFragmentAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
+        mFragmentAdapter = new HomePagerAdapter(getSupportFragmentManager(), this);
         mFragmentAdapter.addFragment(new ProgramFragment());
         mFragmentAdapter.addFragment(new DownloadsFragment());
 

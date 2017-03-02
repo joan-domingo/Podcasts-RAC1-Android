@@ -18,7 +18,6 @@ import java.io.IOException;
 
 import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.ui.activity.RadioPlayerActivity;
@@ -213,7 +212,7 @@ public class RadioPlayerService extends Service implements AudioManager.OnAudioF
             Log.d(TAG, "prepareAsync()");
 
         } catch (IOException e) {
-            ErrorUtil.logException(e);
+            if (mListener != null) mListener.logException(e);
         }
     }
 
@@ -287,12 +286,17 @@ public class RadioPlayerService extends Service implements AudioManager.OnAudioF
         void updateBufferProgress(int percent);
 
         void updateButton(int drawable);
+
+        void logException(String msg);
+
+        void logException(Throwable throwable);
     }
 
     private class MediaPlayerErrorListener implements MediaPlayer.OnErrorListener {
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
-            ErrorUtil.logException("Media player error listener: " + what + ", " + extra);
+            if (mListener != null) mListener
+                    .logException("Media player error listener: " + what + ", " + extra);
             return false;
         }
     }

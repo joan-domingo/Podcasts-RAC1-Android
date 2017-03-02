@@ -11,10 +11,10 @@ import android.widget.Toast;
 import javax.inject.Inject;
 
 import cat.xojan.random1.Application;
-import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.ErrorUtil;
-import cat.xojan.random1.commons.EventUtil;
+import cat.xojan.random1.commons.Log;
+import cat.xojan.random1.domain.entities.CrashReporter;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 
 public class DownloadCompleteReceiver extends BroadcastReceiver {
@@ -23,6 +23,8 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
     @Inject ProgramDataInteractor mProgramDataInteractor;
     @Inject DownloadManager mDownloadManager;
+    @Inject EventLogger mEventLogger;
+    @Inject CrashReporter mCrashReporter;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -53,7 +55,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     String audioId = uri.split(Environment.DIRECTORY_DOWNLOADS + "/")[1]
                             .replace(ProgramDataInteractor.EXTENSION, "");
 
-                    EventUtil.logDownloadedPodcast(title);
+                    mEventLogger.logDownloadedPodcast(title);
                     mProgramDataInteractor.addDownload(audioId);
                     break;
 
@@ -92,7 +94,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             break;
                     }
 
-                    ErrorUtil.logException("Download failed: " + reason + " " + reasonText);
+                    mCrashReporter.logException("Download failed: " + reason + " " + reasonText);
                     Toast.makeText(context,
                             context.getString(R.string.download_failed),
                             Toast.LENGTH_SHORT).show();

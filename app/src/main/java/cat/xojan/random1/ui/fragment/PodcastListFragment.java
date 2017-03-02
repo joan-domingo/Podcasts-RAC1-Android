@@ -17,8 +17,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
+import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
@@ -39,6 +39,7 @@ public class PodcastListFragment extends BaseFragment {
 
     @Inject PodcastsViewModel mPodcastsViewModel;
     @Inject ProgramDataInteractor mProgramDataInteractor;
+    @Inject CrashReporter mCrashReporter;
 
     private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
@@ -138,7 +139,7 @@ public class PodcastListFragment extends BaseFragment {
     private void handleError(Throwable throwable) {
         mBinding.swiperefresh.setRefreshing(false);
         mBinding.emptyList.setVisibility(View.VISIBLE);
-        ErrorUtil.logException(throwable);
+        mCrashReporter.logException(throwable);
     }
 
     private void showBackArrow() {

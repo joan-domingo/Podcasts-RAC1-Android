@@ -2,10 +2,10 @@ package cat.xojan.random1.injection.component;
 
 import android.app.DownloadManager;
 
-import com.crashlytics.android.answers.Answers;
-
 import javax.inject.Singleton;
 
+import cat.xojan.random1.domain.entities.CrashReporter;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.module.AppModule;
 import cat.xojan.random1.receiver.DownloadCompleteReceiver;
@@ -23,5 +23,6 @@ public interface AppComponent {
 
     DownloadManager downloadManager();
     ProgramDataInteractor programDataInteractor();
-    Answers answers();
+    EventLogger eventLogger();
+    CrashReporter crashReporter();
 }

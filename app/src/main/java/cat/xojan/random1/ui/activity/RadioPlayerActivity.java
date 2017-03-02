@@ -13,17 +13,14 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
-
 import javax.inject.Inject;
 
-import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
+import cat.xojan.random1.domain.entities.CrashReporter;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
@@ -39,7 +36,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private static final String KEY_PLAYER_STARTED = "key_player_started";
     private static final String KEY_PLAYER_DURATION = "key_player_duration";
 
-    @Inject Answers mAnswers;
+    @Inject EventLogger mEventLogger;
+    @Inject CrashReporter mCrashReporter;
 
     private ProgressBar mBufferBar;
     private SeekBar mSeekBar;
@@ -106,14 +104,14 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
         if (podcast == null) {
-            ErrorUtil.logException("Podcast cannot be null. Started: " + mPlayerStarted +
-            ", duration: " + mPlayerDuration + ", drawable: " + mPlayerButtonDrawable);
+            mCrashReporter.logException("Podcast cannot be null. Started: " + mPlayerStarted +
+                    ", duration: " + mPlayerDuration + ", drawable: " + mPlayerButtonDrawable);
             finish();
         } else {
             binding.setPodcast(podcast);
             findView();
             initView();
-            logEvent(podcast);
+            mEventLogger.logPlayedPodcast(podcast);
 
             // Bind to the service
             Log.d(TAG, "BindService");
@@ -222,11 +220,14 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mPlayer.setImageResource(mPlayerButtonDrawable);
     }
 
-    private void logEvent(Podcast podcast) {
-        if (!BuildConfig.DEBUG) {
-            mAnswers.logContentView(new ContentViewEvent()
-                    .putContentName(podcast.getTitle()));
-        }
+    @Override
+    public void logException(String msg) {
+        mCrashReporter.logException(msg);
+    }
+
+    @Override
+    public void logException(Throwable throwable) {
+        mCrashReporter.logException(throwable);
     }
 
     private void updateDuration(int duration) {

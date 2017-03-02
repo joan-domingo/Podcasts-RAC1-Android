@@ -3,14 +3,18 @@ package cat.xojan.random1.injection.module;
 import android.app.DownloadManager;
 import android.content.Context;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 
 import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
 import cat.xojan.random1.data.Rac1RetrofitService;
 import cat.xojan.random1.data.RemoteProgramRepository;
+import cat.xojan.random1.domain.entities.CrashReporter;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import dagger.Module;
 import dagger.Provides;
@@ -20,10 +24,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A module for Android-specific dependencies which require a {@link Context} or
- * {@link android.app.Application} to create.
- */
 @Module
 public class AppModule {
 
@@ -68,7 +68,14 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    Answers provideFabricEventLogging() {
-        return Answers.getInstance();
+    EventLogger provideEventLogger() {
+        if (BuildConfig.DEBUG) return new EventLogger();
+        return new EventLogger(Answers.getInstance());
+    }
+
+    @Provides @Singleton
+    CrashReporter provideCrashReporter() {
+        if (BuildConfig.DEBUG) return new CrashReporter();
+        return new CrashReporter(Crashlytics.getInstance());
     }
 }

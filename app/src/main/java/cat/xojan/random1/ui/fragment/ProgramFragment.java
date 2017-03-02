@@ -15,8 +15,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.ErrorUtil;
 import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
+import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
@@ -30,6 +30,7 @@ public class ProgramFragment extends BaseFragment {
 
     @Inject ProgramsViewModel mProgramsViewModel;
     @Inject ProgramDataInteractor mProgramDataInteractor;
+    @Inject CrashReporter mCrashReporter;
 
     private Subscription mSubscription;
     private RecyclerViewFragmentBinding mBinding;
@@ -88,7 +89,7 @@ public class ProgramFragment extends BaseFragment {
     }
 
     private void handleError(Throwable e) {
-        ErrorUtil.logException(e);
+        mCrashReporter.logException(e);
         mBinding.swiperefresh.setRefreshing(false);
         mBinding.emptyList.setVisibility(View.VISIBLE);
     }
