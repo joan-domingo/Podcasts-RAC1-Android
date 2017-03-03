@@ -77,9 +77,7 @@ public class HourByHourListFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
-        showBackArrow(true);
         loadPodcasts(false);
-        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getTitle());
     }
 
     @Override
@@ -111,6 +109,8 @@ public class HourByHourListFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateViewWithDownloaded));
+        showBackArrow(true);
+        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getTitle());
     }
 
     @Override

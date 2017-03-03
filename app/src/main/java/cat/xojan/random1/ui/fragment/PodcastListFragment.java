@@ -99,17 +99,19 @@ public class PodcastListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        showBackArrow();
         mSubscription.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateViewWithDownloaded));
+        getActivity().setTitle(((Section) getArguments().get(ARG_SECTION)).getTitle());
+        showBackArrow();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         mSubscription.clear();
+        getActivity().setTitle(getString(R.string.app_name));
     }
 
     private void showPodcasts(final boolean refresh) {
