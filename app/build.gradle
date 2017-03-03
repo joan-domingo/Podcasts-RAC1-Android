@@ -11,7 +11,7 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 19
+        versionCode 20
         versionName "2.0.0"
         vectorDrawables.useSupportLibrary true
         //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
@@ -69,7 +69,6 @@ dependencies {
 
     //Crashlytics
     compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
-        exclude module:'beta'
         transitive = true;
     }
 
