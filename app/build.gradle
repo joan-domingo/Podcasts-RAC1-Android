@@ -11,8 +11,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 20
-        versionName "2.0.0"
+        versionCode 21
+        versionName "2.0.1"
         vectorDrawables.useSupportLibrary true
         //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
     }
