@@ -9,10 +9,10 @@ android {
 
     defaultConfig {
         applicationId "cat.xojan.random1"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 25
-        versionCode 21
-        versionName "2.0.1"
+        versionCode 22
+        versionName "2.0.2"
         vectorDrawables.useSupportLibrary true
         //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
     }
@@ -62,6 +62,7 @@ repositories {
     jcenter()
     maven {url "https://clojars.org/repo/"}
     maven { url 'https://maven.fabric.io/public' }
+    maven { url  "http://dl.bintray.com/xojan/maven" }
 }
 
 dependencies {
@@ -70,7 +71,7 @@ dependencies {
     compile 'com.android.support:design:25.2.0'
 
     //Crashlytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.5@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
 
@@ -88,6 +89,9 @@ dependencies {
 
     // Mockito
     testCompile 'org.mockito:mockito-core:2.2.11'
+
+    // Music Player
+    compile 'cat.xojan:musicplayer:0.0.1'
 
     //Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'

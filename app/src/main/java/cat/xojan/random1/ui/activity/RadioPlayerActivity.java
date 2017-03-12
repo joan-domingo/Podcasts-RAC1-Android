@@ -1,5 +1,7 @@
 package cat.xojan.random1.ui.activity;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v7.app.NotificationCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -15,9 +18,10 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
+import cat.xojan.musicplayer.MusicPlayerService;
+import cat.xojan.musicplayer.PlayerUtil;
 import cat.xojan.random1.R;
 import cat.xojan.random1.commons.Log;
-import cat.xojan.random1.commons.PlayerUtil;
 import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.EventLogger;
@@ -25,9 +29,8 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
 import cat.xojan.random1.injection.module.RadioPlayerModule;
-import cat.xojan.random1.service.RadioPlayerService;
 
-public class RadioPlayerActivity extends BaseActivity implements RadioPlayerService.Listener {
+public class RadioPlayerActivity extends BaseActivity implements MusicPlayerService.Listener {
 
     public static final String EXTRA_PODCAST = "PODCAST";
     private static final String TAG = RadioPlayerActivity.class.getSimpleName();
@@ -50,7 +53,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     private boolean mPlayerStarted = false;
     private int mPlayerButtonDrawable = -1;
 
-    private RadioPlayerService mService;
+    private MusicPlayerService mService;
     private boolean mBound;
     private ServiceConnection mConnection = new ServiceConnection() {
         // Called when the connection with the service is established
@@ -59,8 +62,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
             // Because we have bound to an explicit
             // service that is running in our own process, we can
             // cast its IBinder to a concrete class and directly access it.
-            RadioPlayerService.RadioPlayerServiceBinder binder =
-                    (RadioPlayerService.RadioPlayerServiceBinder) service;
+            MusicPlayerService.RadioPlayerServiceBinder binder =
+                    (MusicPlayerService.RadioPlayerServiceBinder) service;
             mService = binder.getServiceInstance();
             mService.registerClient(RadioPlayerActivity.this);
             mBound = true;
@@ -80,10 +83,12 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     };
     private Intent mServiceIntent;
 
-    private Intent getRadioPlayerServiceIntent(Podcast podcast) {
-        Intent intent = new Intent(this, RadioPlayerService.class);
-        intent.addCategory(RadioPlayerService.TAG);
-        intent.putExtra(RadioPlayerService.EXTRA_PODCAST, podcast);
+    private Intent getMusicPlayerIntent(Podcast podcast, Notification notification) {
+        Intent intent = new Intent(this, MusicPlayerService.class);
+        intent.addCategory(MusicPlayerService.TAG);
+        intent.putExtra(MusicPlayerService.EXTRA_URL, podcast.getPath());
+        intent.putExtra(MusicPlayerService.EXTRA_FILE_PATH, podcast.getFilePath());
+        intent.putExtra(MusicPlayerService.EXTRA_NOTIFICATION, notification);
         return intent;
     }
 
@@ -115,8 +120,8 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
 
             // Bind to the service
             Log.d(TAG, "BindService");
-            mServiceIntent = getRadioPlayerServiceIntent(podcast);
-            bindService(new Intent(this, RadioPlayerService.class), mConnection,
+            mServiceIntent = getMusicPlayerIntent(podcast, getNotification(podcast.getTitle()));
+            bindService(new Intent(this, MusicPlayerService.class), mConnection,
                     Context.BIND_AUTO_CREATE);
         }
     }
@@ -195,7 +200,7 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     }
 
     @Override
-    public void onPrepared(int duration) {
+    public void onMusicPlayerPrepared(int duration) {
         mLoader.setVisibility(View.GONE);
         mPlayer.setVisibility(View.VISIBLE);
         mPlayer.setOnClickListener(new PlayerButtonClickListener());
@@ -204,25 +209,14 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
     }
 
     @Override
-    public void progressUpdate(int progress, int currentDuration) {
+    public void onProgressUpdate(int progress, int currentDuration) {
         mSeekBar.setProgress(progress);
         mTimer.setText(PlayerUtil.millisToDuration(currentDuration));
     }
 
     @Override
-    public void updateBufferProgress(int percent) {
+    public void onBufferProgressUpdate(int percent) {
         mBufferBar.setProgress(percent);
-    }
-
-    @Override
-    public void updateButton(int drawable) {
-        mPlayerButtonDrawable = R.drawable.ic_play_arrow;
-        mPlayer.setImageResource(mPlayerButtonDrawable);
-    }
-
-    @Override
-    public void logException(String msg) {
-        mCrashReporter.logException(msg);
     }
 
     @Override
@@ -230,8 +224,46 @@ public class RadioPlayerActivity extends BaseActivity implements RadioPlayerServ
         mCrashReporter.logException(throwable);
     }
 
+    @Override
+    public void onMusicPlayerCompletion() {
+        mPlayerButtonDrawable = R.drawable.ic_play_arrow;
+        mPlayer.setImageResource(mPlayerButtonDrawable);
+    }
+
+    @Override
+    public void onMusicPlayerPaused() {
+        mPlayerButtonDrawable = R.drawable.ic_play_arrow;
+        mPlayer.setImageResource(mPlayerButtonDrawable);
+    }
+
+    @Override
+    public void onMusicPlayerResumed() {
+        mPlayerButtonDrawable = R.drawable.ic_pause;
+        mPlayer.setImageResource(mPlayerButtonDrawable);
+    }
+
     private void updateDuration(int duration) {
         mDuration.setText(PlayerUtil.millisToDuration(duration));
+    }
+
+    private Notification getNotification(String title) {
+        final NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(getApplicationContext());
+
+        builder.setSmallIcon(R.mipmap.ic_notification)
+                .setContentTitle(getApplicationContext().getString(R.string.app_name))
+                .setContentText(title);
+
+        Intent foregroundIntent = new Intent(getApplicationContext(), RadioPlayerActivity.class);
+
+        foregroundIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+                foregroundIntent, 0);
+
+        builder.setContentIntent(contentIntent);
+        return builder.build();
     }
 
     private class PlayerButtonClickListener implements View.OnClickListener {

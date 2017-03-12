@@ -11,6 +11,6 @@
     <string name="no_downloaded_podcasts">No downloaded podcasts</string>
     <string name="podcasts_sections">Sections</string>
     <string name="podcasts_hour_by_hour">Hour by hour</string>
-    <string name="export_podcasts">Export Podcasts</string>
+    <string name="export_podcasts">Export downloaded podcasts</string>
     <string name="podcasts_exported">Podcasts exported to Podcasts folder</string>
 </resources>

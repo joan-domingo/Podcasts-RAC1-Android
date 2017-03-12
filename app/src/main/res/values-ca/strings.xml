@@ -12,6 +12,6 @@
     <string name="no_downloaded_podcasts">Cap podcast descarregat</string>
     <string name="podcasts_sections">Seccions</string>
     <string name="podcasts_hour_by_hour">Hora a hora</string>
-    <string name="export_podcasts">Exportar Podcasts</string>
+    <string name="export_podcasts">Exportar podcasts descarregats</string>
     <string name="podcasts_exported">Podcasts exportats a la carpeta Podcasts</string>
 </resources>
