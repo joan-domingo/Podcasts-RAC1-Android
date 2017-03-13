@@ -110,9 +110,14 @@ public class SectionFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSubscription.unsubscribe();
         showBackArrow(false);
         getActivity().setTitle(getString(R.string.app_name));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSubscription.unsubscribe();
     }
 
     private void loadSections() {

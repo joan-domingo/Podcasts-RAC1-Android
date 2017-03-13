@@ -155,11 +155,12 @@ public class ProgramDataInteractor {
                         podcast.getAudioId() + ProgramDataInteractor.EXTENSION)
                 .setVisibleInDownloadsUi(true);
 
-        mDownloadManager.enqueue(request);
+        long reference = mDownloadManager.enqueue(request);
+        podcast.setDownloadReference(reference);
         addDownloadingPodcast(podcast);
     }
 
-    public boolean addDownloadingPodcast(Podcast podcast) {
+    private boolean addDownloadingPodcast(Podcast podcast) {
         return mDownloadRepo.addDownloadingPodcast(podcast);
     }
 
@@ -171,5 +172,15 @@ public class ProgramDataInteractor {
     @Nullable
     public String getDownloadedPodcastTitle(String audioId) {
         return mDownloadRepo.getDownloadedPodcastTitle(audioId);
+    }
+
+    public void deleteDownloading(long reference) {
+        Podcast podcast = null;
+        for (Podcast pod : mDownloadRepo.getDownloadingPodcasts()) {
+            if (reference == pod.getDownloadReference()) {
+                podcast = pod;
+            }
+        }
+        mDownloadRepo.deleteDownloadingPodcast(podcast);
     }
 }

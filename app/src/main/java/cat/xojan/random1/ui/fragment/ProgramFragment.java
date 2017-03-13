@@ -60,8 +60,8 @@ public class ProgramFragment extends BaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroyView() {
+        super.onDestroyView();
         mSubscription.unsubscribe();
     }
 

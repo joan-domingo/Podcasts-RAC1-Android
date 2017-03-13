@@ -42,9 +42,6 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
             switch (status) {
                 case DownloadManager.STATUS_SUCCESSFUL:
-                    Toast.makeText(context,
-                            context.getString(R.string.download_successful),
-                            Toast.LENGTH_SHORT).show();
 
                     int titleIndex = cursor.getColumnIndex(DownloadManager.COLUMN_TITLE);
                     String title = cursor.getString(titleIndex);
@@ -57,6 +54,9 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
 
                     mEventLogger.logDownloadedPodcast(title);
                     mProgramDataInteractor.addDownload(audioId);
+
+                    Toast.makeText(context, context.getString(R.string.download_successful) + ": " +
+                            title, Toast.LENGTH_SHORT).show();
                     break;
 
                 case DownloadManager.STATUS_FAILED:
@@ -95,13 +95,14 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     }
 
                     mCrashReporter.logException("Download failed: " + reason + " " + reasonText);
-                    Toast.makeText(context,
-                            context.getString(R.string.download_failed),
-                            Toast.LENGTH_SHORT).show();
+                    mProgramDataInteractor.deleteDownloading(reference);
+                    Toast.makeText(context, context.getString(R.string.download_failed) + ": "
+                                    + reason, Toast.LENGTH_SHORT).show();
                     break;
             }
             cursor.close();
         } else {
+            mProgramDataInteractor.deleteDownloading(reference);
             Toast.makeText(context, context.getString(R.string.download_cancelled),
                     Toast.LENGTH_SHORT).show();
         }

@@ -110,8 +110,13 @@ public class PodcastListFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSubscription.clear();
         getActivity().setTitle(getString(R.string.app_name));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSubscription.clear();
     }
 
     private void showPodcasts(final boolean refresh) {

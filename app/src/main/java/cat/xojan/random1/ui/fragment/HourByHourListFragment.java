@@ -116,9 +116,14 @@ public class HourByHourListFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSubscription.clear();
         showBackArrow(false);
         getActivity().setTitle(getString(R.string.app_name));
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mSubscription.clear();
     }
 
     @Override

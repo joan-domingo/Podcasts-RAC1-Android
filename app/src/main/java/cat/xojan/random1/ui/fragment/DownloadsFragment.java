@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -68,8 +69,11 @@ public class DownloadsFragment extends BaseFragment {
     }
 
     private void updateView(List<Podcast> podcasts) {
-        mAdapter.update(podcasts);
-        if (podcasts.isEmpty()) {
+        List<Podcast> downloaded = new ArrayList<>(podcasts);
+        downloaded.removeIf(podcast -> podcast.getState() != Podcast.State.DOWNLOADED);
+        downloaded.sort((podcast, t1) -> t1.getDate().compareTo(podcast.getDate()));
+        mAdapter.update(downloaded);
+        if (downloaded.isEmpty()) {
             mBinding.emptyList.setVisibility(View.VISIBLE);
         } else {
             mBinding.emptyList.setVisibility(View.GONE);

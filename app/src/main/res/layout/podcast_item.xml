@@ -10,7 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:attr/selectableItemBackground"
-        android:padding="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
         android:onClick="@{viewModel.onClickPodcast}">
 
         <ImageView
@@ -36,15 +38,15 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:textStyle="bold"
                 android:gravity="center_vertical"
-                android:text="@{viewModel.title}"/>
+                android:text="@{viewModel.title}"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
         <ImageView
             android:id="@+id/icon"
-            android:padding="8dp"
+            android:padding="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

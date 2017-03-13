@@ -15,12 +15,13 @@ public class Podcast extends BaseObservable implements Parcelable {
     private Audio audio;
     private String path;
     private String mFilePath;
-    private Date datetime;
+    private Date dateTime;
     private long durationSeconds;
     private String mProgramId;
     private String mImageUrl;
     private State mState;
     private String appMobileTitle;
+    private long mDownloadReference;
 
     @VisibleForTesting
     public Podcast(String path, String programId, String title) {
@@ -82,16 +83,29 @@ public class Podcast extends BaseObservable implements Parcelable {
         audio.setId(audioId);
     }
 
+    public Long getDownloadReference() {
+        return mDownloadReference;
+    }
+
+    public void setDownloadReference(Long downloadReference) {
+        mDownloadReference = downloadReference;
+    }
+
+    public Date getDate() {
+        return dateTime;
+    }
+
     protected Podcast(Parcel in) {
         audio = (Audio) in.readValue(Audio.class.getClassLoader());
         path = in.readString();
         mFilePath = in.readString();
         long tmpDatetime = in.readLong();
-        datetime = tmpDatetime != -1 ? new Date(tmpDatetime) : null;
+        dateTime = tmpDatetime != -1 ? new Date(tmpDatetime) : null;
         durationSeconds = in.readLong();
         mProgramId = in.readString();
         mImageUrl = in.readString();
         appMobileTitle = in.readString();
+        mDownloadReference = in.readLong();
     }
 
     @Override
@@ -104,11 +118,12 @@ public class Podcast extends BaseObservable implements Parcelable {
         dest.writeValue(audio);
         dest.writeString(path);
         dest.writeString(mFilePath);
-        dest.writeLong(datetime != null ? datetime.getTime() : -1L);
+        dest.writeLong(dateTime != null ? dateTime.getTime() : -1L);
         dest.writeLong(durationSeconds);
         dest.writeString(mProgramId);
         dest.writeString(mImageUrl);
         dest.writeString(appMobileTitle);
+        dest.writeLong(mDownloadReference);
     }
 
     @SuppressWarnings("unused")
