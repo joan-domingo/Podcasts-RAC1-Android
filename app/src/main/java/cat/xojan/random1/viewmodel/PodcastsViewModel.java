@@ -1,5 +1,7 @@
 package cat.xojan.random1.viewmodel;
 
+import android.content.Context;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -63,5 +65,9 @@ public class PodcastsViewModel {
 
     public void selectedSection(boolean b) {
         mProgramDataInteractor.setSectionSelected(b);
+    }
+
+    public Observable<Boolean> exportPodcasts() {
+        return mProgramDataInteractor.exportPodcasts();
     }
 }

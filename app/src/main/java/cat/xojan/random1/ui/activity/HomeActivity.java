@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -20,25 +21,29 @@ import cat.xojan.random1.injection.HasComponent;
 import cat.xojan.random1.injection.component.DaggerHomeComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.injection.module.HomeModule;
-import cat.xojan.random1.presenter.HomePresenter;
-import cat.xojan.random1.ui.fragment.BaseFragment;
 import cat.xojan.random1.ui.adapter.HomePagerAdapter;
+import cat.xojan.random1.ui.fragment.BaseFragment;
 import cat.xojan.random1.ui.fragment.DownloadsFragment;
 import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
 import cat.xojan.random1.ui.fragment.SectionFragment;
+import cat.xojan.random1.viewmodel.PodcastsViewModel;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class HomeActivity extends BaseActivity implements HasComponent {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 20;
 
-    @Inject HomePresenter mPresenter;
+    @Inject PodcastsViewModel mViewModel;
 
     private HomeComponent mComponent;
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     HomePagerAdapter mFragmentAdapter;
+    private Subscription mSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +78,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
                         WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     requestWriteExternalStoragePermission();
                 } else {
-                    mPresenter.exportPodcasts();
+                    exportPodcasts();
                 }
                 break;
         }
@@ -85,7 +90,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_WRITE_EXTERNAL_STORAGE: {
-                mPresenter.exportPodcasts();
+                exportPodcasts();
                 break;
             }
         }
@@ -139,5 +144,24 @@ public class HomeActivity extends BaseActivity implements HasComponent {
             }
         }
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
+            mSubscription.unsubscribe();
+        }
+    }
+
+    private void exportPodcasts() {
+        mSubscription = mViewModel.exportPodcasts()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::notifyUser);
+    }
+
+    private void notifyUser(Boolean b) {
+        Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_SHORT).show();
     }
 }

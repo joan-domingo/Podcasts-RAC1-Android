@@ -143,13 +143,6 @@ public class RadioPlayerActivity extends BaseActivity implements MusicPlayerServ
         super.onSaveInstanceState(outState);
     }
 
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart()");
-    }
-
     @Override
     protected void onDestroy() {
         Log.d(TAG, "onDestroy()");

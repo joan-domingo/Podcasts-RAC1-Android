@@ -6,9 +6,13 @@ import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -182,5 +186,42 @@ public class ProgramDataInteractor {
             }
         }
         mDownloadRepo.deleteDownloadingPodcast(podcast);
+    }
+
+    public Observable<Boolean> exportPodcasts() {
+        return Observable.create(subscriber -> {
+            File iternalFileDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS);
+            File externalFilesDir = Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PODCASTS);
+
+            externalFilesDir.mkdirs();
+
+            for (File podcastFile : iternalFileDir.listFiles()) {
+                String audioId = podcastFile.getPath()
+                        .split(Environment.DIRECTORY_PODCASTS + "/")[1].replace(".mp3", "");
+                String podcastTitle = getDownloadedPodcastTitle(audioId);
+
+                if (!TextUtils.isEmpty(podcastTitle)) {
+                    podcastTitle = podcastTitle.replace("/", "-");
+                    File dest = new File(externalFilesDir, podcastTitle + ".mp3");
+                    copy(podcastFile, dest);
+                }
+            }
+            subscriber.onNext(true);
+        });
+    }
+
+    private void copy(File src, File dst) {
+        try {
+            FileInputStream inStream = new FileInputStream(src);
+            FileOutputStream outStream = new FileOutputStream(dst);
+            FileChannel inChannel = inStream.getChannel();
+            FileChannel outChannel = outStream.getChannel();
+            inChannel.transferTo(0, inChannel.size(), outChannel);
+            inStream.close();
+            outStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
