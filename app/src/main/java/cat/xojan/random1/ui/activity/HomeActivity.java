@@ -162,6 +162,6 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     }
 
     private void notifyUser(Boolean b) {
-        Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_LONG).show();
     }
 }
