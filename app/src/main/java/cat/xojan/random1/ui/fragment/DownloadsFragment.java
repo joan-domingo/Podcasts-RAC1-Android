@@ -8,17 +8,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
+import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -54,6 +59,9 @@ public class DownloadsFragment extends BaseFragment {
         super.onResume();
         mSubscription.add(mPodcastsViewModel.loadDownloadedPodcasts()
                 .subscribeOn(Schedulers.io())
+                /*.flatMap(Observable::from)
+                .filter(podcast -> podcast.getState().equals(Podcast.State.DOWNLOADED))
+                .toSortedList((podcast, podcast2) -> podcast2.getDate().compareTo(podcast.getDate()))*/
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateView));
         mSubscription.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
@@ -69,14 +77,19 @@ public class DownloadsFragment extends BaseFragment {
     }
 
     private void updateView(List<Podcast> podcasts) {
-        List<Podcast> downloaded = new ArrayList<>(podcasts);
-        downloaded.removeIf(podcast -> podcast.getState() != Podcast.State.DOWNLOADED);
-        downloaded.sort((podcast, t1) -> t1.getDate().compareTo(podcast.getDate()));
-        mAdapter.update(downloaded);
-        if (downloaded.isEmpty()) {
+        List<Podcast> downloaded = new ArrayList<>();
+        if (podcasts.isEmpty()) {
             mBinding.emptyList.setVisibility(View.VISIBLE);
         } else {
+            for (Podcast p : podcasts) {
+                if (p.getState().equals(Podcast.State.DOWNLOADED)) {
+                    downloaded.add(p);
+                }
+            }
+            Collections.sort(downloaded, (podcast, podcast2) -> podcast2.getDate().compareTo(podcast.getDate()));
             mBinding.emptyList.setVisibility(View.GONE);
         }
+
+        mAdapter.update(downloaded);
     }
 }

@@ -97,7 +97,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                     mCrashReporter.logException("Download failed: " + reason + " " + reasonText);
                     mProgramDataInteractor.deleteDownloading(reference);
                     Toast.makeText(context, context.getString(R.string.download_failed) + ": "
-                                    + reason, Toast.LENGTH_SHORT).show();
+                                    + reasonText, Toast.LENGTH_SHORT).show();
                     break;
             }
             cursor.close();
