@@ -153,12 +153,15 @@ public class HourByHourListFragment extends BaseFragment {
     private void handleError(Throwable throwable) {
         mCrashReporter.logException(throwable);
         mBinding.emptyList.setVisibility(View.VISIBLE);
+        mBinding.swiperefresh.setRefreshing(false);
+        mBinding.recyclerView.setVisibility(View.GONE);
     }
 
     private void updateView(List<Podcast> podcasts) {
         mBinding.emptyList.setVisibility(View.GONE);
         mBinding.swiperefresh.setRefreshing(false);
         mAdapter.update(podcasts);
+        mBinding.recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void updateViewWithDownloaded(List<Podcast> podcasts) {

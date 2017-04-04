@@ -137,6 +137,7 @@ public class PodcastListFragment extends BaseFragment {
         mBinding.swiperefresh.setRefreshing(false);
         mAdapter.update(podcasts);
         mBinding.emptyList.setVisibility(View.GONE);
+        mBinding.recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void updateViewWithDownloaded(List<Podcast> podcasts) {
@@ -147,6 +148,7 @@ public class PodcastListFragment extends BaseFragment {
         mBinding.swiperefresh.setRefreshing(false);
         mBinding.emptyList.setVisibility(View.VISIBLE);
         mCrashReporter.logException(throwable);
+        mBinding.recyclerView.setVisibility(View.GONE);
     }
 
     private void showBackArrow() {

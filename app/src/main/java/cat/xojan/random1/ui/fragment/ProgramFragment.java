@@ -86,11 +86,13 @@ public class ProgramFragment extends BaseFragment {
         mBinding.swiperefresh.setRefreshing(false);
         mAdapter.updateItems(programs);
         mBinding.emptyList.setVisibility(View.GONE);
+        mBinding.recyclerView.setVisibility(View.VISIBLE);
     }
 
     private void handleError(Throwable e) {
         mCrashReporter.logException(e);
         mBinding.swiperefresh.setRefreshing(false);
         mBinding.emptyList.setVisibility(View.VISIBLE);
+        mBinding.recyclerView.setVisibility(View.GONE);
     }
 }
