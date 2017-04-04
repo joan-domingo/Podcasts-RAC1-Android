@@ -1,4 +1,4 @@
-![Build state](https://api.travis-ci.org/xojan/Podcasts-RAC1-Android.svg)
+[![Build state](https://api.travis-ci.org/xojan/Podcasts-RAC1-Android.svg)](https://travis-ci.org/xojan/Podcasts-RAC1-Android)
 [![codecov](https://codecov.io/gh/xojan/Podcasts-RAC1-Android/branch/master/graph/badge.svg)](https://codecov.io/gh/xojan/Podcasts-RAC1-Android)
 
 
