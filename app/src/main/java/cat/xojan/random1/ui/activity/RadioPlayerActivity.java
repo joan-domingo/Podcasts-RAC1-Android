@@ -262,7 +262,10 @@ public class RadioPlayerActivity extends BaseActivity implements MusicPlayerServ
     private class PlayerButtonClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if (mService.isPlaying()) {
+            final Boolean serviceIsPlaying = mService.isPlaying();
+            if (serviceIsPlaying == null) {
+                onBackPressed();
+            } else if (serviceIsPlaying) {
                 mService.pause();
                 mPlayerButtonDrawable = R.drawable.ic_play_arrow;
                 mPlayer.setImageResource(mPlayerButtonDrawable);

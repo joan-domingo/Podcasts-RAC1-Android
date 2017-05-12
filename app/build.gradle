@@ -11,8 +11,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 23
-        versionName "2.0.3"
+        versionCode 24
+        versionName "2.1.0"
         vectorDrawables.useSupportLibrary true
         //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
     }
@@ -91,7 +91,7 @@ dependencies {
     testCompile 'org.mockito:mockito-core:2.2.11'
 
     // Music Player
-    compile 'cat.xojan:musicplayer:0.0.2'
+    compile 'cat.xojan:musicplayer:0.0.3'
 
     //Picasso
     compile 'com.squareup.picasso:picasso:2.5.2'
