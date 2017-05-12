@@ -1,5 +1,4 @@
 [![Build state](https://travis-ci.org/joan-domingo/Podcasts-RAC1-Android.svg)](https://travis-ci.org/joan-domingo/Podcasts-RAC1-Android)
-
 [![codecov](https://codecov.io/gh/joan-domingo/Podcasts-RAC1-Android/branch/master/graph/badge.svg)](https://codecov.io/gh/joan-domingo/Podcasts-RAC1-Android)
 
 
