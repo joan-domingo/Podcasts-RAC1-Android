@@ -40,7 +40,8 @@ public class AppTestModule extends AppModule {
 
     @Override
     ProgramDataInteractor provideProgramDataInteractor(Rac1RetrofitService service,
-                                                       DownloadManager downloadManager) {
+                                                       DownloadManager downloadManager,
+                                                       EventLogger eventLogger) {
         ProgramDataInteractor interactor = mock(ProgramDataInteractor.class);
         when(interactor.loadPrograms()).thenReturn(Observable.just(getProgramList()));
         when(interactor.loadPodcasts(any(Program.class), any(Section.class), anyBoolean())).thenReturn(Observable.just(getPodcastList()));

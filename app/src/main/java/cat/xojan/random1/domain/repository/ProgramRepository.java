@@ -9,7 +9,7 @@ import rx.Observable;
 
 public interface ProgramRepository {
 
-    Observable<List<Program>> getProgramListObservable() throws IOException;
+    List<Program> getProgramList() throws IOException;
 
     Observable<List<Podcast>> getPodcastByProgram(String programId) throws IOException;
 

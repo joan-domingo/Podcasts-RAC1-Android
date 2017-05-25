@@ -6,7 +6,6 @@ import java.util.List;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.PodcastData;
 import cat.xojan.random1.domain.entities.Program;
-import cat.xojan.random1.domain.entities.ProgramData;
 import cat.xojan.random1.domain.repository.ProgramRepository;
 import rx.Observable;
 
@@ -19,8 +18,8 @@ public class RemoteProgramRepository implements ProgramRepository {
     }
 
     @Override
-    public Observable<List<Program>> getProgramListObservable() throws IOException {
-        return mService.getProgramData().map(ProgramData::getPrograms);
+    public List<Program> getProgramList() throws IOException {
+        return mService.getProgramData().execute().body().getPrograms();
     }
 
     @Override

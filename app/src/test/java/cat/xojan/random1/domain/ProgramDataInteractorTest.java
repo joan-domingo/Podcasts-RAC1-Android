@@ -1,11 +1,11 @@
 package cat.xojan.random1.domain;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Environment;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
@@ -32,6 +33,7 @@ public class ProgramDataInteractorTest {
     private ProgramDataInteractor mProgramDataInteractor;
     private Context mMockContext;
     private DownloadManager mDownloadManager;
+    private EventLogger mEventLogger;
 
     @Before
     public void setUp() {
@@ -39,15 +41,16 @@ public class ProgramDataInteractorTest {
         mDownloadsRepo = mock(PreferencesDownloadPodcastRepository.class);
         mMockContext = mock(Context.class);
         mDownloadManager = mock(DownloadManager.class);
+        mEventLogger = mock(EventLogger.class);
 
         mProgramDataInteractor = new ProgramDataInteractor(mProgramRepo, mDownloadsRepo,
-                mMockContext, mDownloadManager);
+                mMockContext, mDownloadManager, mEventLogger);
     }
 
     @Test
     public void load_programs_successfully_during_first_call() throws IOException {
         mProgramDataInteractor.setProgramsData(null);
-        when(mProgramRepo.getProgramListObservable()).thenReturn(Observable.just(getDummyProgramList()));
+        when(mProgramRepo.getProgramList()).thenReturn(getDummyProgramList());
         TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertValue(getDummyProgramList());
@@ -55,7 +58,7 @@ public class ProgramDataInteractorTest {
 
     @Test
     public void load_programs_successfully_after_first_call() {
-        mProgramDataInteractor.setProgramsData(Observable.just(getDummyProgramList()));
+        mProgramDataInteractor.setProgramsData(getDummyProgramList());
         TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertValue(getDummyProgramList());
@@ -64,7 +67,7 @@ public class ProgramDataInteractorTest {
     @Test
     public void fail_to_load_programs() throws IOException {
         mProgramDataInteractor.setProgramsData(null);
-        when(mProgramRepo.getProgramListObservable()).thenThrow(new IOException());
+        when(mProgramRepo.getProgramList()).thenThrow(new IOException());
         TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);

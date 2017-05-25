@@ -41,7 +41,7 @@ public class ProgramDataInteractor {
     private final Context mContext;
     private final PreferencesDownloadPodcastRepository mDownloadRepo;
     private final DownloadManager mDownloadManager;
-    private Observable<List<Program>> mPrograms;
+    private List<Program> mPrograms;
     private Observable<List<Podcast>> mPodcastsByProgram;
     private Program mProgram;
     private Observable<List<Podcast>> mPodcastsBySection;
@@ -64,14 +64,17 @@ public class ProgramDataInteractor {
     }
 
     public Observable<List<Program>> loadPrograms() {
-        try {
-            if (mPrograms == null) {
-                mPrograms = mProgramRepo.getProgramListObservable();
+        return Observable.create(subscriber -> {
+            try {
+                if (mPrograms == null) {
+                    mPrograms = mProgramRepo.getProgramList();
+                }
+                subscriber.onNext(mPrograms);
+                subscriber.onCompleted();
+            } catch (IOException e) {
+                subscriber.onError(e);
             }
-            return mPrograms;
-        } catch (IOException e) {
-            return Observable.error(e);
-        }
+        });
     }
 
     public Observable<List<Section>> loadSections(Program program) {
@@ -173,7 +176,7 @@ public class ProgramDataInteractor {
     }
 
     @VisibleForTesting
-    public void setProgramsData(Observable<List<Program>> programs) {
+    public void setProgramsData(List<Program> programs) {
         mPrograms = programs;
     }
 
