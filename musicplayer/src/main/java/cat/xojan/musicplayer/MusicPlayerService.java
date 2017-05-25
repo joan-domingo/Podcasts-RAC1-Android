@@ -60,6 +60,9 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
     }
 
     public void pause() {
+        if (mMediaPlayer == null) {
+            onDestroy();
+        }
         mMediaPlayer.pause();
     }
 
@@ -85,8 +88,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
         switch (focusChange) {
             case AudioManager.AUDIOFOCUS_GAIN:
                 Log.d("onAudioFocusChange()", "resume playback");
-                start();
-                mListener.onMusicPlayerResumed();
+                setVolume(1.0f);
                 break;
 
             case AudioManager.AUDIOFOCUS_LOSS:
@@ -98,7 +100,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
 
             case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                 Log.d("onAudioFocusChange()", "keep playing at an attenuated level");
-                mMediaPlayer.setVolume(0.1f, 0.1f);
+                setVolume(0.1f);
                 break;
         }
     }
@@ -218,6 +220,13 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
             mMediaPlayer = null;
         }
         mHandler.removeCallbacks(mUpdateTimeTask);
+    }
+
+    private void setVolume(float volume) {
+        if (mMediaPlayer == null) {
+            onDestroy();
+        }
+        mMediaPlayer.setVolume(volume, volume);
     }
 
     /**

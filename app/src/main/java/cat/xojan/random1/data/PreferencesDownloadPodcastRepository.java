@@ -1,11 +1,11 @@
 package cat.xojan.random1.data;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -49,7 +49,7 @@ public class PreferencesDownloadPodcastRepository implements DownloadPodcastRepo
     @Override
     public void setPodcastAsDownloaded(String audioId, String filePath) {
         Podcast podcast = getDownloadingPodcast(audioId);
-        if (deleteDownloadingPodcast(podcast)) {
+        if (podcast != null && deleteDownloadingPodcast(podcast)) {
             podcast.setFilePath(filePath);
             podcast.setState(Podcast.State.DOWNLOADED);
             addDownloadedPodcast(podcast);
@@ -94,6 +94,7 @@ public class PreferencesDownloadPodcastRepository implements DownloadPodcastRepo
                 .apply();
     }
 
+    @Nullable
     private Podcast getDownloadingPodcast(String audioId) {
         Podcast downloadedPodcast = null;
 

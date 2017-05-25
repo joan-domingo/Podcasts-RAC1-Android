@@ -1,5 +1,6 @@
 package cat.xojan.random1.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
+import cat.xojan.random1.ui.activity.HomeActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
 import rx.android.schedulers.AndroidSchedulers;
@@ -45,6 +47,7 @@ public class HourByHourListFragment extends BaseFragment {
     private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
     private CompositeSubscription mSubscription = new CompositeSubscription();
+    private HomeActivity mHomeActivity;
 
     public static HourByHourListFragment newInstance(Program program) {
         Bundle args = new Bundle();
@@ -54,6 +57,14 @@ public class HourByHourListFragment extends BaseFragment {
         hourByHourListFragment.setArguments(args);
 
         return hourByHourListFragment;
+    }
+
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        if (context instanceof HomeActivity){
+            mHomeActivity = (HomeActivity) context;
+        }
     }
 
     @Nullable
@@ -128,7 +139,7 @@ public class HourByHourListFragment extends BaseFragment {
 
     @Override
     public boolean handleOnBackPressed() {
-        getActivity().getSupportFragmentManager()
+        mHomeActivity.getSupportFragmentManager()
                 .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         getActivity().setTitle(getString(R.string.app_name));
         ((BaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
