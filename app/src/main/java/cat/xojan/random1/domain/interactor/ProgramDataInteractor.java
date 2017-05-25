@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
+import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
@@ -46,17 +47,20 @@ public class ProgramDataInteractor {
     private Observable<List<Podcast>> mPodcastsBySection;
     private Section mSection;
     private PublishSubject<List<Podcast>> mDownloadedPodcastsSubject;
+    private final EventLogger mEventLogger;
 
     @Inject
     public ProgramDataInteractor(ProgramRepository programRepository,
                                  PreferencesDownloadPodcastRepository downloadRepository,
                                  Context context,
-                                 DownloadManager downloadManager) {
+                                 DownloadManager downloadManager,
+                                 EventLogger eventLogger) {
         mProgramRepo = programRepository;
         mDownloadRepo = downloadRepository;
         mContext = context;
         mDownloadedPodcastsSubject = PublishSubject.create();
         mDownloadManager = downloadManager;
+        mEventLogger = eventLogger;
     }
 
     public Observable<List<Program>> loadPrograms() {
@@ -189,6 +193,7 @@ public class ProgramDataInteractor {
     }
 
     public Observable<Boolean> exportPodcasts() {
+        mEventLogger.logExportedPodcastAction();
         return Observable.create(subscriber -> {
             File iternalFileDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS);
             File externalFilesDir = Environment.getExternalStoragePublicDirectory(
@@ -205,6 +210,7 @@ public class ProgramDataInteractor {
                     podcastTitle = podcastTitle.replace("/", "-");
                     File dest = new File(externalFilesDir, podcastTitle + ".mp3");
                     copy(podcastFile, dest);
+                    mEventLogger.logExportedPodcast(podcastTitle);
                 }
             }
             subscriber.onNext(true);

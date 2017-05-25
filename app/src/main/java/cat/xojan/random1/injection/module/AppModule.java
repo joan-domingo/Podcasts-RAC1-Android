@@ -1,12 +1,13 @@
 package cat.xojan.random1.injection.module;
 
-import android.app.DownloadManager;
-import android.content.Context;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
+import android.app.DownloadManager;
+import android.content.Context;
 
 import javax.inject.Singleton;
 
@@ -67,10 +68,11 @@ public class AppModule {
 
     @Provides @Singleton
     ProgramDataInteractor provideProgramDataInteractor(Rac1RetrofitService service,
-                                                       DownloadManager downloadManager) {
+                                                       DownloadManager downloadManager,
+                                                       EventLogger eventLogger) {
         return new ProgramDataInteractor(new RemoteProgramRepository(service),
                 new PreferencesDownloadPodcastRepository(mApplication),
-                mApplication, downloadManager);
+                mApplication, downloadManager, eventLogger);
     }
 
     @Provides @Singleton

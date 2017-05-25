@@ -27,4 +27,16 @@ public class EventLogger {
             mAnswers.logContentView(new ContentViewEvent().putContentName(podcast.getTitle()));
         }
     }
+
+    public void logExportedPodcast(final String podcastTitle) {
+        if (mAnswers != null) {
+            mAnswers.logCustom(new CustomEvent("Exported").putCustomAttribute("title", podcastTitle));
+        }
+    }
+
+    public void logExportedPodcastAction() {
+        if (mAnswers != null) {
+            mAnswers.logCustom(new CustomEvent("ExportAction"));
+        }
+    }
 }
