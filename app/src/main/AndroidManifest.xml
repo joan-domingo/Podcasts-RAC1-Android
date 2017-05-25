@@ -27,10 +27,6 @@
             android:name="io.fabric.ApiKey"
             android:value="5742c867fe11c1f0cb1fc503b90ed10ff5f54e91" />
 
-        <service android:name=".service.RadioPlayerService"
-            android:exported="false"
-            android:stopWithTask="false"/>
-
         <receiver android:name=".receiver.DownloadCompleteReceiver"
             android:enabled="true"
             android:exported="true">
