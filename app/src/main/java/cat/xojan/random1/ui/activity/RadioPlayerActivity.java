@@ -28,7 +28,6 @@ import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
-import cat.xojan.random1.injection.module.RadioPlayerModule;
 
 public class RadioPlayerActivity extends BaseActivity implements MusicPlayerService.Listener {
 
@@ -187,7 +186,6 @@ public class RadioPlayerActivity extends BaseActivity implements MusicPlayerServ
         RadioPlayerComponent mComponent = DaggerRadioPlayerComponent.builder()
                 .appComponent(getApplicationComponent())
                 .baseActivityModule(getActivityModule())
-                .radioPlayerModule(new RadioPlayerModule())
                 .build();
         mComponent.inject(this);
     }
