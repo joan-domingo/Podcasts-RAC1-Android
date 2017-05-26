@@ -9,6 +9,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'jacoco-android'
 
 android {
     compileSdkVersion 25
