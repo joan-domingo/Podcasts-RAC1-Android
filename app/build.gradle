@@ -44,7 +44,15 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
+        unitTests {
+            returnDefaultValues = true
+            all {
+                jacoco {
+                    includeNoLocationClasses = true
+                }
+            }
+        }
+
     }
 }
 
