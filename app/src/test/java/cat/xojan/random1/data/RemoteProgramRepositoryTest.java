@@ -2,7 +2,6 @@ package cat.xojan.random1.data;
 
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -32,7 +31,7 @@ public class RemoteProgramRepositoryTest {
         mRemoteRepository = new RemoteProgramRepository(mService);
     }
 
-    @Test @Ignore
+    @Test
     public void get_program_list() throws IOException {
         when(mService.getProgramData().execute().body()).thenReturn(getProgramData());
 
