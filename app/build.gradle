@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
-apply from: 'jacoco.gradle'
+apply plugin: 'jacoco-android'
+
 
 android {
     compileSdkVersion 25
