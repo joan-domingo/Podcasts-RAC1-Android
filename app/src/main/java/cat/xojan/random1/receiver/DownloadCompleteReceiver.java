@@ -6,13 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Environment;
+import android.util.Log;
 import android.widget.Toast;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.Application;
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;

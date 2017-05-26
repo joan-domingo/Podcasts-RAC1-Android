@@ -9,21 +9,17 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.commons.Log;
 import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
