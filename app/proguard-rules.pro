@@ -16,15 +16,6 @@
 #   public *;
 #}
 
-#Icepick
--dontwarn icepick.**
--keep class icepick.** { *; }
--keep class **$$Icepick { *; }
--keepclasseswithmembernames class * {
-    @icepick.* <fields>;
-}
--keepnames class * { @icepick.State *;}
-
 #Retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
