@@ -14,8 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.appsee.Appsee;
+
 import javax.inject.Inject;
 
+import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.R;
 import cat.xojan.random1.injection.HasComponent;
 import cat.xojan.random1.injection.component.DaggerHomeComponent;
@@ -48,6 +51,11 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (BuildConfig.DEBUG) {
+            Appsee.start("d04247320d6a4ca59d27703d1619e9b5");
+        } else {
+            Appsee.start("6e9eaee993734023afea0ee693752d8e");
+        }
 
         final Intent intent = getIntent();
         if ((intent.getFlags() & Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT) != 0
