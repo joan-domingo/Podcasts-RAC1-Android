@@ -1,6 +1,7 @@
 package cat.xojan.random1.viewmodel;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,8 +12,10 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.observers.TestObserver;
+import io.reactivex.subjects.PublishSubject;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,8 +34,8 @@ public class PodcastsViewModelTest {
 
     @Test
     public void load_downloaded_podcasts_successfully() {
-        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Observable.just(getPodcastList()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.just(getPodcastList()));
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
         mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
@@ -40,8 +43,8 @@ public class PodcastsViewModelTest {
 
     @Test
     public void fail_to_load_downloaded_podcasts() {
-        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Observable.error(new IOException()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.error(new IOException()));
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
         mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
@@ -54,8 +57,8 @@ public class PodcastsViewModelTest {
         Section section = new Section("id1", true, Section.Type.SECTION);
 
         when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Observable.just(getPodcastList()));
-        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Observable.just(getDownloadedPodcastList()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.just(getDownloadedPodcastList()));
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mViewModel.loadPodcasts(program, section, false).subscribe(testSubscriber);
 
         testSubscriber.assertValue(getPodcastList());
@@ -63,8 +66,8 @@ public class PodcastsViewModelTest {
 
     @Test
     public void fail_to_load_podcasts() {
-        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Observable.error(new IOException()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.error(new IOException()));
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
         mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
@@ -72,9 +75,12 @@ public class PodcastsViewModelTest {
 
     @Test
     public void get_downloaded_podcasts_update() {
-        when(mProgramDataInteractor.getDownloadedPodcastsUpdates()).thenReturn(Observable.just(getDownloadedPodcastList()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        PublishSubject<List<Podcast>> ps = PublishSubject.create();
+
+        when(mProgramDataInteractor.getDownloadedPodcastsUpdates()).thenReturn(ps);
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mViewModel.getDownloadedPodcastsUpdates().subscribe(testSubscriber);
+        ps.onNext(getDownloadedPodcastList());
 
         testSubscriber.assertValue(getDownloadedPodcastList());
     }

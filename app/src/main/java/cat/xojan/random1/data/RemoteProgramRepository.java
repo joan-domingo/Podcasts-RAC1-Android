@@ -7,7 +7,7 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.PodcastData;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.repository.ProgramRepository;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public class RemoteProgramRepository implements ProgramRepository {
 

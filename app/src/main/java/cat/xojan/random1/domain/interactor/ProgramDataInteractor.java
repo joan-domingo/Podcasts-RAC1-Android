@@ -27,8 +27,10 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.repository.ProgramRepository;
-import rx.Observable;
-import rx.subjects.PublishSubject;
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.subjects.PublishSubject;
 
 public class ProgramDataInteractor {
 
@@ -70,7 +72,7 @@ public class ProgramDataInteractor {
                     mPrograms = mProgramRepo.getProgramList();
                 }
                 subscriber.onNext(mPrograms);
-                subscriber.onCompleted();
+                subscriber.onComplete();
             } catch (IOException e) {
                 subscriber.onError(e);
             }
@@ -128,11 +130,11 @@ public class ProgramDataInteractor {
         }
     }
 
-    public Observable<List<Podcast>> getDownloadedPodcasts() {
-        return Observable.just(fetchDownloadedPodcasts());
+    public Single<List<Podcast>> getDownloadedPodcasts() {
+        return Single.just(fetchDownloadedPodcasts());
     }
 
-    public Observable<List<Podcast>> getDownloadedPodcastsUpdates() {
+    public PublishSubject<List<Podcast>> getDownloadedPodcastsUpdates() {
         return mDownloadedPodcastsSubject;
     }
 
@@ -197,7 +199,7 @@ public class ProgramDataInteractor {
 
     public Observable<Boolean> exportPodcasts() {
         mEventLogger.logExportedPodcastAction();
-        return Observable.create(subscriber -> {
+        return Observable.create(e -> {
             File iternalFileDir = mContext.getExternalFilesDir(Environment.DIRECTORY_PODCASTS);
             File externalFilesDir = Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_PODCASTS);
@@ -216,7 +218,7 @@ public class ProgramDataInteractor {
                     mEventLogger.logExportedPodcast(podcastTitle);
                 }
             }
-            subscriber.onNext(true);
+            e.onNext(true);
         });
     }
 

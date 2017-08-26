@@ -13,8 +13,8 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.PodcastData;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.ProgramData;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -42,7 +42,7 @@ public class RemoteProgramRepositoryTest {
     @Test
     public void get_podcasts_list_by_program() throws IOException {
         when(mService.getPodcastData(anyString())).thenReturn(Observable.just(getPodcastData()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
         mRemoteRepository.getPodcastByProgram("programId").subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
@@ -51,7 +51,7 @@ public class RemoteProgramRepositoryTest {
     @Test
     public void get_podcasts_list_by_section() throws IOException {
         when(mService.getPodcastData(anyString(), anyString())).thenReturn(Observable.just(getPodcastData()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
         mRemoteRepository.getPodcastBySection("programId", "sectionId").subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());

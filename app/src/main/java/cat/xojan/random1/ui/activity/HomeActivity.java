@@ -29,9 +29,9 @@ import cat.xojan.random1.ui.fragment.PodcastListFragment;
 import cat.xojan.random1.ui.fragment.ProgramFragment;
 import cat.xojan.random1.ui.fragment.SectionFragment;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class HomeActivity extends BaseActivity implements HasComponent {
 
@@ -43,7 +43,7 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     private ViewPager mViewPager;
     private TabLayout mTabLayout;
     HomePagerAdapter mFragmentAdapter;
-    private Subscription mSubscription;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,16 +149,14 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     @Override
     protected void onStop() {
         super.onStop();
-        if (mSubscription != null && !mSubscription.isUnsubscribed()) {
-            mSubscription.unsubscribe();
-        }
+        mCompositeDisposable.clear();
     }
 
     private void exportPodcasts() {
-        mSubscription = mViewModel.exportPodcasts()
+        mCompositeDisposable.add(mViewModel.exportPodcasts()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::notifyUser);
+                .subscribe(this::notifyUser));
     }
 
     private void notifyUser(Boolean b) {

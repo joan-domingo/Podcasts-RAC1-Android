@@ -10,8 +10,8 @@ import java.util.List;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -30,7 +30,7 @@ public class ProgramsViewModelTest {
     @Test
     public void load_programs_successfully() {
         when(mProgramDataInteractor.loadPrograms()).thenReturn(Observable.just(getDummyProgramList()));
-        TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Program>> testSubscriber = new TestObserver<>();
 
         mViewModel.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertValue(getDummyProgramListResult());
@@ -39,7 +39,7 @@ public class ProgramsViewModelTest {
     @Test
     public void fail_to_load_programs() {
         when(mProgramDataInteractor.loadPrograms()).thenReturn(Observable.error(new IOException()));
-        TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Program>> testSubscriber = new TestObserver<>();
 
         mViewModel.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);

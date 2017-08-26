@@ -24,9 +24,9 @@ import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.adapter.SectionListAdapter;
 import cat.xojan.random1.viewmodel.SectionsViewModel;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class SectionFragment extends BaseFragment {
 
@@ -38,7 +38,7 @@ public class SectionFragment extends BaseFragment {
     private RecyclerViewFragmentBinding mBinding;
     private ActionBar mActionBar;
     private SectionListAdapter mAdapter;
-    private Subscription mSubscription;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private Program mProgram;
 
     public static SectionFragment newInstance(Program program) {
@@ -117,14 +117,14 @@ public class SectionFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mSubscription.unsubscribe();
+        mCompositeDisposable.clear();
     }
 
     private void loadSections() {
-        mSubscription = mSectionsViewModel.loadSections(mProgram)
+        mCompositeDisposable.add(mSectionsViewModel.loadSections(mProgram)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::updateView);
+                .subscribe(this::updateView));
     }
 
     private void updateView(List<Section> sections) {

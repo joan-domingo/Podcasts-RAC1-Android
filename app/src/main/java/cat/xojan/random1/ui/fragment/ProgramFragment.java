@@ -22,9 +22,9 @@ import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.adapter.ProgramListAdapter;
 import cat.xojan.random1.viewmodel.ProgramsViewModel;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ProgramFragment extends BaseFragment {
 
@@ -32,7 +32,7 @@ public class ProgramFragment extends BaseFragment {
     @Inject ProgramDataInteractor mProgramDataInteractor;
     @Inject CrashReporter mCrashReporter;
 
-    private Subscription mSubscription;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private RecyclerViewFragmentBinding mBinding;
     private ProgramListAdapter mAdapter;
 
@@ -62,7 +62,7 @@ public class ProgramFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mSubscription.unsubscribe();
+        mCompositeDisposable.clear();
     }
 
     private void setLayoutManager(int orientation) {
@@ -75,11 +75,11 @@ public class ProgramFragment extends BaseFragment {
 
     private void loadPrograms() {
         mBinding.swiperefresh.setRefreshing(true);
-        mSubscription = mProgramsViewModel.loadPrograms()
+        mCompositeDisposable.add(mProgramsViewModel.loadPrograms()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateView,
-                        this::handleError);
+                        this::handleError));
     }
 
     private void updateView(List<Program> programs) {

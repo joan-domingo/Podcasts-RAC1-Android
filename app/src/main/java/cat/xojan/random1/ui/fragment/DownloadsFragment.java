@@ -20,16 +20,16 @@ import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DownloadsFragment extends BaseFragment {
 
     @Inject PodcastsViewModel mPodcastsViewModel;
     @Inject ProgramDataInteractor mProgramDataInteractor;
 
-    private CompositeSubscription mSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private PodcastListAdapter mAdapter;
     private RecyclerViewFragmentBinding mBinding;
 
@@ -53,14 +53,14 @@ public class DownloadsFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSubscription.add(mPodcastsViewModel.loadDownloadedPodcasts()
+        mCompositeDisposable.add(mPodcastsViewModel.loadDownloadedPodcasts()
                 .subscribeOn(Schedulers.io())
                 /*.flatMap(Observable::from)
                 .filter(podcast -> podcast.getState().equals(Podcast.State.DOWNLOADED))
                 .toSortedList((podcast, podcast2) -> podcast2.getDate().compareTo(podcast.getDate()))*/
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateView));
-        mSubscription.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
+        mCompositeDisposable.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateView));
@@ -69,7 +69,7 @@ public class DownloadsFragment extends BaseFragment {
     @Override
     public void onPause() {
         super.onPause();
-        mSubscription.clear();
+        mCompositeDisposable.clear();
     }
 
     private void updateView(List<Podcast> podcasts) {

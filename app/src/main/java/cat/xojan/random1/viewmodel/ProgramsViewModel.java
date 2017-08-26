@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
+import io.reactivex.Single;
 
 public class ProgramsViewModel {
 
@@ -17,9 +17,9 @@ public class ProgramsViewModel {
         mProgramDataInteractor = programDataInteractor;
     }
 
-    public Observable<List<Program>> loadPrograms() {
+    public Single<List<Program>> loadPrograms() {
         return mProgramDataInteractor.loadPrograms()
-                .flatMap(Observable::from)
+                .flatMapIterable(list -> list)
                 .filter(Program::isActive)
                 .toList();
     }

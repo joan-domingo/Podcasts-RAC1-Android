@@ -5,7 +5,7 @@ import java.util.List;
 
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
-import rx.Observable;
+import io.reactivex.Observable;
 
 public interface ProgramRepository {
 

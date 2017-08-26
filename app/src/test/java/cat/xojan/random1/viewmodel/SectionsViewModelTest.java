@@ -9,8 +9,8 @@ import java.util.List;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -34,7 +34,7 @@ public class SectionsViewModelTest {
         program.setImageUrl("www.image.url");
 
         when(mProgramDataInteractor.loadSections(any(Program.class))).thenReturn(Observable.just(getSections()));
-        TestSubscriber<List<Section>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Section>> testSubscriber = new TestObserver<>();
         mViewModel.loadSections(program).subscribe(testSubscriber);
 
         testSubscriber.assertValue(getSectionsResult());

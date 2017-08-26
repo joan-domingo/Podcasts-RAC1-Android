@@ -5,7 +5,7 @@ import java.util.List;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
+import io.reactivex.Single;
 
 public class SectionsViewModel {
 
@@ -15,9 +15,9 @@ public class SectionsViewModel {
         mProgramDataInteractor = programDataInteractor;
     }
 
-    public Observable<List<Section>> loadSections(Program program) {
+    public Single<List<Section>> loadSections(Program program) {
         return mProgramDataInteractor.loadSections(program)
-                .flatMap(Observable::from)
+                .flatMapIterable(list -> list)
                 .filter(Section::isActive)
                 .filter(section -> section.getType() == Section.Type.SECTION)
                 .map(section -> {

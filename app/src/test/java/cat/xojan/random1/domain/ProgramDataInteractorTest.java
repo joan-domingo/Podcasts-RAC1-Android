@@ -1,11 +1,11 @@
 package cat.xojan.random1.domain;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Environment;
+
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,8 +19,8 @@ import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.repository.ProgramRepository;
-import rx.Observable;
-import rx.observers.TestSubscriber;
+import io.reactivex.Observable;
+import io.reactivex.observers.TestObserver;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -51,7 +51,7 @@ public class ProgramDataInteractorTest {
     public void load_programs_successfully_during_first_call() throws IOException {
         mProgramDataInteractor.setProgramsData(null);
         when(mProgramRepo.getProgramList()).thenReturn(getDummyProgramList());
-        TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Program>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertValue(getDummyProgramList());
     }
@@ -59,7 +59,7 @@ public class ProgramDataInteractorTest {
     @Test
     public void load_programs_successfully_after_first_call() {
         mProgramDataInteractor.setProgramsData(getDummyProgramList());
-        TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Program>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertValue(getDummyProgramList());
     }
@@ -68,7 +68,7 @@ public class ProgramDataInteractorTest {
     public void fail_to_load_programs() throws IOException {
         mProgramDataInteractor.setProgramsData(null);
         when(mProgramRepo.getProgramList()).thenThrow(new IOException());
-        TestSubscriber<List<Program>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Program>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
     }
@@ -76,7 +76,7 @@ public class ProgramDataInteractorTest {
     @Test
     public void get_sections_from_program() {
         Program program = getDummyProgram();
-        TestSubscriber<List<Section>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Section>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadSections(program).subscribe(testSubscriber);
         testSubscriber.assertValue(getSections());
     }
@@ -85,7 +85,7 @@ public class ProgramDataInteractorTest {
     public void load_podcasts_by_program_successfully() throws IOException {
         Program program = getDummyProgram();
         when(mProgramRepo.getPodcastByProgram(anyString())).thenReturn(Observable.just(getPodcastList()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPodcasts(program, null, false).subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
     }
@@ -95,7 +95,7 @@ public class ProgramDataInteractorTest {
         Program program = getDummyProgram();
         Section section = getSections().get(0);
         when(mProgramRepo.getPodcastBySection(anyString(), anyString())).thenReturn(Observable.just(getPodcastList()));
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPodcasts(program, section, false).subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
     }
@@ -104,14 +104,14 @@ public class ProgramDataInteractorTest {
     public void fail_to_load_podcasts() throws IOException {
         Program program = getDummyProgram();
         when(mProgramRepo.getPodcastByProgram(anyString())).thenThrow(new IOException());
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPodcasts(program, null, false).subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
     }
 
     @Test
     public void add_downloaded_podcast_and_refresh_list_fail() {
-        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
+        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.getDownloadedPodcasts().subscribe(testSubscriber);
 
         when(mMockContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)).thenReturn(new File("downloads/"));

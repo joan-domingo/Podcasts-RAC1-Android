@@ -1,7 +1,5 @@
 package cat.xojan.random1.viewmodel;
 
-import android.content.Context;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,7 +8,10 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import rx.Observable;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.Single;
+import io.reactivex.subjects.PublishSubject;
 
 public class PodcastsViewModel {
 
@@ -21,19 +22,19 @@ public class PodcastsViewModel {
         mProgramDataInteractor = programDataInteractor;
     }
 
-    public Observable<List<Podcast>> loadDownloadedPodcasts() {
+    public Single<List<Podcast>> loadDownloadedPodcasts() {
         return mProgramDataInteractor.getDownloadedPodcasts();
     }
 
-    public Observable<List<Podcast>> getDownloadedPodcastsUpdates() {
+    public PublishSubject<List<Podcast>> getDownloadedPodcastsUpdates() {
         return mProgramDataInteractor.getDownloadedPodcastsUpdates();
     }
 
-    public Observable<List<Podcast>> loadPodcasts(Program program, Section section,
+    public Single<List<Podcast>> loadPodcasts(Program program, Section section,
                                                   boolean refresh) {
-        Observable<List<Podcast>> loadedPodcasts =
+        Single<List<Podcast>> loadedPodcasts =
                 mProgramDataInteractor.loadPodcasts(program, section, refresh)
-                .flatMap(Observable::from)
+                .flatMapIterable(list -> list)
                 .map(podcast -> {
                     podcast.setProgramId(program.getId());
                     podcast.setImageUrl(program.getImageUrl());
@@ -41,10 +42,10 @@ public class PodcastsViewModel {
                 })
                 .toList();
 
-        Observable<List<Podcast>> downloadedPodcasts =
+        Single<List<Podcast>> downloadedPodcasts =
                 mProgramDataInteractor.getDownloadedPodcasts();
 
-        return Observable.zip(loadedPodcasts, downloadedPodcasts,
+        return Single.zip(loadedPodcasts, downloadedPodcasts,
                 (loaded, downloaded) -> {
                     for (Podcast podcast : loaded) {
                         podcast.setFilePath(null);

@@ -30,9 +30,9 @@ import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.activity.HomeActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
 import cat.xojan.random1.viewmodel.PodcastsViewModel;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class HourByHourListFragment extends BaseFragment {
 
@@ -46,7 +46,7 @@ public class HourByHourListFragment extends BaseFragment {
     private RecyclerViewFragmentBinding mBinding;
     private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
-    private CompositeSubscription mSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private HomeActivity mHomeActivity;
 
     public static HourByHourListFragment newInstance(Program program) {
@@ -116,7 +116,7 @@ public class HourByHourListFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSubscription.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
+        mCompositeDisposable.add(mPodcastsViewModel.getDownloadedPodcastsUpdates()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateViewWithDownloaded));
@@ -134,7 +134,7 @@ public class HourByHourListFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mSubscription.clear();
+        mCompositeDisposable.clear();
     }
 
     @Override
@@ -153,7 +153,7 @@ public class HourByHourListFragment extends BaseFragment {
             Program program = getArguments().getParcelable(PodcastListFragment.ARG_PROGRAM);
             Section section = getArguments().getParcelable(PodcastListFragment.ARG_SECTION);
 
-            mSubscription.add(mPodcastsViewModel.loadPodcasts(program, section, refresh)
+            mCompositeDisposable.add(mPodcastsViewModel.loadPodcasts(program, section, refresh)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(this::updateView,
