@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 
@@ -27,7 +28,7 @@ public class SectionViewModelTest {
     public void setUp() {
         mActivity = mock(BaseActivity.class);
         mProgram = new Program("id", true);
-        mSection = new Section("id", true, Section.Type.SECTION);
+        mSection = new Section("id", true, SectionType.SECTION);
         mSection.setTitle("title");
         mSection.setImageUrl("www.image.url");
         mViewModel = new SectionViewModel(mActivity, mSection, mProgram);

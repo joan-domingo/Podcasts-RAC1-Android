@@ -8,6 +8,7 @@ import java.util.List;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
@@ -48,17 +49,17 @@ public class SectionsViewModelTest {
 
     private List<Section> getSections() {
         List<Section> sections = new ArrayList<>();
-        sections.add(new Section("section1", true, Section.Type.SECTION));
-        sections.add(new Section("section2", false, Section.Type.SECTION));
-        sections.add(new Section("section3", true, Section.Type.GENERIC));
-        sections.add(new Section("section4", true, Section.Type.SECTION));
+        sections.add(new Section("section1", true, SectionType.SECTION));
+        sections.add(new Section("section2", false, SectionType.SECTION));
+        sections.add(new Section("section3", true, SectionType.GENERIC));
+        sections.add(new Section("section4", true, SectionType.SECTION));
         return sections;
     }
 
     private List<Section> getSectionsResult() {
         List<Section> sections = new ArrayList<>();
-        sections.add(new Section("section1", true, Section.Type.SECTION));
-        sections.add(new Section("section4", true, Section.Type.SECTION));
+        sections.add(new Section("section1", true, SectionType.SECTION));
+        sections.add(new Section("section4", true, SectionType.SECTION));
         return sections;
     }
 }

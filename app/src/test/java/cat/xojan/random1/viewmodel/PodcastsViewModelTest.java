@@ -1,7 +1,6 @@
 package cat.xojan.random1.viewmodel;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -11,6 +10,7 @@ import java.util.List;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -54,7 +54,7 @@ public class PodcastsViewModelTest {
     public void load_podcasts_successfully() {
         Program program = new Program("program1", true);
         program.setImageUrl("www.image.url");
-        Section section = new Section("id1", true, Section.Type.SECTION);
+        Section section = new Section("id1", true, SectionType.SECTION);
 
         when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Observable.just(getPodcastList()));
         when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.just(getDownloadedPodcastList()));

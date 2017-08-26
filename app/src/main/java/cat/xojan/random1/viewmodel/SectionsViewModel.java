@@ -4,6 +4,7 @@ import java.util.List;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Single;
 
@@ -19,7 +20,7 @@ public class SectionsViewModel {
         return mProgramDataInteractor.loadSections(program)
                 .flatMapIterable(list -> list)
                 .filter(Section::isActive)
-                .filter(section -> section.getType() == Section.Type.SECTION)
+                .filter(section -> section.getType() == SectionType.SECTION)
                 .map(section -> {
                     section.setImageUrl(program.getImageUrl());
                     return section;

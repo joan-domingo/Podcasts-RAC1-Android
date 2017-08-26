@@ -11,6 +11,7 @@ import java.util.List;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.HourByHourListFragment;
@@ -69,8 +70,8 @@ public class ProgramViewModelTest {
 
     private List<Section> getSections() {
         List<Section> sections = new ArrayList<>();
-        sections.add(new Section("id1", true, Section.Type.SECTION));
-        sections.add(new Section("id2", true, Section.Type.SECTION));
+        sections.add(new Section("id1", true, SectionType.SECTION));
+        sections.add(new Section("id2", true, SectionType.SECTION));
         return sections;
     }
 }

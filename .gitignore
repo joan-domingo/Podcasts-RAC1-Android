@@ -8,3 +8,4 @@
 app/app-release.apk
 app/fabric.properties
 app/build
+/gradle.properties
