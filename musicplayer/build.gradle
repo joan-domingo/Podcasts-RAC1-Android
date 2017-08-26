@@ -12,12 +12,12 @@ apply plugin: 'com.jfrog.bintray'
 apply plugin: 'jacoco-android'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion global_compileSdkVersion
     buildToolsVersion global_buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 25
+        minSdkVersion global_minSdkVersion
+        targetSdkVersion global_targetSdkVersion
         versionCode 1
         versionName "1.0"
 

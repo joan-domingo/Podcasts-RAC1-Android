@@ -34,3 +34,6 @@ task clean(type: Delete) {
 }
 
 project.ext.global_buildToolsVersion = '25.0.3'
+project.ext.global_compileSdkVersion = 25
+project.ext.global_minSdkVersion = 16
+project.ext.global_targetSdkVersion = 25
