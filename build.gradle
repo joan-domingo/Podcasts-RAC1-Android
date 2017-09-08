@@ -19,6 +19,9 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven {
+            url "https://maven.google.com"
+        }
     }
 
     gradle.projectsEvaluated {
@@ -32,7 +35,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-project.ext.global_buildToolsVersion = '25.0.3'
-project.ext.global_compileSdkVersion = 25
+project.ext.global_buildToolsVersion = '26.0.1'
+project.ext.global_compileSdkVersion = 26
 project.ext.global_minSdkVersion = 16
-project.ext.global_targetSdkVersion = 25
+project.ext.global_targetSdkVersion = 26
