@@ -7,6 +7,7 @@
  * ./gradlew bintrayUpload
  */
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'jacoco-android'
@@ -43,6 +44,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
 }
 
 def siteUrl = 'https://github.com/xojan/MusicPlayer'      // Homepage URL of the library
@@ -123,4 +125,7 @@ if (project.rootProject.file('local.properties').exists()) {
             publish = true
         }
     }
+}
+repositories {
+    mavenCentral()
 }
