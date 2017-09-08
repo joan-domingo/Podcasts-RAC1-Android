@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
 
@@ -14,7 +13,6 @@ android {
         versionCode 26
         versionName "2.2.1"
         vectorDrawables.useSupportLibrary true
-        //jackOptions.enabled true //Data Binding does not support Jack builds yet, instead using retrolambda
     }
 
     signingConfigs {
