@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
-apply plugin: 'jacoco-android'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion global_compileSdkVersion
-    buildToolsVersion global_buildToolsVersion
+    compileSdkVersion compileSdk
+    buildToolsVersion buildTools
 
     defaultConfig {
         applicationId "cat.xojan.random1"
-        minSdkVersion global_minSdkVersion
-        targetSdkVersion global_targetSdkVersion
+        minSdkVersion minSdk
+        targetSdkVersion targetSdk
         versionCode 26
         versionName "2.2.1"
         vectorDrawables.useSupportLibrary true
@@ -58,11 +59,6 @@ android {
     testOptions {
         unitTests {
             returnDefaultValues = true
-            all {
-                jacoco {
-                    includeNoLocationClasses = true
-                }
-            }
         }
 
     }
@@ -70,6 +66,10 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+}
+
+androidExtensions {
+    experimental = true
 }
 
 buildscript {
@@ -90,34 +90,48 @@ repositories {
 }
 
 dependencies {
-    compile project(':musicplayer')
-    //Android support
-    compile 'com.android.support:appcompat-v7:26.0.2'
-    compile 'com.android.support:design:26.0.2'
-    //Crashlytics
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation project(':musicplayer')
+
+    // Android support
+    implementation "com.android.support:appcompat-v7:${supportLib}"
+    implementation "com.android.support:design:${supportLib}"
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Crashlytics
+    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true;
     }
-    //Dagger 2
-    compile 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
-    //JUnit
-    testCompile 'junit:junit:4.12'
-    //Leak canary
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    // Mockito
-    testCompile 'org.mockito:mockito-core:2.2.11'
-    //Picasso
-    compile 'com.squareup.picasso:picasso:2.5.2'
-    //Retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    //Rx
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.2'
+
+    // Dagger 2
+    kapt "com.google.dagger:dagger-compiler:${dagger}"
+    // when everything is migrated to kotlin, this line can be removed
+    annotationProcessor "com.google.dagger:dagger-compiler:${dagger}"
+    implementation "com.google.dagger:dagger:${dagger}"
+
+    // JUnit
+    testImplementation "junit:junit:${jUnit}"
+
+    // kotlin
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+
+    //Leak canary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:2.2.11'
+
+    // Picasso
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+
+    // Rx
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.2'
 }

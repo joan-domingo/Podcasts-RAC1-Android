@@ -7,11 +7,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta5'
-        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta6'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.4'
-        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -36,7 +34,14 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-project.ext.global_buildToolsVersion = '26.0.1'
-project.ext.global_compileSdkVersion = 26
-project.ext.global_minSdkVersion = 16
-project.ext.global_targetSdkVersion = 26
+ext {
+    buildTools = '26.0.1'
+    compileSdk = 26
+    minSdk = 16
+    targetSdk = 26
+
+    supportLib = '26.1.0'
+    retrofit = '2.3.0'
+    jUnit = '4.12'
+    dagger = '2.11'
+}
