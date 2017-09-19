@@ -1,4 +1,4 @@
-package cat.xojan.musicplayer;
+package cat.xojan.random1.service;
 
 import org.junit.Test;
 

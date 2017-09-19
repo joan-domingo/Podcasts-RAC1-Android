@@ -72,6 +72,10 @@ androidExtensions {
     experimental = true
 }
 
+kapt {
+    generateStubs = true
+}
+
 buildscript {
     repositories {
         maven { url 'https://maven.fabric.io/public' }
@@ -85,13 +89,11 @@ buildscript {
 repositories {
     mavenCentral()
     jcenter()
-    maven {url "https://clojars.org/repo/"}
+    maven {url "https://clojars.org/repo/" }
     maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
-    implementation project(':musicplayer')
-
     // Android support
     implementation "com.android.support:appcompat-v7:${supportLib}"
     implementation "com.android.support:design:${supportLib}"
@@ -103,9 +105,9 @@ dependencies {
     }
 
     // Dagger 2
-    annotationProcessor "com.google.dagger:dagger-compiler:${dagger}"
-    //kapt "com.google.dagger:dagger-compiler:${dagger}"
+    kapt "com.google.dagger:dagger-compiler:${dagger}"
     implementation "com.google.dagger:dagger:${dagger}"
+    kapt 'com.android.databinding:compiler:2.3.3'
 
     // JUnit
     testImplementation "junit:junit:${jUnit}"

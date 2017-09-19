@@ -18,9 +18,7 @@ import javax.inject.Inject;
 
 import cat.xojan.random1.R;
 import cat.xojan.random1.injection.HasComponent;
-import cat.xojan.random1.injection.component.DaggerHomeComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
-import cat.xojan.random1.injection.module.HomeModule;
 import cat.xojan.random1.ui.adapter.HomePagerAdapter;
 import cat.xojan.random1.ui.fragment.BaseFragment;
 import cat.xojan.random1.ui.fragment.DownloadsFragment;
@@ -33,7 +31,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class HomeActivity extends BaseActivity implements HasComponent {
+public class HomeActivityJava extends BaseActivity implements HasComponent {
 
     private static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 20;
 
@@ -103,17 +101,17 @@ public class HomeActivity extends BaseActivity implements HasComponent {
     }
 
     private void initInjector() {
-        mComponent = DaggerHomeComponent.builder()
+        /*mComponent = DaggerHomeComponent.builder()
                 .appComponent(getApplicationComponent())
                 .baseActivityModule(getActivityModule())
                 .homeModule(new HomeModule(this))
                 .build();
-        mComponent.inject(this);
+        mComponent.inject(this);*/
     }
 
     private void findView() {
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mViewPager = (ViewPager) findViewById(R.id.viewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
     }
 
     private void initView() {

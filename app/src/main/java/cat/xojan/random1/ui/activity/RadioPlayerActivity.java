@@ -19,8 +19,6 @@ import android.widget.TextView;
 
 import javax.inject.Inject;
 
-import cat.xojan.musicplayer.MusicPlayerService;
-import cat.xojan.musicplayer.PlayerUtil;
 import cat.xojan.random1.R;
 import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
@@ -28,6 +26,8 @@ import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.injection.component.DaggerRadioPlayerComponent;
 import cat.xojan.random1.injection.component.RadioPlayerComponent;
+import cat.xojan.random1.service.MusicPlayerService;
+import cat.xojan.random1.service.PlayerUtil;
 
 public class RadioPlayerActivity extends BaseActivity implements MusicPlayerService.Listener {
 

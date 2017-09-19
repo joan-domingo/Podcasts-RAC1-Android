@@ -2,6 +2,8 @@ package cat.xojan.random1.ui.fragment;
 
 import android.support.v4.app.Fragment;
 
+import cat.xojan.random1.injection.HasComponent;
+
 public abstract class BaseFragment extends Fragment {
 
     /**

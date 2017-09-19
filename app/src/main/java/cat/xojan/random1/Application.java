@@ -5,6 +5,7 @@ import com.crashlytics.android.answers.Answers;
 import com.squareup.leakcanary.LeakCanary;
 
 import cat.xojan.random1.injection.component.AppComponent;
+import cat.xojan.random1.injection.component.DaggerAppComponent;
 import cat.xojan.random1.injection.module.AppModule;
 import io.fabric.sdk.android.Fabric;
 

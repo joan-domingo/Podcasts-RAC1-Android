@@ -47,5 +47,9 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".service.MusicPlayerService"
+            android:exported="false"
+            android:stopWithTask="false"/>
+
     </application>
 </manifest>
