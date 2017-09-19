@@ -19,7 +19,6 @@ import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import cat.xojan.random1.domain.repository.ProgramRepository;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 

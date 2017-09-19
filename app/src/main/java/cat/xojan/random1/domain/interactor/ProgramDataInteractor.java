@@ -9,6 +9,8 @@ import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.intellij.lang.annotations.Flow;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -27,7 +29,7 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.repository.ProgramRepository;
-import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.PublishSubject;
@@ -44,9 +46,9 @@ public class ProgramDataInteractor {
     private final PreferencesDownloadPodcastRepository mDownloadRepo;
     private final DownloadManager mDownloadManager;
     private List<Program> mPrograms;
-    private Observable<List<Podcast>> mPodcastsByProgram;
+    private Flowable<List<Podcast>> mPodcastsByProgram;
     private Program mProgram;
-    private Observable<List<Podcast>> mPodcastsBySection;
+    private Flowable<List<Podcast>> mPodcastsBySection;
     private Section mSection;
     private PublishSubject<List<Podcast>> mDownloadedPodcastsSubject;
     private final EventLogger mEventLogger;
@@ -69,7 +71,7 @@ public class ProgramDataInteractor {
         return Observable.create(subscriber -> {
             try {
                 if (mPrograms == null) {
-                    mPrograms = mProgramRepo.getProgramList();
+                    mPrograms = mProgramRepo.getPrograms();
                 }
                 subscriber.onNext(mPrograms);
                 subscriber.onComplete();
@@ -93,25 +95,25 @@ public class ProgramDataInteractor {
                 .putBoolean(PREF_SECTION, selected).apply();
     }
 
-    public Observable<List<Podcast>> loadPodcasts(final Program program, final Section section,
-                                                  final boolean refresh) {
+    public Flowable<List<Podcast>> loadPodcasts(final Program program, final Section section,
+                                                final boolean refresh) {
         try {
             if (section != null) {
                 if (mPodcastsBySection == null || refresh || !mSection.equals(section)) {
                     mSection = section;
-                    mPodcastsBySection = mProgramRepo.getPodcastBySection(program.getId(),
+                    mPodcastsBySection = mProgramRepo.getPodcast(program.getId(),
                             section.getId());
                 }
                 return mPodcastsBySection;
             } else {
                 if (mPodcastsByProgram == null || refresh || !mProgram.equals(program)) {
                     mProgram = program;
-                    mPodcastsByProgram = mProgramRepo.getPodcastByProgram(program.getId());
+                    mPodcastsByProgram = mProgramRepo.getPodcast(program.getId(), null);
                 }
                 return mPodcastsByProgram;
             }
         } catch (IOException e) {
-            return Observable.error(e);
+            return Flowable.error(e);
         }
     }
 

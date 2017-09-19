@@ -1,20 +1,19 @@
 package cat.xojan.random1.injection.module;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.app.DownloadManager;
+import android.content.Context;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
-
-import android.app.DownloadManager;
-import android.content.Context;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.inject.Singleton;
 
 import cat.xojan.random1.Application;
 import cat.xojan.random1.BuildConfig;
 import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
-import cat.xojan.random1.data.Rac1RetrofitService;
+import cat.xojan.random1.data.Rac1ApiService;
 import cat.xojan.random1.data.RemoteProgramRepository;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.EventLogger;
@@ -44,7 +43,7 @@ public class AppModule {
     }
 
     @Provides @Singleton
-    Rac1RetrofitService provideRetrofitRac1Service() {
+    Rac1ApiService provideRetrofitRac1Service() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -63,11 +62,11 @@ public class AppModule {
                 .client(httpClient)
                 .build();
 
-        return retrofit.create(Rac1RetrofitService.class);
+        return retrofit.create(Rac1ApiService.class);
     }
 
     @Provides @Singleton
-    ProgramDataInteractor provideProgramDataInteractor(Rac1RetrofitService service,
+    ProgramDataInteractor provideProgramDataInteractor(Rac1ApiService service,
                                                        DownloadManager downloadManager,
                                                        EventLogger eventLogger) {
         return new ProgramDataInteractor(new RemoteProgramRepository(service),
