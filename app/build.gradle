@@ -111,7 +111,7 @@ dependencies {
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:${dagger}"
     implementation "com.google.dagger:dagger:${dagger}"
-    kapt 'com.android.databinding:compiler:2.3.3'
+    kapt 'com.android.databinding:compiler:3.0.0-beta6'
 
     // JUnit
     testImplementation "junit:junit:${jUnit}"
