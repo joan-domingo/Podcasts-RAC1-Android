@@ -66,6 +66,10 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
+    sourceSets {
+        test.java.srcDirs += 'src/test/kotlin'
+    }
 }
 
 androidExtensions {
@@ -121,7 +125,7 @@ dependencies {
     testImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanary"
 
     // Mockito
-    testImplementation 'org.mockito:mockito-core:2.2.11'
+    testImplementation 'org.mockito:mockito-core:2.10.0'
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'
