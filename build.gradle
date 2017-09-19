@@ -45,4 +45,5 @@ ext {
     retrofit = '2.3.0'
     jUnit = '4.12'
     dagger = '2.11'
+    leakCanary = '1.5.2'
 }

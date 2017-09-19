@@ -12,7 +12,7 @@ import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import io.reactivex.Observable;
+import io.reactivex.Flowable;
 import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subjects.PublishSubject;
@@ -56,7 +56,7 @@ public class PodcastsViewModelTest {
         program.setImageUrl("www.image.url");
         Section section = new Section("id1", true, SectionType.SECTION);
 
-        when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Observable.just(getPodcastList()));
+        when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Flowable.just(getPodcastList()));
         when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.just(getDownloadedPodcastList()));
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
         mViewModel.loadPodcasts(program, section, false).subscribe(testSubscriber);

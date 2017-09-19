@@ -13,8 +13,8 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.PodcastData;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.ProgramData;
-import io.reactivex.Observable;
-import io.reactivex.observers.TestObserver;
+import io.reactivex.Flowable;
+import io.reactivex.subscribers.TestSubscriber;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,11 +24,11 @@ import static org.mockito.Mockito.when;
 public class RemoteProgramRepositoryTest {
 
     private RemoteProgramRepository mRemoteRepository;
-    private Rac1RetrofitService mService;
+    private Rac1ApiService mService;
 
     @Before
     public void setUp() {
-        mService = mock(Rac1RetrofitService.class);
+        mService = mock(Rac1ApiService.class);
         mRemoteRepository = new RemoteProgramRepository(mService);
     }
 
@@ -36,24 +36,24 @@ public class RemoteProgramRepositoryTest {
     public void get_program_list() throws IOException {
         when(mService.getProgramData().execute().body()).thenReturn(getProgramData());
 
-        assertEquals(mRemoteRepository.getProgramList(), getProgramList());
+        assertEquals(mRemoteRepository.getPrograms(), getProgramList());
     }
 
     @Test
     public void get_podcasts_list_by_program() throws IOException {
-        when(mService.getPodcastData(anyString())).thenReturn(Observable.just(getPodcastData()));
-        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
+        when(mService.getPodcastData(anyString())).thenReturn(Flowable.just(getPodcastData()));
+        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
 
-        mRemoteRepository.getPodcastByProgram("programId").subscribe(testSubscriber);
+        mRemoteRepository.getPodcast("programId", null).subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
     }
 
     @Test
     public void get_podcasts_list_by_section() throws IOException {
-        when(mService.getPodcastData(anyString(), anyString())).thenReturn(Observable.just(getPodcastData()));
-        TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
+        when(mService.getPodcastData(anyString(), anyString())).thenReturn(Flowable.just(getPodcastData()));
+        TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
 
-        mRemoteRepository.getPodcastBySection("programId", "sectionId").subscribe(testSubscriber);
+        mRemoteRepository.getPodcast("programId", "sectionId").subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
     }
 
