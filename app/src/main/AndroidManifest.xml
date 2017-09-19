@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activity.HomeActivity" />
+        <activity android:name=".ui.activity.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ui.activity.RadioPlayerActivity"/>
 
         <activity

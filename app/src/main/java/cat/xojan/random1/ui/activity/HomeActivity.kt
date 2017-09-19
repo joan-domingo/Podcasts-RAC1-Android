@@ -12,36 +12,35 @@ import cat.xojan.random1.ui.fragment.ProgramFragment
 import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity() : BaseActivity(), HasComponent<HomeComponent> {
+    companion object {
+        private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
+    }
 
-    override val component: HomeComponent
-        get() = homeComponent
+    override val component: HomeComponent by lazy {
+        DaggerHomeComponent.builder()
+                .appComponent(applicationComponent)
+                .baseActivityModule(activityModule)
+                .homeModule(HomeModule(this))
+                .build()
+    }
 
-    lateinit var homeComponent : HomeComponent
-    private lateinit var pageAdapter: HomePagerAdapter
+    private val pageAdapter: HomePagerAdapter by lazy {
+        HomePagerAdapter(supportFragmentManager, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        inject()
         initView()
+        component.inject(this)
     }
 
     private fun initView() {
-        //setSupportActionBar(toolbar)
-        pageAdapter = HomePagerAdapter(supportFragmentManager, this)
+        setSupportActionBar(toolbar)
         pageAdapter.addFragment(ProgramFragment())
         pageAdapter.addFragment(DownloadsFragment())
 
         viewPager.adapter = pageAdapter
         tabLayout.setupWithViewPager(viewPager)
-    }
-
-    private fun inject() {
-        homeComponent = DaggerHomeComponent.builder()
-                .appComponent(applicationComponent)
-                .baseActivityModule(activityModule)
-                .homeModule(HomeModule(this))
-                .build()
-        homeComponent.inject(this)
     }
 }
