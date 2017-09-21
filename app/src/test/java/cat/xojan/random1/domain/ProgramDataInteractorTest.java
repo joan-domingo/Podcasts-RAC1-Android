@@ -26,6 +26,8 @@ import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
 
 import static cat.xojan.random1.testutil.DataKt.getPodcastList;
+import static cat.xojan.random1.testutil.DataKt.getProgram1;
+import static cat.xojan.random1.testutil.DataKt.getProgramList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,18 +56,18 @@ public class ProgramDataInteractorTest {
     @Test
     public void load_programs_successfully_during_first_call() throws IOException {
         mProgramDataInteractor.setProgramsData(null);
-        when(mProgramRepo.getPrograms()).thenReturn(getDummyProgramList());
+        when(mProgramRepo.getPrograms()).thenReturn(getProgramList());
         TestObserver<List<Program>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
-        testSubscriber.assertValue(getDummyProgramList());
+        testSubscriber.assertValue(getProgramList());
     }
 
     @Test
     public void load_programs_successfully_after_first_call() {
-        mProgramDataInteractor.setProgramsData(getDummyProgramList());
+        mProgramDataInteractor.setProgramsData(getProgramList());
         TestObserver<List<Program>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber);
-        testSubscriber.assertValue(getDummyProgramList());
+        testSubscriber.assertValue(getProgramList());
     }
 
     @Test
@@ -125,17 +127,8 @@ public class ProgramDataInteractorTest {
         testSubscriber.assertValue(new ArrayList<Podcast>());
     }
 
-    private List<Program> getDummyProgramList() {
-        List<Program> programs = new ArrayList<>();
-        programs.add(new Program("id1", true));
-        programs.add(new Program("id2", true));
-
-        return programs;
-    }
-
     private Program getDummyProgram() {
-        Program program = new Program("programId", true);
-        program.setImageUrl("http://placekitten.com/g/200/300");
+        Program program = getProgram1();
         program.setSections(getSections());
         return program;
     }

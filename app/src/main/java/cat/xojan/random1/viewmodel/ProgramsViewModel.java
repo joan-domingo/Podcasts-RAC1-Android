@@ -20,7 +20,7 @@ public class ProgramsViewModel {
     public Single<List<Program>> loadPrograms() {
         return mProgramDataInteractor.loadPrograms()
                 .flatMapIterable(list -> list)
-                .filter(Program::isActive)
+                .filter(Program::getActive)
                 .toList();
     }
 }

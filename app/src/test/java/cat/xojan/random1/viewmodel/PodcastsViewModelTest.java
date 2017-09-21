@@ -20,6 +20,7 @@ import io.reactivex.subjects.PublishSubject;
 import static cat.xojan.random1.testutil.DataKt.getPodcast1;
 import static cat.xojan.random1.testutil.DataKt.getPodcast3;
 import static cat.xojan.random1.testutil.DataKt.getPodcastList;
+import static cat.xojan.random1.testutil.DataKt.getProgram1;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,8 +56,7 @@ public class PodcastsViewModelTest {
 
     @Test
     public void load_podcasts_successfully() {
-        Program program = new Program("program1", true);
-        program.setImageUrl("www.image.url");
+        Program program = getProgram1();
         Section section = new Section("id1", true, SectionType.SECTION);
 
         when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Flowable.just(getPodcastList()));

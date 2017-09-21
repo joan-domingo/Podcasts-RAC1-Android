@@ -6,17 +6,16 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.PodcastData;
-import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.ProgramData;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 
 import static cat.xojan.random1.testutil.DataKt.getPodcastList;
+import static cat.xojan.random1.testutil.DataKt.getProgramList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -62,14 +61,6 @@ public class RemoteProgramRepositoryTest {
         ProgramData programData = new ProgramData();
         programData.setPrograms(getProgramList());
         return programData;
-    }
-
-    private List<Program> getProgramList() {
-        List<Program> programs = new ArrayList<>();
-        programs.add(new Program("program1", true));
-        programs.add(new Program("program2", true));
-        programs.add(new Program("program3", true));
-        return programs;
     }
 
     private PodcastData getPodcastData() {

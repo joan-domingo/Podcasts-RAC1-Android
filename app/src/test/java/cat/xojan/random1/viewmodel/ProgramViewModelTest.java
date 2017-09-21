@@ -17,6 +17,7 @@ import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.SectionFragment;
 
+import static cat.xojan.random1.testutil.DataKt.getProgram1;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -35,11 +36,7 @@ public class ProgramViewModelTest {
     public void setUp() {
         mActivity = mock(BaseActivity.class);
         mProgramDataInteractor = mock(ProgramDataInteractor.class);
-
-        mProgram = new Program("program1", true);
-        mProgram.setTitle("title program 1");
-        mProgram.setImageUrl("http://www.url.com/image");
-
+        mProgram = getProgram1();
         mViewModel = new ProgramViewModel(mActivity, mProgram, mProgramDataInteractor);
     }
 

@@ -13,6 +13,7 @@ import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
+import static cat.xojan.random1.testutil.DataKt.getProgram1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -31,12 +32,9 @@ public class SectionsViewModelTest {
 
     @Test
     public void load_sections_successfully() {
-        Program program = new Program("program1", true);
-        program.setImageUrl("www.image.url");
-
         when(mProgramDataInteractor.loadSections(any(Program.class))).thenReturn(Observable.just(getSections()));
         TestObserver<List<Section>> testSubscriber = new TestObserver<>();
-        mViewModel.loadSections(program).subscribe(testSubscriber);
+        mViewModel.loadSections(getProgram1()).subscribe(testSubscriber);
 
         testSubscriber.assertValue(getSectionsResult());
     }

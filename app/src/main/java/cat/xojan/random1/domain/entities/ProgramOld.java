@@ -7,7 +7,7 @@ import android.support.annotation.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program implements Parcelable {
+public class ProgramOld implements Parcelable {
 
     private String id;
     private String methodSelectionId;
@@ -20,7 +20,7 @@ public class Program implements Parcelable {
     private boolean active;
 
     @VisibleForTesting
-    public Program(String id, boolean active) {
+    public ProgramOld(String id, boolean active) {
         this.id = id;
         this.active = active;
     }
@@ -45,7 +45,7 @@ public class Program implements Parcelable {
         return active;
     }
 
-    protected Program(Parcel in) {
+    protected ProgramOld(Parcel in) {
         id = in.readString();
         methodSelectionId = in.readString();
         title = in.readString();
@@ -84,15 +84,15 @@ public class Program implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Program> CREATOR = new Parcelable.Creator<Program>() {
+    public static final Parcelable.Creator<ProgramOld> CREATOR = new Parcelable.Creator<ProgramOld>() {
         @Override
-        public Program createFromParcel(Parcel in) {
-            return new Program(in);
+        public ProgramOld createFromParcel(Parcel in) {
+            return new ProgramOld(in);
         }
 
         @Override
-        public Program[] newArray(int size) {
-            return new Program[size];
+        public ProgramOld[] newArray(int size) {
+            return new ProgramOld[size];
         }
     };
 
@@ -101,7 +101,7 @@ public class Program implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Program program = (Program) o;
+        ProgramOld program = (ProgramOld) o;
 
         return id != null ? id.equals(program.id) : program.id == null;
 

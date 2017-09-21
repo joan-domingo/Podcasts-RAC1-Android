@@ -5,12 +5,12 @@ import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 
-import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 
+import static cat.xojan.random1.testutil.DataKt.getProgram1;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -20,18 +20,16 @@ import static org.mockito.Mockito.verify;
 public class SectionViewModelTest {
 
     private BaseActivity mActivity;
-    private Program mProgram;
     private SectionViewModel mViewModel;
     private Section mSection;
 
     @Before
     public void setUp() {
         mActivity = mock(BaseActivity.class);
-        mProgram = new Program("id", true);
         mSection = new Section("id", true, SectionType.SECTION);
         mSection.setTitle("title");
         mSection.setImageUrl("www.image.url");
-        mViewModel = new SectionViewModel(mActivity, mSection, mProgram);
+        mViewModel = new SectionViewModel(mActivity, mSection, getProgram1());
     }
 
     @Test
