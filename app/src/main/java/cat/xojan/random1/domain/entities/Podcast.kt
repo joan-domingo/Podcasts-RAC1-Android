@@ -3,16 +3,15 @@ package cat.xojan.random1.domain.entities
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.os.Parcelable
-import android.util.Log
 import com.android.databinding.library.baseAdapters.BR
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-class Podcast(private var audio: Audio,
+data class Podcast(private var audio: Audio,
               var path: String,
               var filePath: String?,
-              var dateTime: String,
+              var dateTime: Date,
               private var durationSeconds: Long,
               var programId: String,
               private var _imageUrl: String?,
@@ -51,5 +50,23 @@ class Podcast(private var audio: Audio,
         LOADED,
         DOWNLOADING,
         DOWNLOADED
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+
+        val podcast = other as Podcast
+
+        if (path != podcast.path) return false
+        if (programId != podcast.programId) return false
+        return appMobileTitle == podcast.appMobileTitle
+    }
+
+    override fun hashCode(): Int {
+        var result = path.hashCode()
+        result = 31 * result + programId.hashCode()
+        result = 31 * result + appMobileTitle.hashCode()
+        return result
     }
 }
