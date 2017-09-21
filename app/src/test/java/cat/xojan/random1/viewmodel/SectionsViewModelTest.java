@@ -3,17 +3,17 @@ package cat.xojan.random1.viewmodel;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Observable;
 import io.reactivex.observers.TestObserver;
 
 import static cat.xojan.random1.testutil.DataKt.getProgram1;
+import static cat.xojan.random1.testutil.DataKt.getSectionList;
+import static cat.xojan.random1.testutil.DataKt.getSectionListResult1;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -32,32 +32,17 @@ public class SectionsViewModelTest {
 
     @Test
     public void load_sections_successfully() {
-        when(mProgramDataInteractor.loadSections(any(Program.class))).thenReturn(Observable.just(getSections()));
+        when(mProgramDataInteractor.loadSections(any(Program.class))).thenReturn(Observable.just
+                (getSectionList()));
         TestObserver<List<Section>> testSubscriber = new TestObserver<>();
         mViewModel.loadSections(getProgram1()).subscribe(testSubscriber);
 
-        testSubscriber.assertValue(getSectionsResult());
+        testSubscriber.assertValue(getSectionListResult1());
     }
 
     @Test
     public void set_selected_mode() {
         mViewModel.selectedSection(true);
         verify(mProgramDataInteractor).setSectionSelected(true);
-    }
-
-    private List<Section> getSections() {
-        List<Section> sections = new ArrayList<>();
-        sections.add(new Section("section1", true, SectionType.SECTION));
-        sections.add(new Section("section2", false, SectionType.SECTION));
-        sections.add(new Section("section3", true, SectionType.GENERIC));
-        sections.add(new Section("section4", true, SectionType.SECTION));
-        return sections;
-    }
-
-    private List<Section> getSectionsResult() {
-        List<Section> sections = new ArrayList<>();
-        sections.add(new Section("section1", true, SectionType.SECTION));
-        sections.add(new Section("section4", true, SectionType.SECTION));
-        return sections;
     }
 }

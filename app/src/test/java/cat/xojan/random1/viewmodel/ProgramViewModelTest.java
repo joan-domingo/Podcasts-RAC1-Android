@@ -6,18 +6,14 @@ import android.view.View;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cat.xojan.random1.domain.entities.Program;
-import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.HourByHourListFragment;
 import cat.xojan.random1.ui.fragment.SectionFragment;
 
 import static cat.xojan.random1.testutil.DataKt.getProgram1;
+import static cat.xojan.random1.testutil.DataKt.getSectionList;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -59,16 +55,9 @@ public class ProgramViewModelTest {
 
     @Test
     public void click_program_and_show_sections() {
-        mProgram.setSections(getSections());
+        mProgram.setSections(getSectionList());
         when(mProgramDataInteractor.isSectionSelected()).thenReturn(true);
         mViewModel.onClickProgram().onClick(new View(mActivity));
         verify(mActivity).addFragment(any(SectionFragment.class), eq(SectionFragment.TAG), eq(true));
-    }
-
-    private List<Section> getSections() {
-        List<Section> sections = new ArrayList<>();
-        sections.add(new Section("id1", true, SectionType.SECTION));
-        sections.add(new Section("id2", true, SectionType.SECTION));
-        return sections;
     }
 }

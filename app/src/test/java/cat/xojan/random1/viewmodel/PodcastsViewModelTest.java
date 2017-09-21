@@ -10,7 +10,6 @@ import java.util.List;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -21,6 +20,7 @@ import static cat.xojan.random1.testutil.DataKt.getPodcast1;
 import static cat.xojan.random1.testutil.DataKt.getPodcast3;
 import static cat.xojan.random1.testutil.DataKt.getPodcastList;
 import static cat.xojan.random1.testutil.DataKt.getProgram1;
+import static cat.xojan.random1.testutil.DataKt.getSection1;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,7 +57,7 @@ public class PodcastsViewModelTest {
     @Test
     public void load_podcasts_successfully() {
         Program program = getProgram1();
-        Section section = new Section("id1", true, SectionType.SECTION);
+        Section section = getSection1();
 
         when(mProgramDataInteractor.loadPodcasts(program, section, false)).thenReturn(Flowable.just(getPodcastList()));
         when(mProgramDataInteractor.getDownloadedPodcasts()).thenReturn(Single.just(getDownloadedPodcastList()));

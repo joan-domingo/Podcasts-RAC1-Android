@@ -6,11 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.fragment.PodcastListFragment;
 
 import static cat.xojan.random1.testutil.DataKt.getProgram1;
+import static cat.xojan.random1.testutil.DataKt.getSection1;
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -26,9 +26,7 @@ public class SectionViewModelTest {
     @Before
     public void setUp() {
         mActivity = mock(BaseActivity.class);
-        mSection = new Section("id", true, SectionType.SECTION);
-        mSection.setTitle("title");
-        mSection.setImageUrl("www.image.url");
+        mSection = getSection1();
         mViewModel = new SectionViewModel(mActivity, mSection, getProgram1());
     }
 

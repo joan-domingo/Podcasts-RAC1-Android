@@ -18,7 +18,6 @@ import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.entities.SectionType;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.repository.ProgramRepository;
 import io.reactivex.Flowable;
@@ -28,6 +27,7 @@ import io.reactivex.subscribers.TestSubscriber;
 import static cat.xojan.random1.testutil.DataKt.getPodcastList;
 import static cat.xojan.random1.testutil.DataKt.getProgram1;
 import static cat.xojan.random1.testutil.DataKt.getProgramList;
+import static cat.xojan.random1.testutil.DataKt.getSectionList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -84,7 +84,7 @@ public class ProgramDataInteractorTest {
         Program program = getDummyProgram();
         TestObserver<List<Section>> testSubscriber = new TestObserver<>();
         mProgramDataInteractor.loadSections(program).subscribe(testSubscriber);
-        testSubscriber.assertValue(getSections());
+        testSubscriber.assertValue(getSectionList());
     }
 
     @Test @Ignore
@@ -99,7 +99,7 @@ public class ProgramDataInteractorTest {
     @Test
     public void load_podcasts_by_section_successfully() throws IOException {
         Program program = getDummyProgram();
-        Section section = getSections().get(0);
+        Section section = getSectionList().get(0);
         when(mProgramRepo.getPodcast(anyString(), anyString())).thenReturn(Flowable.just(getPodcastList()));
         TestSubscriber<List<Podcast>> testSubscriber = new TestSubscriber<>();
         mProgramDataInteractor.loadPodcasts(program, section, false).subscribe(testSubscriber);
@@ -129,16 +129,7 @@ public class ProgramDataInteractorTest {
 
     private Program getDummyProgram() {
         Program program = getProgram1();
-        program.setSections(getSections());
+        program.setSections(getSectionList());
         return program;
-    }
-
-    private List<Section> getSections() {
-        List<Section> sections = new ArrayList<>();
-        sections.add(new Section("sectionId1", true, SectionType.SECTION));
-        sections.add(new Section("sectionId2", true, SectionType.SECTION));
-        sections.add(new Section("sectionId3", true, SectionType.SECTION));
-
-        return sections;
     }
 }
