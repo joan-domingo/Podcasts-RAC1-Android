@@ -19,7 +19,7 @@ public class SectionsViewModel {
     public Single<List<Section>> loadSections(Program program) {
         return mProgramDataInteractor.loadSections(program)
                 .flatMapIterable(list -> list)
-                .filter(Section::isActive)
+                .filter(Section::getActive)
                 .filter(section -> section.getType() == SectionType.SECTION)
                 .map(section -> {
                     section.setImageUrl(program.getImageUrl());

@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.VisibleForTesting;
 
-public class Section implements Parcelable {
+public class SectionOld implements Parcelable {
 
     private String id;
     private String title;
@@ -13,7 +13,7 @@ public class Section implements Parcelable {
     private SectionType type;
 
     @VisibleForTesting
-    public Section(String id, boolean isActive, SectionType type) {
+    public SectionOld(String id, boolean isActive, SectionType type) {
         this.id = id;
         this.active = isActive;
         this.type = type;
@@ -47,7 +47,7 @@ public class Section implements Parcelable {
         return type;
     }
 
-    protected Section(Parcel in) {
+    protected SectionOld(Parcel in) {
         id = in.readString();
         title = in.readString();
         mImageUrl = in.readString();
@@ -68,15 +68,15 @@ public class Section implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Section> CREATOR = new Parcelable.Creator<Section>() {
+    public static final Parcelable.Creator<SectionOld> CREATOR = new Parcelable.Creator<SectionOld>() {
         @Override
-        public Section createFromParcel(Parcel in) {
-            return new Section(in);
+        public SectionOld createFromParcel(Parcel in) {
+            return new SectionOld(in);
         }
 
         @Override
-        public Section[] newArray(int size) {
-            return new Section[size];
+        public SectionOld[] newArray(int size) {
+            return new SectionOld[size];
         }
     };
 
@@ -85,7 +85,7 @@ public class Section implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Section section = (Section) o;
+        SectionOld section = (SectionOld) o;
 
         return id.equals(section.id);
 
