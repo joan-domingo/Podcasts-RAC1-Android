@@ -82,7 +82,8 @@ public class DownloadsFragment extends BaseFragment {
                     downloaded.add(p);
                 }
             }
-            Collections.sort(downloaded, (podcast, podcast2) -> podcast2.getDate().compareTo(podcast.getDate()));
+            Collections.sort(downloaded, (podcast, podcast2) -> podcast2.getDateTime().compareTo(podcast
+                    .getDateTime()));
             mBinding.emptyList.setVisibility(View.GONE);
         }
 

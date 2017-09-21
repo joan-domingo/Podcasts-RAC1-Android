@@ -32,7 +32,6 @@ android {
         debug {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
-            testCoverageEnabled true
         }
         release {
             minifyEnabled true
@@ -53,31 +52,27 @@ android {
     }
 
     dataBinding {
-        enabled = true
+        enabled true
     }
 
-    testOptions {
+    /*testOptions {
         unitTests {
-            returnDefaultValues = true
+            returnDefaultValues true
         }
 
-    }
+    }*/
 
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
 
-    sourceSets {
+    /*sourceSets {
         test.java.srcDirs += 'src/test/kotlin'
-    }
+    }*/
 }
 
 androidExtensions {
-    experimental = true
-}
-
-kapt {
-    generateStubs = true
+    experimental true
 }
 
 buildscript {

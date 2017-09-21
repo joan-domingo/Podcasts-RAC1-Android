@@ -10,7 +10,7 @@ import java.util.Date;
 
 import cat.xojan.random1.BR;
 
-public class Podcast extends BaseObservable implements Parcelable {
+public class PodcastOld extends BaseObservable implements Parcelable {
 
     private Audio audio;
     private String path;
@@ -24,7 +24,7 @@ public class Podcast extends BaseObservable implements Parcelable {
     private long mDownloadReference;
 
     @VisibleForTesting
-    public Podcast(String path, String programId, String title) {
+    public PodcastOld(String path, String programId, String title) {
         this.path = path;
         mProgramId = programId;
         appMobileTitle = title;
@@ -95,7 +95,7 @@ public class Podcast extends BaseObservable implements Parcelable {
         return dateTime;
     }
 
-    protected Podcast(Parcel in) {
+    protected PodcastOld(Parcel in) {
         audio = (Audio) in.readValue(Audio.class.getClassLoader());
         path = in.readString();
         mFilePath = in.readString();
@@ -127,15 +127,16 @@ public class Podcast extends BaseObservable implements Parcelable {
     }
 
     @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Podcast> CREATOR = new Parcelable.Creator<Podcast>() {
+    public static final Parcelable.Creator<PodcastOld> CREATOR = new Parcelable.Creator<PodcastOld>
+            () {
         @Override
-        public Podcast createFromParcel(Parcel in) {
-            return new Podcast(in);
+        public PodcastOld createFromParcel(Parcel in) {
+            return new PodcastOld(in);
         }
 
         @Override
-        public Podcast[] newArray(int size) {
-            return new Podcast[size];
+        public PodcastOld[] newArray(int size) {
+            return new PodcastOld[size];
         }
     };
 
@@ -150,7 +151,7 @@ public class Podcast extends BaseObservable implements Parcelable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Podcast podcast = (Podcast) o;
+        PodcastOld podcast = (PodcastOld) o;
 
         if (!path.equals(podcast.path)) return false;
         if (!mProgramId.equals(podcast.mProgramId)) return false;
