@@ -25,6 +25,7 @@ import io.reactivex.Flowable;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subscribers.TestSubscriber;
 
+import static cat.xojan.random1.testutil.DataKt.getPodcastList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -146,13 +147,5 @@ public class ProgramDataInteractorTest {
         sections.add(new Section("sectionId3", true, SectionType.SECTION));
 
         return sections;
-    }
-
-    private List<Podcast> getPodcastList() {
-        List<Podcast> podcasts = new ArrayList<>();
-        podcasts.add(new Podcast("path1", "programId1", "title1"));
-        podcasts.add(new Podcast("path2", "programId2", "title2"));
-
-        return podcasts;
     }
 }

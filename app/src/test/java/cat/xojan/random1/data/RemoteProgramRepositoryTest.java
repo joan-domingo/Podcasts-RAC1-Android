@@ -16,6 +16,7 @@ import cat.xojan.random1.domain.entities.ProgramData;
 import io.reactivex.Flowable;
 import io.reactivex.subscribers.TestSubscriber;
 
+import static cat.xojan.random1.testutil.DataKt.getPodcastList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -75,14 +76,6 @@ public class RemoteProgramRepositoryTest {
         PodcastData podcastData = new PodcastData();
         podcastData.setPodcasts(getPodcastList());
         return podcastData;
-    }
-
-    private List<Podcast> getPodcastList() {
-        List<Podcast> podcasts = new ArrayList<>();
-        podcasts.add(new Podcast("path1", "program1", "title1"));
-        podcasts.add(new Podcast("path2", "program1", "title2"));
-        podcasts.add(new Podcast("path3", "program1", "title3"));
-        return podcasts;
     }
 }
 

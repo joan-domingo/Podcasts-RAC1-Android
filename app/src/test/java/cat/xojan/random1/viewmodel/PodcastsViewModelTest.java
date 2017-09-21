@@ -17,6 +17,9 @@ import io.reactivex.Single;
 import io.reactivex.observers.TestObserver;
 import io.reactivex.subjects.PublishSubject;
 
+import static cat.xojan.random1.testutil.DataKt.getPodcast1;
+import static cat.xojan.random1.testutil.DataKt.getPodcast3;
+import static cat.xojan.random1.testutil.DataKt.getPodcastList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -91,27 +94,11 @@ public class PodcastsViewModelTest {
         verify(mProgramDataInteractor).setSectionSelected(true);
     }
 
-    private List<Podcast> getPodcastList() {
-        List<Podcast> podcasts = new ArrayList<>();
-        podcasts.add(new Podcast("path1", "program1", "podcast1"));
-        podcasts.add(new Podcast("path2", "program1", "podcast2"));
-        podcasts.add(new Podcast("path3", "program1", "podcast3"));
-        return podcasts;
-    }
-
     private List<Podcast> getDownloadedPodcastList() {
         List<Podcast> podcasts = new ArrayList<>();
 
-        Podcast podcast1 = new Podcast("path1", "program1", "podcast1");
-        podcast1.setFilePath("filePath1");
-        podcast1.setState(Podcast.State.DOWNLOADED);
-
-        Podcast podcast3 = new Podcast("path3", "program1", "podcast3");
-        podcast3.setFilePath("filePath3");
-        podcast3.setState(Podcast.State.DOWNLOADING);
-
-        podcasts.add(podcast1);
-        podcasts.add(podcast3);
+        podcasts.add(getPodcast1());
+        podcasts.add(getPodcast3());
 
         return podcasts;
     }

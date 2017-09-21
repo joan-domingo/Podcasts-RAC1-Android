@@ -55,20 +55,16 @@ android {
         enabled true
     }
 
-    /*testOptions {
+    testOptions {
         unitTests {
             returnDefaultValues true
         }
 
-    }*/
+    }
 
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
-
-    /*sourceSets {
-        test.java.srcDirs += 'src/test/kotlin'
-    }*/
 }
 
 androidExtensions {
