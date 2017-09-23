@@ -12,7 +12,6 @@ import cat.xojan.random1.injection.module.BrowseModule
 import cat.xojan.random1.ui.fragment.HourByHourListFragment
 import cat.xojan.random1.ui.fragment.SectionFragment
 import cat.xojan.random1.viewmodel.PodcastsViewModel
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
@@ -30,7 +29,6 @@ class BrowseActivity: BaseActivity(), HasComponent<BrowseComponent> {
     }
 
     @Inject internal lateinit var mViewModel: PodcastsViewModel
-    private val mCompositeDisposable = CompositeDisposable()
 
     override val component: BrowseComponent by lazy {
         DaggerBrowseComponent.builder()
@@ -48,11 +46,18 @@ class BrowseActivity: BaseActivity(), HasComponent<BrowseComponent> {
     }
 
     private fun initView() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val program = intent.getParcelableExtra<Program>(EXTRA_PROGRAM)
+        title = program.title
         if (intent.getBooleanExtra(EXTRA_IS_SECTION, false)) {
             addFragment(SectionFragment.newInstance(program), SectionFragment.TAG, true)
         } else {
             addFragment(HourByHourListFragment.newInstance(program), HourByHourListFragment.TAG, true)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 }

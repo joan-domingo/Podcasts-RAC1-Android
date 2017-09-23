@@ -2,10 +2,13 @@ package cat.xojan.random1.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +17,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.HomeComponent;
@@ -31,23 +33,29 @@ public class DownloadsFragment extends BaseFragment {
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private PodcastListAdapter mAdapter;
-    private RecyclerViewFragmentBinding mBinding;
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private TextView mEmptyList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         getComponent(HomeComponent.class).inject(this);
-        mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBinding.swiperefresh.setEnabled(false);
-        mBinding.emptyList.setText(getString(R.string.no_downloaded_podcasts));
+        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mEmptyList = view.findViewById(R.id.empty_list);
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSwipeRefresh.setEnabled(false);
+        mEmptyList.setText(getString(R.string.no_downloaded_podcasts));
 
         mAdapter = new PodcastListAdapter(getContext(), mProgramDataInteractor);
-        mBinding.recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-        return mBinding.getRoot();
+        return view;
     }
 
     @Override
@@ -75,7 +83,7 @@ public class DownloadsFragment extends BaseFragment {
     private void updateView(List<Podcast> podcasts) {
         List<Podcast> downloaded = new ArrayList<>();
         if (podcasts.isEmpty()) {
-            mBinding.emptyList.setVisibility(View.VISIBLE);
+            mEmptyList.setVisibility(View.VISIBLE);
         } else {
             for (Podcast p : podcasts) {
                 if (p.getState().equals(Podcast.State.DOWNLOADED)) {
@@ -84,7 +92,7 @@ public class DownloadsFragment extends BaseFragment {
             }
             Collections.sort(downloaded, (podcast, podcast2) -> podcast2.getDateTime().compareTo(podcast
                     .getDateTime()));
-            mBinding.emptyList.setVisibility(View.GONE);
+            mEmptyList.setVisibility(View.GONE);
         }
 
         mAdapter.update(downloaded);

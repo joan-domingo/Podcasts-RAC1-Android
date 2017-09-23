@@ -3,21 +3,21 @@ package cat.xojan.random1.ui.fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
@@ -43,8 +43,11 @@ public class PodcastListFragment extends BaseFragment {
 
     private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
-    private RecyclerViewFragmentBinding mBinding;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private TextView mEmptyList;
 
     public static PodcastListFragment newInstance(Section section, Program program) {
         Bundle args = new Bundle();
@@ -62,15 +65,19 @@ public class PodcastListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         getComponent(BrowseComponent.class).inject(this);
-        mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
-        mBinding.swiperefresh.setColorSchemeResources(R.color.colorAccent);
-        mBinding.swiperefresh.setOnRefreshListener(() -> showPodcasts(true));
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mEmptyList = view.findViewById(R.id.empty_list);
+
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefresh.setOnRefreshListener(() -> showPodcasts(true));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new PodcastListAdapter(getActivity(), mProgramDataInteractor);
-        mBinding.recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-        return mBinding.getRoot();
+        return view;
     }
 
     @Override
@@ -78,12 +85,6 @@ public class PodcastListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         showPodcasts(false);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.findItem(R.id.action_export_podcasts).setVisible(false);
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -121,7 +122,7 @@ public class PodcastListFragment extends BaseFragment {
 
     private void showPodcasts(final boolean refresh) {
         new Handler().postDelayed(() -> {
-            mBinding.swiperefresh.setRefreshing(true);
+            mSwipeRefresh.setRefreshing(true);
             Program program = getArguments().getParcelable(PodcastListFragment.ARG_PROGRAM);
             Section section = getArguments().getParcelable(PodcastListFragment.ARG_SECTION);
 
@@ -134,10 +135,10 @@ public class PodcastListFragment extends BaseFragment {
     }
 
     private void updateView(List<Podcast> podcasts) {
-        mBinding.swiperefresh.setRefreshing(false);
+        mSwipeRefresh.setRefreshing(false);
         mAdapter.update(podcasts);
-        mBinding.emptyList.setVisibility(View.GONE);
-        mBinding.recyclerView.setVisibility(View.VISIBLE);
+        mEmptyList.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void updateViewWithDownloaded(List<Podcast> podcasts) {
@@ -145,10 +146,10 @@ public class PodcastListFragment extends BaseFragment {
     }
 
     private void handleError(Throwable throwable) {
-        mBinding.swiperefresh.setRefreshing(false);
-        mBinding.emptyList.setVisibility(View.VISIBLE);
+        mSwipeRefresh.setRefreshing(false);
+        mEmptyList.setVisibility(View.VISIBLE);
         mCrashReporter.logException(throwable);
-        mBinding.recyclerView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
     }
 
     private void showBackArrow() {

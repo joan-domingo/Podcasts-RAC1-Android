@@ -4,21 +4,22 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
@@ -42,11 +43,13 @@ public class HourByHourListFragment extends BaseFragment {
     @Inject ProgramDataInteractor mProgramDataInteractor;
     @Inject CrashReporter mCrashReporter;
 
-    private RecyclerViewFragmentBinding mBinding;
-    private ActionBar mActionBar;
     private PodcastListAdapter mAdapter;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private HomeActivity mHomeActivity;
+
+    private RecyclerView mRecyclerView;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private TextView mEmptyList;
 
     public static HourByHourListFragment newInstance(Program program) {
         Bundle args = new Bundle();
@@ -71,22 +74,27 @@ public class HourByHourListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         getComponent(BrowseComponent.class).inject(this);
-        mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
-        mBinding.swiperefresh.setColorSchemeResources(R.color.colorAccent);
-        mBinding.swiperefresh.setOnRefreshListener(() -> loadPodcasts(true));
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setHasOptionsMenu(true);
+
+        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mEmptyList = view.findViewById(R.id.empty_list);
+
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefresh.setOnRefreshListener(() -> loadPodcasts(true));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         mAdapter = new PodcastListAdapter(getActivity(), mProgramDataInteractor);
-        mBinding.recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-        return mBinding.getRoot();
+        return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
         loadPodcasts(false);
     }
 
@@ -118,15 +126,6 @@ public class HourByHourListFragment extends BaseFragment {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateViewWithDownloaded));
-        showBackArrow(true);
-        getActivity().setTitle(((Program) getArguments().get(ARG_PROGRAM)).getTitle());
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        showBackArrow(false);
-        getActivity().setTitle(getString(R.string.app_name));
     }
 
     @Override
@@ -143,7 +142,7 @@ public class HourByHourListFragment extends BaseFragment {
 
     private void loadPodcasts(final boolean refresh) {
         new Handler().postDelayed(() -> {
-            mBinding.swiperefresh.setRefreshing(true);
+            mSwipeRefresh.setRefreshing(true);
             Program program = getArguments().getParcelable(PodcastListFragment.ARG_PROGRAM);
             Section section = getArguments().getParcelable(PodcastListFragment.ARG_SECTION);
 
@@ -157,25 +156,20 @@ public class HourByHourListFragment extends BaseFragment {
 
     private void handleError(Throwable throwable) {
         mCrashReporter.logException(throwable);
-        mBinding.emptyList.setVisibility(View.VISIBLE);
-        mBinding.swiperefresh.setRefreshing(false);
-        mBinding.recyclerView.setVisibility(View.GONE);
+        mEmptyList.setVisibility(View.VISIBLE);
+        mSwipeRefresh.setRefreshing(false);
+        mRecyclerView.setVisibility(View.GONE);
     }
 
     private void updateView(List<Podcast> podcasts) {
-        mBinding.emptyList.setVisibility(View.GONE);
-        mBinding.swiperefresh.setRefreshing(false);
+        mEmptyList.setVisibility(View.GONE);
+        mSwipeRefresh.setRefreshing(false);
         mAdapter.update(podcasts);
-        mBinding.recyclerView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void updateViewWithDownloaded(List<Podcast> podcasts) {
         mAdapter.updateWithDownloaded(podcasts);
-    }
-
-    private void showBackArrow(boolean show) {
-        setHasOptionsMenu(show);
-        mActionBar.setDisplayHomeAsUpEnabled(show);
     }
 
     private void showSections() {

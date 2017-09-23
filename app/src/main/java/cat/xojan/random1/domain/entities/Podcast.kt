@@ -18,16 +18,15 @@ data class Podcast(private var audio: Audio,
               private var _state: State?,
               private var appMobileTitle: String,
               var downloadReference: Long
-) : BaseObservable(), Parcelable {
+) : Parcelable {
 
     val title: String
-        @Bindable get() = appMobileTitle
+        get() = appMobileTitle
 
     var imageUrl: String?
         get() = _imageUrl
         set(value) {
             _imageUrl = value
-            notifyPropertyChanged(BR.viewModel)
         }
 
     var state: State
@@ -39,7 +38,6 @@ data class Podcast(private var audio: Audio,
         }
         set(value) {
             _state = value
-            notifyPropertyChanged(BR.viewModel)
         }
 
     @Transient

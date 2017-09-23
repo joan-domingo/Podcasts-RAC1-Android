@@ -2,26 +2,25 @@ package cat.xojan.random1.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.injection.component.BrowseComponent;
-import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.adapter.SectionListAdapter;
 import cat.xojan.random1.viewmodel.SectionsViewModel;
@@ -36,11 +35,11 @@ public class SectionFragment extends BaseFragment {
 
     @Inject SectionsViewModel mSectionsViewModel;
 
-    private RecyclerViewFragmentBinding mBinding;
-    private ActionBar mActionBar;
     private SectionListAdapter mAdapter;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private Program mProgram;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private RecyclerView mRecyclerView;
 
     public static SectionFragment newInstance(Program program) {
         Bundle args = new Bundle();
@@ -57,15 +56,18 @@ public class SectionFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         getComponent(BrowseComponent.class).inject(this);
-        mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
+        View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
         mProgram = (Program) getArguments().get(ARG_PROGRAM);
 
-        mBinding.swiperefresh.setEnabled(false);
-        mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        setHasOptionsMenu(true);
+        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mSwipeRefresh.setEnabled(false);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new SectionListAdapter(getActivity(), mProgram);
-        mBinding.recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
-        return mBinding.getRoot();
+        return view;
     }
 
     @Override
@@ -77,10 +79,6 @@ public class SectionFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
-        showBackArrow(true);
-        getActivity().setTitle(mProgram.getTitle());
-
         loadSections();
     }
 
@@ -98,19 +96,6 @@ public class SectionFragment extends BaseFragment {
     }
 
     @Override
-    public boolean handleOnBackPressed() {
-        getActivity().finish();
-        return true;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        showBackArrow(false);
-        getActivity().setTitle(getString(R.string.app_name));
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         mCompositeDisposable.clear();
@@ -125,11 +110,6 @@ public class SectionFragment extends BaseFragment {
 
     private void updateView(List<Section> sections) {
         mAdapter.updateData(sections);
-    }
-
-    private void showBackArrow(boolean show) {
-        setHasOptionsMenu(show);
-        mActionBar.setDisplayHomeAsUpEnabled(show);
     }
 
     private void showHourByHour() {
