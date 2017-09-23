@@ -78,7 +78,7 @@ public class HourByHourListFragment extends BaseFragment {
 
         setHasOptionsMenu(true);
 
-        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyList = view.findViewById(R.id.empty_list);
 

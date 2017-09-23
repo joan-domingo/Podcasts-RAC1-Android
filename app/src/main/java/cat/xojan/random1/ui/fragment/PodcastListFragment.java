@@ -67,7 +67,7 @@ public class PodcastListFragment extends BaseFragment {
         getComponent(BrowseComponent.class).inject(this);
         View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
 
-        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mEmptyList = view.findViewById(R.id.empty_list);
 

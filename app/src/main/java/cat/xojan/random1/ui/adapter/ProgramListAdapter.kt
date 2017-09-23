@@ -4,13 +4,13 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import cat.xojan.random1.R
 import cat.xojan.random1.domain.entities.Program
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import cat.xojan.random1.ui.activity.BrowseActivity
 import com.squareup.picasso.Picasso
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.program_item.*
 
 
 class ProgramListAdapter(private val interactor: ProgramDataInteractor)
@@ -36,11 +36,9 @@ class ProgramListAdapter(private val interactor: ProgramDataInteractor)
         return ViewHolder(itemView, interactor)
     }
 
-    class ViewHolder(itemView: View,
+    class ViewHolder(override val containerView: View,
                      val interactor: ProgramDataInteractor) : RecyclerView
-    .ViewHolder(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.programTitle)
-        private var image: ImageView = itemView.findViewById(R.id.programImage)
+    .ViewHolder(containerView), LayoutContainer {
 
         fun bind(item: Program) {
             itemView?.setOnClickListener {
@@ -48,11 +46,11 @@ class ProgramListAdapter(private val interactor: ProgramDataInteractor)
                 val intent = BrowseActivity.newIntent(itemView.context, item, isSection)
                 itemView.context.startActivity(intent)
             }
-            title.text = item.title
+            programTitle.text = item.title
             Picasso.with(itemView.context)
                     .load(item.imageUrl())
-                    .placeholder(R.drawable.default_rac1)
-                    .into(image)
+                    .error(R.drawable.default_rac1)
+                    .into(programImage)
         }
     }
 

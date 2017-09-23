@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class SectionFragment extends BaseFragment {
         mProgram = (Program) getArguments().get(ARG_PROGRAM);
 
         setHasOptionsMenu(true);
-        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mSwipeRefresh.setEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
