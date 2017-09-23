@@ -20,6 +20,7 @@ import cat.xojan.random1.R;
 import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
+import cat.xojan.random1.injection.component.BrowseComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.adapter.SectionListAdapter;
@@ -55,7 +56,7 @@ public class SectionFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        getComponent(HomeComponent.class).inject(this);
+        getComponent(BrowseComponent.class).inject(this);
         mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
         mProgram = (Program) getArguments().get(ARG_PROGRAM);
 

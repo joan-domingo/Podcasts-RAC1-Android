@@ -23,6 +23,7 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
+import cat.xojan.random1.injection.component.BrowseComponent;
 import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
@@ -61,7 +62,7 @@ public class PodcastListFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        getComponent(HomeComponent.class).inject(this);
+        getComponent(BrowseComponent.class).inject(this);
         mBinding = RecyclerViewFragmentBinding.inflate(inflater, container, false);
 
         mBinding.swiperefresh.setColorSchemeResources(R.color.colorAccent);

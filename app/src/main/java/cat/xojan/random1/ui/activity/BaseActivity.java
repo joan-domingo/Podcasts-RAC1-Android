@@ -46,12 +46,4 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (addToBackSTack) fragmentTransaction.addToBackStack(tag);
         fragmentTransaction.commit();
     }
-
-    /**
-     * Search for a fragment on the back stack.
-     * @param tag fragment's tag.
-     */
-    public Fragment getFragment(String tag) {
-        return getSupportFragmentManager().findFragmentByTag(tag);
-    }
 }

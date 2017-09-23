@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.Menu
 import android.view.MenuItem
@@ -15,7 +14,8 @@ import cat.xojan.random1.injection.component.DaggerHomeComponent
 import cat.xojan.random1.injection.component.HomeComponent
 import cat.xojan.random1.injection.module.HomeModule
 import cat.xojan.random1.ui.adapter.HomePagerAdapter
-import cat.xojan.random1.ui.fragment.*
+import cat.xojan.random1.ui.fragment.DownloadsFragment
+import cat.xojan.random1.ui.fragment.ProgramFragment
 import cat.xojan.random1.viewmodel.PodcastsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HomeActivity() : BaseActivity(), HasComponent<HomeComponent> {
+class HomeActivity: BaseActivity(), HasComponent<HomeComponent> {
     companion object {
         private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
@@ -90,21 +90,6 @@ class HomeActivity() : BaseActivity(), HasComponent<HomeComponent> {
         ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 PERMISSION_WRITE_EXTERNAL_STORAGE)
-    }
-
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            var fragment: Fragment? = getFragment(HourByHourListFragment.TAG)
-            if (fragment == null) fragment = getFragment(SectionFragment.TAG)
-
-            if (fragment != null && supportFragmentManager
-                    .findFragmentByTag(PodcastListFragment.TAG) == null) {
-                if ((fragment as BaseFragment).handleOnBackPressed()) {
-                    return
-                }
-            }
-        }
-        super.onBackPressed()
     }
 
     override fun onStop() {

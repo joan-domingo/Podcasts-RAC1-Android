@@ -12,8 +12,7 @@ class Program(var id: String,
               var active: Boolean
 ): Parcelable {
 
-    @Transient
-    var imageUrl: String? = null
+    var imageUrl: String = images.imageUrl
         get() = images.imageUrl
         @TestOnly
         set(value) {
