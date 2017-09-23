@@ -1,7 +1,7 @@
 package cat.xojan.random1.domain.entities
 
 enum class SectionType {
-    /*HOUR,*/
+    HOUR,
     SECTION,
     GENERIC
 }

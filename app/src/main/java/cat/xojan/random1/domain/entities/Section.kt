@@ -6,9 +6,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class Section(val id: String,
               val title: String,
-              var imageUrl: String,
+              var imageUrl: String?,
               val active: Boolean,
-              val type: SectionType? = SectionType.GENERIC
+              var type: SectionType
 ) : Parcelable {
 
     override fun equals(other: Any?): Boolean {

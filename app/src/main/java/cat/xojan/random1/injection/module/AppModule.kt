@@ -72,12 +72,13 @@ class AppModule(private val mApplication: Application) {
     @Provides
     @Singleton
     internal fun provideEventLogger(): EventLogger {
-        return if (BuildConfig.DEBUG) EventLogger() else EventLogger(Answers.getInstance())
+        return if (BuildConfig.DEBUG) EventLogger(null) else EventLogger(Answers.getInstance())
     }
 
     @Provides
     @Singleton
     internal fun provideCrashReporter(): CrashReporter {
-        return if (BuildConfig.DEBUG) CrashReporter() else CrashReporter(Crashlytics.getInstance())
+        return if (BuildConfig.DEBUG) CrashReporter(null) else CrashReporter(Crashlytics
+                .getInstance())
     }
 }

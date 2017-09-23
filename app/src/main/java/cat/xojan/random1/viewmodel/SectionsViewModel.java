@@ -22,7 +22,7 @@ public class SectionsViewModel {
                 .filter(Section::getActive)
                 .filter(section -> section.getType() == SectionType.SECTION)
                 .map(section -> {
-                    section.setImageUrl(program.getImageUrl());
+                    section.setImageUrl(program.imageUrl());
                     return section;
                 })
                 .toList();

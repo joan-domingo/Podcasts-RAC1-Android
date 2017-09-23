@@ -43,7 +43,7 @@ public class ProgramViewModelTest {
 
     @Test
     public void read_image_url() {
-        assertEquals(mViewModel.getImageUrl(), mProgram.getImageUrl());
+        assertEquals(mViewModel.getImageUrl(), mProgram.imageUrl());
     }
 
     @Test

@@ -71,7 +71,6 @@ public class SectionFragment extends BaseFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.sections, menu);
-        menu.findItem(R.id.action_export_podcasts).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -100,11 +99,7 @@ public class SectionFragment extends BaseFragment {
 
     @Override
     public boolean handleOnBackPressed() {
-        getActivity().getSupportFragmentManager()
-                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getActivity().setTitle(getString(R.string.app_name));
-        ((BaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        setHasOptionsMenu(false);
+        getActivity().finish();
         return true;
     }
 

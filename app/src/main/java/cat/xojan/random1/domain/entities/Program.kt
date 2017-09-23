@@ -12,12 +12,9 @@ class Program(var id: String,
               var active: Boolean
 ): Parcelable {
 
-    var imageUrl: String = images.imageUrl
-        get() = images.imageUrl
-        @TestOnly
-        set(value) {
-            field = value
-        }
+    fun imageUrl(): String {
+        return images.imageUrl
+    }
 
 
     override fun equals(other: Any?): Boolean {

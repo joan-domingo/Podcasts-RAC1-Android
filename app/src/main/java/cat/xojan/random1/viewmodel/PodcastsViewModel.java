@@ -8,7 +8,6 @@ import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.subjects.PublishSubject;
@@ -37,7 +36,7 @@ public class PodcastsViewModel {
                 .flatMapIterable(list -> list)
                 .map(podcast -> {
                     podcast.setProgramId(program.getId());
-                    podcast.setImageUrl(program.getImageUrl());
+                    podcast.setImageUrl(program.imageUrl());
                     return podcast;
                 })
                 .toList();

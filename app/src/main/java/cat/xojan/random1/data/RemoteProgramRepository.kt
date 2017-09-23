@@ -17,8 +17,8 @@ class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepos
     @Throws(IOException::class)
     override fun getPodcast(programId: String, sectionId: String?): Flowable<List<Podcast>> {
         sectionId?.let {
-            return service.getPodcastData(programId, sectionId).map(PodcastData::getPodcasts)
+            return service.getPodcastData(programId, sectionId).map(PodcastData::podcasts)
         }
-        return service.getPodcastData(programId).map(PodcastData::getPodcasts)
+        return service.getPodcastData(programId).map(PodcastData::podcasts)
     }
 }

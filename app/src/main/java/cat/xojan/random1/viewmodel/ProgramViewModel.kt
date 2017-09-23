@@ -15,7 +15,7 @@ class ProgramViewModel(
 ) : BaseObservable() {
 
     val imageUrl: String?
-        get() = program.imageUrl
+        get() = program.imageUrl()
 
     val title: String
         get() = program.title

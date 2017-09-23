@@ -3,7 +3,7 @@ package cat.xojan.random1.domain.entities
 import android.databinding.BaseObservable
 import android.databinding.Bindable
 import android.os.Parcelable
-import com.android.databinding.library.baseAdapters.BR
+import cat.xojan.random1.BR
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -27,7 +27,7 @@ data class Podcast(private var audio: Audio,
         get() = _imageUrl
         set(value) {
             _imageUrl = value
-            notifyPropertyChanged(BR.imageUrl)
+            notifyPropertyChanged(BR.viewModel)
         }
 
     var state: State
@@ -39,7 +39,7 @@ data class Podcast(private var audio: Audio,
         }
         set(value) {
             _state = value
-            notifyPropertyChanged(BR.state)
+            notifyPropertyChanged(BR.viewModel)
         }
 
     @Transient

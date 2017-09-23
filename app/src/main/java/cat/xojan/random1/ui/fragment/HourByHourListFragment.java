@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.injection.component.BrowseComponent;
-import cat.xojan.random1.injection.component.HomeComponent;
 import cat.xojan.random1.ui.activity.BaseActivity;
 import cat.xojan.random1.ui.activity.HomeActivity;
 import cat.xojan.random1.ui.adapter.PodcastListAdapter;
@@ -97,7 +95,6 @@ public class HourByHourListFragment extends BaseFragment {
         if (((Program) getArguments().get(ARG_PROGRAM)).getSections().size() > 1) {
             inflater.inflate(R.menu.hour_by_hour, menu);
         }
-        menu.findItem(R.id.action_export_podcasts).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -140,11 +137,7 @@ public class HourByHourListFragment extends BaseFragment {
 
     @Override
     public boolean handleOnBackPressed() {
-        mHomeActivity.getSupportFragmentManager()
-                .popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        getActivity().setTitle(getString(R.string.app_name));
-        ((BaseActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        setHasOptionsMenu(false);
+        getActivity().finish();
         return true;
     }
 
