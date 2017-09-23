@@ -34,7 +34,7 @@
                 android:padding="16dp"
                 android:text="@{podcast.title}"/>
 
-            <cat.xojan.random1.ui.view.CroppedImageView
+            <cat.xojan.random1.ui.view.SquareImageView
                 android:id="@+id/image"
                 android:layout_width="@dimen/player_image_size"
                 android:layout_height="@dimen/player_image_size"

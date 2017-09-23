@@ -1,21 +1,22 @@
 package cat.xojan.random1.ui.fragment;
 
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RecyclerViewFragmentBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
@@ -33,23 +34,27 @@ public class ProgramFragment extends BaseFragment {
     @Inject CrashReporter mCrashReporter;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-    private RecyclerViewFragmentBinding mBinding;
     private ProgramListAdapter mAdapter;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private RecyclerView mRecyclerView;
+    private TextView mEmptyList;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         getComponent(HomeComponent.class).inject(this);
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.recycler_view_fragment, container,
-                false);
-        mBinding.swiperefresh.setColorSchemeResources(R.color.colorAccent);
-        mBinding.swiperefresh.setOnRefreshListener(() ->
+        View view = inflater.inflate(R.layout.recycler_view_fragment, container, false);
+        mSwipeRefresh = view.findViewById(R.id.swiperefresh);
+        mSwipeRefresh.setColorSchemeResources(R.color.colorAccent);
+        mSwipeRefresh.setOnRefreshListener(() ->
                 new Handler().postDelayed(this::loadPrograms, 0));
-        mAdapter = new ProgramListAdapter(getContext(), mProgramDataInteractor);
-        mBinding.recyclerView.setAdapter(mAdapter);
+        mAdapter = new ProgramListAdapter( mProgramDataInteractor);
+        mRecyclerView = view.findViewById(R.id.recycler_view);
+        mRecyclerView.setAdapter(mAdapter);
+        mEmptyList = view.findViewById(R.id.empty_list);
 
-        return mBinding.getRoot();
+        return view;
     }
 
     @Override
@@ -67,14 +72,14 @@ public class ProgramFragment extends BaseFragment {
 
     private void setLayoutManager(int orientation) {
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mBinding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         } else {
-            mBinding.recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         }
     }
 
     private void loadPrograms() {
-        mBinding.swiperefresh.setRefreshing(true);
+        mSwipeRefresh.setRefreshing(true);
         mCompositeDisposable.add(mProgramsViewModel.loadPrograms()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -83,16 +88,16 @@ public class ProgramFragment extends BaseFragment {
     }
 
     private void updateView(List<Program> programs) {
-        mBinding.swiperefresh.setRefreshing(false);
-        mAdapter.updateItems(programs);
-        mBinding.emptyList.setVisibility(View.GONE);
-        mBinding.recyclerView.setVisibility(View.VISIBLE);
+        mSwipeRefresh.setRefreshing(false);
+        mAdapter.setPrograms(programs);
+        mEmptyList.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void handleError(Throwable e) {
         mCrashReporter.logException(e);
-        mBinding.swiperefresh.setRefreshing(false);
-        mBinding.emptyList.setVisibility(View.VISIBLE);
-        mBinding.recyclerView.setVisibility(View.GONE);
+        mSwipeRefresh.setRefreshing(false);
+        mEmptyList.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
     }
 }
