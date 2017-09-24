@@ -12,6 +12,9 @@ import cat.xojan.random1.domain.entities.EventLogger
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import com.crashlytics.android.Crashlytics
 import com.crashlytics.android.answers.Answers
+import com.squareup.moshi.KotlinJsonAdapterFactory
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Rfc3339DateJsonAdapter
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -19,6 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 import javax.inject.Singleton
 
 @Module
@@ -43,13 +47,18 @@ class AppModule(private val mApplication: Application) {
         val httpClientBuilder = OkHttpClient.Builder()
         if (BuildConfig.DEBUG) httpClientBuilder.addInterceptor(loggingInterceptor)
 
+        val moshi = Moshi.Builder()
+                .add(KotlinJsonAdapterFactory())
+                .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
+                .build()
+
         /*val gson = GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .create()*/
 
         val retrofit = Retrofit.Builder()
                 .baseUrl(RAC1_URL)
-                .addConverterFactory(MoshiConverterFactory.create())
+                .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientBuilder.build())
                 .build()

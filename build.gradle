@@ -46,4 +46,5 @@ ext {
     jUnit = '4.12'
     dagger = '2.11'
     leakCanary = '1.5.3'
+    moshi = '1.5.0'
 }

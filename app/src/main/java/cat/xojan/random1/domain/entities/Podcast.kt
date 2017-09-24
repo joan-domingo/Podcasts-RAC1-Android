@@ -10,11 +10,11 @@ data class Podcast(private var audio: Audio,
               var filePath: String?,
               var dateTime: Date,
               private var durationSeconds: Long,
-              var programId: String,
+              var programId: String?,
               private var _imageUrl: String?,
               private var _state: State?,
               private var appMobileTitle: String,
-              var downloadReference: Long
+              var downloadReference: Long = 0
 ) : Parcelable {
 
     val title: String
@@ -60,7 +60,7 @@ data class Podcast(private var audio: Audio,
 
     override fun hashCode(): Int {
         var result = path.hashCode()
-        result = 31 * result + programId.hashCode()
+        result = 31 * result + programId!!.hashCode()
         result = 31 * result + appMobileTitle.hashCode()
         return result
     }
