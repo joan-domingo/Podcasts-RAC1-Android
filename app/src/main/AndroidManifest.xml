@@ -21,13 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.activity.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".ui.activity.RadioPlayerActivity"/>
-
-        <activity android:name=".ui.activity.BrowseActivity"/>
-
         <activity
             android:name=".ui.activity.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -37,6 +30,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.activity.HomeActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".ui.activity.RadioPlayerActivity"/>
+
+        <activity android:name=".ui.activity.BrowseActivity"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
