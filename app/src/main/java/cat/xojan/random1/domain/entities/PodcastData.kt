@@ -1,10 +1,10 @@
 package cat.xojan.random1.domain.entities
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 
 class PodcastData {
 
-    @SerializedName("result")
+    @Json(name = "result")
     var podcasts: List<Podcast> = listOf()
 }

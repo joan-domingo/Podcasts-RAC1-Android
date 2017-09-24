@@ -2,7 +2,6 @@ package cat.xojan.random1.domain.entities
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.jetbrains.annotations.TestOnly
 
 @Parcelize
 class Program(var id: String,
