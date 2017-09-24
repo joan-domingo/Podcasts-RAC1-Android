@@ -1,4 +1,4 @@
-[![Build Status](https://www.bitrise.io/app/5d54ef1d9ea2d0c1/status.svg?token=gS3oy2NtIP8rGn7SSJaOBA&branch=master)](https://www.bitrise.io/app/5d54ef1d9ea2d0c1)
+[![Build Status](https://www.bitrise.io/app/c67a37e96b94866a/status.svg?token=BrNliWdZCITX_MCujXCyow&branch=master)](https://www.bitrise.io/app/c67a37e96b94866a)
 
 # Podcasts-RAC1
 Android app to listen to podcasts from RAC1 radio station
