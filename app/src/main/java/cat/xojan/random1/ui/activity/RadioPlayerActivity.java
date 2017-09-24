@@ -6,7 +6,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import cat.xojan.random1.R;
-import cat.xojan.random1.databinding.RadioPlayerActivityBinding;
 import cat.xojan.random1.domain.entities.CrashReporter;
 import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
@@ -103,8 +101,7 @@ public class RadioPlayerActivity extends BaseActivity implements MusicPlayerServ
         }
 
         Log.d(TAG, "onCreate");
-        RadioPlayerActivityBinding binding =
-                DataBindingUtil.setContentView(this, R.layout.radio_player_activity);
+        setContentView(R.layout.radio_player_activity);
 
         Podcast podcast = getIntent().getParcelableExtra(EXTRA_PODCAST);
         if (podcast == null) {
@@ -112,7 +109,6 @@ public class RadioPlayerActivity extends BaseActivity implements MusicPlayerServ
                     ", duration: " + mPlayerDuration + ", drawable: " + mPlayerButtonDrawable);
             finish();
         } else {
-            binding.setPodcast(podcast);
             findView();
             initView();
             mEventLogger.logPlayedPodcast(podcast);

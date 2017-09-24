@@ -52,7 +52,7 @@ public class DownloadsFragment extends BaseFragment {
         mSwipeRefresh.setEnabled(false);
         mEmptyList.setText(getString(R.string.no_downloaded_podcasts));
 
-        mAdapter = new PodcastListAdapter(getContext(), mProgramDataInteractor);
+        mAdapter = new PodcastListAdapter(mProgramDataInteractor);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -95,6 +95,6 @@ public class DownloadsFragment extends BaseFragment {
             mEmptyList.setVisibility(View.GONE);
         }
 
-        mAdapter.update(downloaded);
+        mAdapter.setPodcasts(downloaded);
     }
 }

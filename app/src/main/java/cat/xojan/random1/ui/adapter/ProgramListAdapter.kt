@@ -11,6 +11,7 @@ import cat.xojan.random1.ui.activity.BrowseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.program_item.*
+import java.util.*
 
 
 class ProgramListAdapter(private val interactor: ProgramDataInteractor)
@@ -48,11 +49,14 @@ class ProgramListAdapter(private val interactor: ProgramDataInteractor)
             }
             programTitle.text = item.title
             Picasso.with(itemView.context)
-                    .load(item.imageUrl())
+                    .load(item.imageUrl()+ "?w=" + getWeekOfTheYear())
                     .error(R.drawable.default_rac1)
                     .into(programImage)
         }
+
+        private fun getWeekOfTheYear(): Int {
+            val cal = Calendar.getInstance()
+            return cal.get(Calendar.WEEK_OF_YEAR)
+        }
     }
-
-
 }

@@ -63,7 +63,7 @@ public class SectionFragment extends BaseFragment {
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mSwipeRefresh.setEnabled(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new SectionListAdapter(getActivity(), mProgram);
+        mAdapter = new SectionListAdapter((BaseActivity) getActivity(), mProgram);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -108,7 +108,7 @@ public class SectionFragment extends BaseFragment {
     }
 
     private void updateView(List<Section> sections) {
-        mAdapter.updateData(sections);
+        mAdapter.setSections(sections);
     }
 
     private void showHourByHour() {

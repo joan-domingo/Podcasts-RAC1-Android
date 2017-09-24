@@ -1,9 +1,6 @@
 package cat.xojan.random1.domain.entities
 
-import android.databinding.BaseObservable
-import android.databinding.Bindable
 import android.os.Parcelable
-import cat.xojan.random1.BR
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 

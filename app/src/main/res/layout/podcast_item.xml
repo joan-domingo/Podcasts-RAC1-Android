@@ -1,60 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <data>
-        <variable
-            name="viewModel"
-            type="cat.xojan.random1.viewmodel.PodcastViewModel"/>
-    </data>
-    <RelativeLayout
+<RelativeLayout android:layout_width="match_parent"
+    android:id="@+id/podcast_item"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/podcast_image"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/gradient_background_oval"/>
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
-        android:paddingLeft="16dp"
-        android:onClick="@{viewModel.onClickPodcast}">
+        android:layout_toRightOf="@+id/podcast_image"
+        android:layout_toEndOf="@+id/podcast_image"
+        android:layout_toLeftOf="@+id/podcast_icon"
+        android:layout_toStartOf="@+id/podcast_icon">
 
-        <ImageView
-            android:id="@+id/circle_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:background="@drawable/gradient_background_oval"
-            app:smallImageUrl="@{viewModel.imageUrl}"/>
-
-        <LinearLayout
-            android:id="@+id/text_container"
-            android:orientation="vertical"
+        <TextView
+            android:id="@+id/podcast_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/circle_image"
-            android:layout_toEndOf="@+id/circle_image"
-            android:layout_toLeftOf="@+id/icon"
-            android:layout_toStartOf="@+id/icon">
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:gravity="center_vertical"
-                android:text="@{viewModel.title}"
-                android:textStyle="bold" />
+    </LinearLayout>
 
-        </LinearLayout>
+    <ImageView
+        android:id="@+id/podcast_icon"
+        android:padding="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/download_program" />
 
-        <ImageView
-            android:id="@+id/icon"
-            android:padding="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            app:podcastIcon="@{viewModel.state}"
-            android:contentDescription="@string/download_program"
-            android:onClick="@{viewModel.onClickIcon}"/>
-
-    </RelativeLayout>
-</layout>
+</RelativeLayout>

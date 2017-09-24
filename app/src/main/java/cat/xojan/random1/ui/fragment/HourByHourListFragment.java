@@ -86,7 +86,7 @@ public class HourByHourListFragment extends BaseFragment {
         mSwipeRefresh.setOnRefreshListener(() -> loadPodcasts(true));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        mAdapter = new PodcastListAdapter(getActivity(), mProgramDataInteractor);
+        mAdapter = new PodcastListAdapter(mProgramDataInteractor);
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
@@ -164,7 +164,7 @@ public class HourByHourListFragment extends BaseFragment {
     private void updateView(List<Podcast> podcasts) {
         mEmptyList.setVisibility(View.GONE);
         mSwipeRefresh.setRefreshing(false);
-        mAdapter.update(podcasts);
+        mAdapter.setPodcasts(podcasts);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
