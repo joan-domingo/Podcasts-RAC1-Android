@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import cat.xojan.random1.domain.entities.Podcast;
-import cat.xojan.random1.domain.repository.DownloadPodcastRepository;
 
 public class PreferencesDownloadPodcastRepository implements DownloadPodcastRepository {
 
