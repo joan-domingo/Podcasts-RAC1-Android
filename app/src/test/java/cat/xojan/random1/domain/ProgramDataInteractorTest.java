@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cat.xojan.random1.data.PreferencesDownloadPodcastRepository;
 import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;

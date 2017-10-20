@@ -16,5 +16,5 @@ interface DownloadPodcastRepository {
 
     fun deleteDownloadedPodcast(podcast: Podcast)
 
-    fun getDownloadedPodcastTitle(audioId: String): String
+    fun getDownloadedPodcastTitle(audioId: String): String?
 }
