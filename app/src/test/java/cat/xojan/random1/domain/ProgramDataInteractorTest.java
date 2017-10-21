@@ -17,7 +17,6 @@ import cat.xojan.random1.domain.entities.EventLogger;
 import cat.xojan.random1.domain.entities.Podcast;
 import cat.xojan.random1.domain.entities.Program;
 import cat.xojan.random1.domain.entities.Section;
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
 import cat.xojan.random1.domain.repository.ProgramRepository;
 import io.reactivex.Flowable;
 import io.reactivex.observers.TestObserver;

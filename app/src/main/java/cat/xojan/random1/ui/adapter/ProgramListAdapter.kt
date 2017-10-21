@@ -43,7 +43,7 @@ class ProgramListAdapter(private val interactor: ProgramDataInteractor)
 
         fun bind(item: Program) {
             itemView?.setOnClickListener {
-                val isSection = interactor.isSectionSelected && item.sections.size > 1
+                val isSection = interactor.isSectionSelected() && item.sections.size > 1
                 val intent = BrowseActivity.newIntent(itemView.context, item, isSection)
                 itemView.context.startActivity(intent)
             }

@@ -50,7 +50,7 @@ public class DownloadCompleteReceiver extends BroadcastReceiver {
                             cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
                     String uri = cursor.getString(localUriIndex);
                     String audioId = uri.split(Environment.DIRECTORY_DOWNLOADS + "/")[1]
-                            .replace(ProgramDataInteractor.EXTENSION, "");
+                            .replace(ProgramDataInteractor.Companion.getEXTENSION(), "");
 
                     mEventLogger.logDownloadedPodcast(title);
                     mProgramDataInteractor.addDownload(audioId);
