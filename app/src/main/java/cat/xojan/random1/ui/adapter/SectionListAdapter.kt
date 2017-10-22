@@ -51,7 +51,7 @@ class SectionListAdapter(private val activity: BaseActivity, private val program
                     .load(program.imageUrl() + "?w=" + getWeekOfTheYear())
                     .resize(200, 200)
                     .transform(CircleTransform())
-                    .error(R.drawable.default_rac1)
+                    .placeholder(R.drawable.default_rac1)
                     .into(section_image)
         }
 

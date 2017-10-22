@@ -50,7 +50,7 @@ class ProgramListAdapter(private val interactor: ProgramDataInteractor)
             programTitle.text = item.title
             Picasso.with(itemView.context)
                     .load(item.imageUrl()+ "?w=" + getWeekOfTheYear())
-                    .error(R.drawable.default_rac1)
+                    .placeholder(R.drawable.default_rac1)
                     .into(programImage)
         }
 

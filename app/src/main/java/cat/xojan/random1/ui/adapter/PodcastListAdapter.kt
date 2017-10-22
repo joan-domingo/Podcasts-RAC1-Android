@@ -90,8 +90,8 @@ class PodcastListAdapter(private val programInteractor: ProgramDataInteractor)
             Picasso.with(itemView.context)
                     .load(podcast.imageUrl + "?w=" + getWeekOfTheYear())
                     .resize(200, 200)
+                    .placeholder(R.drawable.default_rac1)
                     .transform(CircleTransform())
-                    .error(R.drawable.default_rac1)
                     .into(podcast_image)
         }
 
