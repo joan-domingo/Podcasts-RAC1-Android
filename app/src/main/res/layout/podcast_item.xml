@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/podcast_item"
     android:layout_height="wrap_content"
     android:foreground="?android:attr/selectableItemBackground"
@@ -8,21 +9,36 @@
     android:paddingLeft="16dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/podcast_image"
+    <RelativeLayout
+        android:id="@+id/image_frame"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/gradient_background_oval"/>
+        android:layout_marginRight="16dp">
+
+        <ImageView
+            android:id="@+id/podcast_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_background_oval"
+            android:alpha="0.3"/>
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_play_arrow"
+            android:contentDescription="Play podcast"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/text_container"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/podcast_image"
-        android:layout_toEndOf="@+id/podcast_image"
+        android:layout_toRightOf="@+id/image_frame"
+        android:layout_toEndOf="@+id/image_frame"
         android:layout_toLeftOf="@+id/podcast_icon"
         android:layout_toStartOf="@+id/podcast_icon">
 
@@ -31,7 +47,9 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:gravity="center_vertical"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="3" />
 
     </LinearLayout>
 
@@ -43,6 +61,7 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:contentDescription="@string/download_program" />
+        android:contentDescription="@string/download_program"
+        android:layout_marginLeft="8dp"/>
 
 </RelativeLayout>
