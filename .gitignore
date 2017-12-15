@@ -6,6 +6,6 @@
 /captures
 .idea/
 app/app-release.apk
-app/fabric.properties
 app/build
+app/google-services.json
 /gradle.properties

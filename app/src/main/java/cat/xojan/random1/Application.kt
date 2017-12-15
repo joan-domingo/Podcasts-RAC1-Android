@@ -3,10 +3,7 @@ package cat.xojan.random1
 import cat.xojan.random1.injection.component.AppComponent
 import cat.xojan.random1.injection.component.DaggerAppComponent
 import cat.xojan.random1.injection.module.AppModule
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
 import com.squareup.leakcanary.LeakCanary
-import io.fabric.sdk.android.Fabric
 
 class Application : android.app.Application() {
 
@@ -14,7 +11,6 @@ class Application : android.app.Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initCrashlytics()
         initInjector()
         initLeakDetection()
     }
@@ -28,12 +24,6 @@ class Application : android.app.Application() {
     private fun initLeakDetection() {
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this)
-        }
-    }
-
-    private fun initCrashlytics() {
-        if (!BuildConfig.DEBUG) {
-            Fabric.with(this, Answers(), Crashlytics())
         }
     }
 }

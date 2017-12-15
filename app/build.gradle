@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -30,7 +29,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".dev"
+            //applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
         }
         release {
@@ -67,21 +66,10 @@ androidExtensions {
     experimental true
 }
 
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.+'
-    }
-}
-
 repositories {
     mavenCentral()
     jcenter()
     maven { url "https://clojars.org/repo/" }
-    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -89,11 +77,6 @@ dependencies {
     implementation "com.android.support:appcompat-v7:$supportLib"
     implementation "com.android.support:design:$supportLib"
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-
-    // Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
 
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:$dagger"
@@ -133,3 +116,5 @@ dependencies {
     // RxLint
     implementation 'nl.littlerobots.rxlint:rxlint:1.5'
 }
+
+apply plugin: 'com.google.gms.google-services'

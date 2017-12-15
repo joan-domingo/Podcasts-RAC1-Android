@@ -14,8 +14,6 @@ import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
 import cat.xojan.random1.domain.repository.ProgramRepository
 import cat.xojan.random1.feature.mediaplayback.QueueManager
-import com.crashlytics.android.Crashlytics
-import com.crashlytics.android.answers.Answers
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
@@ -98,14 +96,13 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideEventLogger(): EventLogger {
-        return if (BuildConfig.DEBUG) EventLogger(null) else EventLogger(Answers.getInstance())
+        return EventLogger()
     }
 
     @Provides
     @Singleton
     fun provideCrashReporter(): CrashReporter {
-        return if (BuildConfig.DEBUG) CrashReporter(null) else CrashReporter(Crashlytics
-                .getInstance())
+        return CrashReporter()
     }
 
     @Provides

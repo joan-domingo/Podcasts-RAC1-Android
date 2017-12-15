@@ -42,10 +42,6 @@
 
         <activity android:name=".feature.mediaplayback.MediaPlaybackFullScreenActivity"/>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="5742c867fe11c1f0cb1fc503b90ed10ff5f54e91" />
-
         <receiver android:name=".feature.downloads.DownloadCompleteReceiver"
             android:enabled="true"
             android:exported="true">
