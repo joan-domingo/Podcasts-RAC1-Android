@@ -55,8 +55,12 @@ class Player(appContext: Context, private val listener: PlayerListener) {
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
     }
 
-    fun getCurrentPosition() = mediaPlayer.currentPosition
-    // or PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
+    fun getCurrentPosition(): Long {
+        if (mediaPlayer.isPlaying) {
+            return mediaPlayer.currentPosition.toLong()
+        }
+        return PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
+    }
 
     fun release() {
         /*giveUpAudioFocus();

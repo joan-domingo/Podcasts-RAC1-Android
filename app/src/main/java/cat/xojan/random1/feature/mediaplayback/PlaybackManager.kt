@@ -81,10 +81,12 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
     }
 
     override fun onPlaybackStatusChanged(state: Int) {
-        val position: Long = player.getCurrentPosition().toLong()
-        val stateBuilder = PlaybackStateCompat.Builder().setActions(getAvailableActions())
-        stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime())
-        listener.updatePlaybackState(stateBuilder.build())
+        if (state != PlaybackStateCompat.STATE_STOPPED) {
+            val position: Long = player.getCurrentPosition()
+            val stateBuilder = PlaybackStateCompat.Builder().setActions(getAvailableActions())
+            stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime())
+            listener.updatePlaybackState(stateBuilder.build())
+        }
 
         if (state == PlaybackStateCompat.STATE_PLAYING ||
                 state == PlaybackStateCompat.STATE_PAUSED) {
