@@ -109,6 +109,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
 
             val playbackState = getMediaItemState(activity, item)
             when (playbackState) {
+                STATE_PLAYING -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
                 STATE_PAUSED -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
                 else -> playback_state.setImageResource(R.drawable.ic_play_arrow)
             }
