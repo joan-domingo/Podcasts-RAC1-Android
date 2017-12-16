@@ -2,6 +2,9 @@ package cat.xojan.random1.feature.browser
 
 import android.app.Activity
 import android.graphics.drawable.Animatable
+import android.graphics.drawable.AnimationDrawable
+import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -67,6 +70,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
         private val STATE_NONE = 0
         private val STATE_PAUSED = 1
         private val STATE_PLAYING = 2
+        private val STATE_BUFFERING = 3
 
         fun bind(item: MediaBrowserCompat.MediaItem, viewModel: BrowserViewModel,
                  activity: Activity) {
@@ -109,8 +113,14 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
 
             val playbackState = getMediaItemState(activity, item)
             when (playbackState) {
-                STATE_PLAYING -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
+                STATE_PLAYING -> {
+                    playback_state.setImageResource(R.drawable.ic_equalizer_white_36dp)
+                    if (playback_state.drawable is Animatable) {
+                        (playback_state.drawable as Animatable).start()
+                    }
+                }
                 STATE_PAUSED -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
+                STATE_BUFFERING -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
                 else -> playback_state.setImageResource(R.drawable.ic_play_arrow)
             }
         }
@@ -131,6 +141,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                         return when (playbackState.state) {
                             PlaybackStateCompat.STATE_PLAYING -> STATE_PLAYING
                             PlaybackStateCompat.STATE_PAUSED -> STATE_PAUSED
+                            PlaybackStateCompat.STATE_BUFFERING -> STATE_BUFFERING
                             else -> STATE_NONE
                         }
                     }
