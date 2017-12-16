@@ -72,7 +72,7 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         swipe_refresh.setOnRefreshListener { onMediaControllerConnected() }
         recycler_view.layoutManager = LinearLayoutManager(activity)
 
-        adapter = PodcastListAdapter(viewModel)
+        adapter = PodcastListAdapter(viewModel, activity as Activity)
         recycler_view.adapter = adapter
     }
 

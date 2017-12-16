@@ -1,5 +1,6 @@
 package cat.xojan.random1.feature.home
 
+import android.app.Activity
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v7.widget.LinearLayoutManager
@@ -44,7 +45,7 @@ class DownloadsFragment : BaseFragment() {
         swipe_refresh.isEnabled = false
         empty_list.text = getString(R.string.no_downloaded_podcasts)
 
-        adapter = PodcastListAdapter(viewModel)
+        adapter = PodcastListAdapter(viewModel, activity as Activity)
         recycler_view.adapter = adapter
     }
 

@@ -61,7 +61,6 @@ abstract class BaseActivity : AppCompatActivity(), MediaBrowserProvider {
                 ComponentName(this, MediaPlaybackService::class.java),
                 object : MediaBrowserCompat.ConnectionCallback() {
                     override fun onConnected() {
-                        Log.d(TAG, "media browser connected")
                         try {
                             connectToSession(mMediaBrowser.sessionToken)
                         } catch (e: RemoteException) {
@@ -111,7 +110,6 @@ abstract class BaseActivity : AppCompatActivity(), MediaBrowserProvider {
     override fun getMediaBrowser(): MediaBrowserCompat = mMediaBrowser
 
     private fun hidePlaybackControls() {
-        Log.d(TAG, "hidePlaybackControls")
         supportFragmentManager.beginTransaction()
                 .hide(controlsFragment)
                 .commit()
@@ -132,7 +130,6 @@ abstract class BaseActivity : AppCompatActivity(), MediaBrowserProvider {
     }
 
     private fun showPlaybackControls() {
-        Log.d(TAG, "showPlaybackControls")
         supportFragmentManager.beginTransaction()
                 /*.setCustomAnimations(
                         R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
@@ -147,8 +144,6 @@ abstract class BaseActivity : AppCompatActivity(), MediaBrowserProvider {
             if (shouldShowControls()) {
                 showPlaybackControls()
             } else {
-                Log.d(TAG, "mediaControllerCallback.onPlaybackStateChanged: "
-                        + "hiding controls because state is " + state.state)
                 hidePlaybackControls()
             }
         }
@@ -157,8 +152,6 @@ abstract class BaseActivity : AppCompatActivity(), MediaBrowserProvider {
             if (shouldShowControls()) {
                 showPlaybackControls()
             } else {
-                Log.d(TAG, "mediaControllerCallback.onMetadataChanged: "
-                        + "hiding controls because metadata is null")
                 hidePlaybackControls()
             }
         }

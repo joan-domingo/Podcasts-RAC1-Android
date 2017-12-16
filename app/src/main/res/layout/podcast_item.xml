@@ -24,11 +24,11 @@
             android:alpha="0.3"/>
 
         <ImageView
+            android:id="@+id/playback_state"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerInParent="true"
-            app:srcCompat="@drawable/ic_play_arrow"
-            android:contentDescription="Play podcast"/>
+            app:srcCompat="@drawable/ic_play_arrow"/>
 
     </RelativeLayout>
 

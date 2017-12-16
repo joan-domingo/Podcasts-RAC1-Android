@@ -1,8 +1,10 @@
 package cat.xojan.random1.feature.browser
 
+import android.app.Activity
 import android.graphics.drawable.Animatable
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +19,8 @@ import kotlinx.android.synthetic.main.podcast_item.*
 import java.util.*
 
 
-class PodcastListAdapter(private val viewModel: BrowserViewModel) : RecyclerView
+class PodcastListAdapter(private val viewModel: BrowserViewModel,
+                         private val activity: Activity) : RecyclerView
 .Adapter<PodcastListAdapter.MediaItemViewHolder>() {
 
     var podcasts = emptyList<MediaBrowserCompat.MediaItem>()
@@ -53,7 +56,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel) : RecyclerView
     }
 
     override fun onBindViewHolder(holder: MediaItemViewHolder?, position: Int) {
-        holder?.bind(podcasts[position], viewModel)
+        holder?.bind(podcasts[position], viewModel, activity)
     }
 
     override fun getItemCount(): Int = podcasts.size
@@ -61,7 +64,13 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel) : RecyclerView
     class MediaItemViewHolder(override val containerView: View)
         : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-        fun bind(item: MediaBrowserCompat.MediaItem, viewModel: BrowserViewModel) {
+        private val STATE_NONE = 0
+        private val STATE_PAUSED = 1
+        private val STATE_PLAYING = 2
+
+        fun bind(item: MediaBrowserCompat.MediaItem, viewModel: BrowserViewModel,
+                 activity: Activity) {
+
             val podcast = item.description
 
             itemView.setOnClickListener {
@@ -97,11 +106,36 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel) : RecyclerView
                     .placeholder(R.drawable.default_rac1)
                     .transform(CircleTransform())
                     .into(podcast_image)
+
+            val playbackState = getMediaItemState(activity, item)
+            when (playbackState) {
+                STATE_PAUSED -> playback_state.setImageResource(R.drawable.ic_equalizer_white_24px)
+                else -> playback_state.setImageResource(R.drawable.ic_play_arrow)
+            }
         }
 
         private fun getWeekOfTheYear(): Int {
             val cal = Calendar.getInstance()
             return cal.get(Calendar.WEEK_OF_YEAR)
+        }
+
+        private fun getMediaItemState(activity: Activity,
+                                      mediaItem: MediaBrowserCompat.MediaItem): Int {
+            val controller = MediaControllerCompat.getMediaController(activity)
+            controller?.let {
+                val controllerMediaId = controller.metadata?.description?.mediaId
+                if (controllerMediaId == mediaItem.mediaId) {
+                    val playbackState = controller.playbackState
+                    playbackState?.let {
+                        return when (playbackState.state) {
+                            PlaybackStateCompat.STATE_PLAYING -> STATE_PLAYING
+                            PlaybackStateCompat.STATE_PAUSED -> STATE_PAUSED
+                            else -> STATE_NONE
+                        }
+                    }
+                }
+            }
+            return STATE_NONE
         }
     }
 }

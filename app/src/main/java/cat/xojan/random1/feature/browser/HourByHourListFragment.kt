@@ -71,7 +71,7 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
         swipe_refresh.setOnRefreshListener { onMediaControllerConnected() }
         recycler_view.layoutManager = LinearLayoutManager(activity)
 
-        adapter = PodcastListAdapter(viewModel)
+        adapter = PodcastListAdapter(viewModel, activity as Activity)
         recycler_view.adapter = adapter
     }
 
@@ -199,7 +199,6 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
             if (isChildrenError(children)) {
                 handleError(children[0].description)
             } else {
-                Log.d(TAG, "onChildrenLoaded, parentId=" + parentId + "  count=" + children.size)
                 adapter.podcasts = viewModel.updatePodcastState(children)
                 showPodcasts()
             }
@@ -212,22 +211,18 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
         }
     }
 
-    // Receive callbacks from the MediaController. Here we update our state such as which queue
-    // is being shown, the current title and description and the PlaybackState.
     private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
             if (metadata == null) {
                 return
             }
-            Log.d(TAG, "Received metadata change to media " + metadata.description.mediaId)
-            //TODO update programs adapter
+            adapter.notifyDataSetChanged()
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
             super.onPlaybackStateChanged(state)
-            Log.d(TAG, "Received state change: " + state)
-            //TODO update whatever
+            adapter.notifyDataSetChanged()
         }
     }
 }
