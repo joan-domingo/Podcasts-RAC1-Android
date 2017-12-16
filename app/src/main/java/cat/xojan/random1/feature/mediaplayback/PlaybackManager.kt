@@ -113,11 +113,9 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
 
     fun handlePlayRequest(mediaId: String? = null) {
         Log.d(TAG, "handlePlayRequest: mediaId= " + mediaId)
-        mediaId?.let {
-            val currentMedia = queueManager.getMediaItem(mediaId)
-            listener.onPlaybackStart()
-            player.play(currentMedia)
-        }
+        val currentMedia = queueManager.getMediaItem(mediaId)
+        listener.onPlaybackStart()
+        player.play(currentMedia)
     }
 
     fun handlePauseRequest() {
