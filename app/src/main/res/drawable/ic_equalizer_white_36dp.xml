@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <animation-list xmlns:android="http://schemas.android.com/apk/res/android" android:oneshot="false">
-    <item android:drawable="@mipmap/ic_equalizer1_white_36dp" android:duration="150"/>
-    <item android:drawable="@mipmap/ic_equalizer2_white_36dp" android:duration="150"/>
-    <item android:drawable="@mipmap/ic_equalizer3_white_36dp" android:duration="150"/>
+    <item android:drawable="@mipmap/ic_equalizer1_white_36dp" android:duration="170"/>
+    <item android:drawable="@mipmap/ic_equalizer2_white_36dp" android:duration="170"/>
+    <item android:drawable="@mipmap/ic_equalizer3_white_36dp" android:duration="170"/>
 </animation-list>

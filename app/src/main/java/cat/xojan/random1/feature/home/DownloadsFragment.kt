@@ -3,6 +3,9 @@ package cat.xojan.random1.feature.home
 import android.app.Activity
 import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -95,4 +98,19 @@ class DownloadsFragment : BaseFragment() {
     private fun onError(e: Throwable) {
         crashReporter.logException(e)
     }
+
+    /*private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
+        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            super.onMetadataChanged(metadata)
+            if (metadata == null) {
+                return
+            }
+            adapter.notifyDataSetChanged()
+        }
+
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            super.onPlaybackStateChanged(state)
+            adapter.notifyDataSetChanged()
+        }
+    }*/
 }

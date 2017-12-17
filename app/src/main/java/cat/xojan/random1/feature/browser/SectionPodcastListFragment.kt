@@ -158,7 +158,6 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
             mediaBrowser.subscribe(mediaId, mediaBrowserSubscriptionCallback)
         }
 
-        // Add MediaController callback so we can redraw the list when metadata changes:
         val controller = MediaControllerCompat.getMediaController(activity as Activity)
         controller?.registerCallback(mediaControllerCallback)
     }
@@ -175,7 +174,6 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
             if (isChildrenError(children)) {
                 handleError(children[0].description)
             } else {
-                Log.d(TAG, "onChildrenLoaded, parentId=" + parentId + "  count=" + children.size)
                 adapter.podcasts = viewModel.updatePodcastState(children)
                 showPodcasts()
             }
@@ -188,22 +186,18 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         }
     }
 
-    // Receive callbacks from the MediaController. Here we update our state such as which queue
-    // is being shown, the current title and description and the PlaybackState.
     private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
         override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
             super.onMetadataChanged(metadata)
             if (metadata == null) {
                 return
             }
-            Log.d(TAG, "Received metadata change to media " + metadata.description.mediaId)
-            //TODO update programs adapter
+            adapter.notifyDataSetChanged()
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
             super.onPlaybackStateChanged(state)
-            Log.d(TAG, "Received state change: " + state)
-            //TODO update whatever
+            adapter.notifyDataSetChanged()
         }
     }
 

@@ -8,11 +8,10 @@
     android:background="@color/colorPrimary">
 
     <ImageView
-        android:id="@+id/album_art"
+        android:id="@+id/playback_icon"
         android:scaleType="centerCrop"
         android:layout_width="64dp"
         android:layout_height="64dp"
-        android:src="@drawable/default_rac1"
         android:layout_alignParentLeft="true"/>
 
     <LinearLayout
@@ -20,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_toRightOf="@id/album_art"
+        android:layout_toRightOf="@id/playback_icon"
         android:layout_toLeftOf="@+id/play_pause"
         android:layout_marginLeft="8dp"
         android:layout_centerVertical="true">

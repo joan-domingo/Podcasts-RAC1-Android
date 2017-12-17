@@ -24,6 +24,8 @@ class QueueManager {
                     .putText(MediaMetadataCompat.METADATA_KEY_TITLE, itemMediaData.title)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
                             itemMediaData.mediaUri.toString())
+                    .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
+                            itemMediaData.iconUri.toString())
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, items.size.toLong())
                     .build()

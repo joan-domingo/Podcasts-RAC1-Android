@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cat.xojan.random1.R
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_playback_controls.*
+import java.util.*
 
 class MediaPlaybackControlsFragment : Fragment() {
 
@@ -65,6 +68,17 @@ class MediaPlaybackControlsFragment : Fragment() {
             return
         }
         title.text = metadata.description.title
+
+        Picasso.with(activity)
+                .load(metadata.description.iconUri.toString() + "?w=" + getWeekOfTheYear())
+                .resize(200, 200)
+                .placeholder(R.drawable.default_rac1)
+                .into(playback_icon)
+    }
+
+    private fun getWeekOfTheYear(): Int {
+        val cal = Calendar.getInstance()
+        return cal.get(Calendar.WEEK_OF_YEAR)
     }
 
     private fun onPlaybackStateChanged(playbackState: PlaybackStateCompat?) {

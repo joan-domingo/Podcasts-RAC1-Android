@@ -2,9 +2,6 @@ package cat.xojan.random1.feature.browser
 
 import android.app.Activity
 import android.graphics.drawable.Animatable
-import android.graphics.drawable.AnimationDrawable
-import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.DrawableCompat
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
