@@ -43,11 +43,13 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
 
                     val localUriIndex = cursor.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)
                     val uri = cursor.getString(localUriIndex)
-                    val audioId = uri.split((Environment.DIRECTORY_DOWNLOADS + "/").toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+                    val audioId = uri.split((Environment.DIRECTORY_DOWNLOADS + "/")
+                            .toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
                             .replace(PodcastDataInteractor.EXTENSION, "")
 
-                    eventLogger.logDownloadedPodcast(title)
                     podcastDataInteractor.addDownload(audioId)
+                    val programId = podcastDataInteractor.getProgramId(audioId)
+                    eventLogger.logDownloadedPodcastSuccess(audioId, title, programId)
 
                     Toast.makeText(context, context.getString(R.string.download_successful) + ": " +
                             title, Toast.LENGTH_SHORT).show()

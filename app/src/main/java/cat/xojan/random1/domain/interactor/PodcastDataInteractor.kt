@@ -144,4 +144,8 @@ class PodcastDataInteractor @Inject constructor(
             to.delete()
         }
     }
+
+    fun getProgramId(audioId: String): String? {
+        return downloadRepo.getDownloadedPodcastProgramId(audioId)
+    }
 }

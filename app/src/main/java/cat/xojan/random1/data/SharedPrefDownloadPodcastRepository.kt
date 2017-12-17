@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.support.v4.media.MediaDescriptionCompat
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import com.squareup.moshi.JsonAdapter
@@ -105,5 +106,10 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
         sharedPref.edit()
                 .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
                 .apply()
+    }
+
+    override fun getDownloadedPodcastProgramId(audioId: String): String? {
+        return getDownloadedPodcasts().firstOrNull { it.mediaId == audioId }
+                ?.extras!!.getString(PODCAST_PROGRAM_ID)
     }
 }

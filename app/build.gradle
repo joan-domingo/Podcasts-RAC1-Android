@@ -14,6 +14,7 @@ android {
         versionCode 26
         versionName "2.2.1"
         vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
     }
 
     signingConfigs {
@@ -29,7 +30,7 @@ android {
 
     buildTypes {
         debug {
-            //applicationIdSuffix ".dev"
+            applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
         }
         release {
@@ -82,6 +83,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger"
     implementation "com.google.dagger:dagger:$dagger"
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:11.6.2'
+
     // JUnit
     testImplementation "junit:junit:$jUnit"
 
@@ -99,6 +103,9 @@ dependencies {
     // Moshi
     implementation "com.squareup.moshi:moshi-kotlin:$moshi"
     implementation "com.squareup.moshi:moshi-adapters:$moshi"
+
+    // Multidex
+    compile 'com.android.support:multidex:1.0.1'
 
     // Picasso
     implementation 'com.squareup.picasso:picasso:2.5.2'

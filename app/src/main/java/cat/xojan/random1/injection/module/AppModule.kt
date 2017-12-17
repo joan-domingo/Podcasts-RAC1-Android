@@ -96,7 +96,7 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideEventLogger(): EventLogger {
-        return EventLogger()
+        return EventLogger(application)
     }
 
     @Provides

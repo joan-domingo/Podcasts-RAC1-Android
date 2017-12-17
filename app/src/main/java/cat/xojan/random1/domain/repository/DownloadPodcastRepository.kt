@@ -17,4 +17,6 @@ interface DownloadPodcastRepository {
     fun deleteDownloadedPodcast(podcast: MediaDescriptionCompat)
 
     fun getDownloadedPodcastTitle(mediaId: String): String?
+
+    fun getDownloadedPodcastProgramId(audioId: String): String?
 }

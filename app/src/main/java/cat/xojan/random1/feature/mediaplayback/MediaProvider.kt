@@ -13,6 +13,7 @@ import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.feature.home.ProgramFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -147,6 +148,7 @@ class MediaProvider @Inject constructor(
     private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaBrowserCompat.MediaItem {
         val extras = Bundle()
         extras.putSerializable(PODCAST_STATE, podcast.state)
+        extras.putString(PODCAST_PROGRAM_ID, podcast.programId)
 
         val description = MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.audioId)
