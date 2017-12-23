@@ -77,7 +77,6 @@ dependencies {
     // Android support
     implementation "com.android.support:appcompat-v7:$supportLib"
     implementation "com.android.support:design:$supportLib"
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
 
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:$dagger"
