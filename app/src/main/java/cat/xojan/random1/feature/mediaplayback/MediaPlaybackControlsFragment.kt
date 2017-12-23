@@ -1,6 +1,7 @@
 package cat.xojan.random1.feature.mediaplayback
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.media.MediaMetadataCompat
@@ -11,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cat.xojan.random1.R
+import cat.xojan.random1.feature.browser.BrowseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_playback_controls.*
 import java.util.*
@@ -37,6 +39,10 @@ class MediaPlaybackControlsFragment : Fragment() {
                     state == PlaybackStateCompat.STATE_CONNECTING) {
                 pauseMedia()
             }
+        }
+        media_controls_view.setOnClickListener {
+            val intent = MediaPlaybackFullScreenActivity.newIntent(activity!!.baseContext)
+            activity?.baseContext?.startActivity(intent)
         }
     }
 

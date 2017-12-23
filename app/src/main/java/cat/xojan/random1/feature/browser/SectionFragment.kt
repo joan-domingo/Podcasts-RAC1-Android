@@ -8,12 +8,12 @@ import android.util.Log
 import android.view.*
 import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.CrashReporter
-import cat.xojan.random1.injection.component.BrowseComponent
-import cat.xojan.random1.feature.BaseActivity
 import cat.xojan.random1.feature.BaseFragment
 import cat.xojan.random1.feature.IsMediaBrowserFragment
 import cat.xojan.random1.feature.MediaBrowserProvider
+import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.feature.home.ProgramFragment
+import cat.xojan.random1.injection.component.BrowseComponent
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.recycler_view_fragment.*
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class SectionFragment : BaseFragment(), IsMediaBrowserFragment {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mediaBrowserProvider = context as BaseActivity
+        mediaBrowserProvider = context as MediaPlayerBaseActivity
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -15,12 +15,12 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.CrashReporter
-import cat.xojan.random1.injection.component.BrowseComponent
-import cat.xojan.random1.feature.BaseActivity
 import cat.xojan.random1.feature.BaseFragment
 import cat.xojan.random1.feature.IsMediaBrowserFragment
 import cat.xojan.random1.feature.MediaBrowserProvider
+import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.feature.home.ProgramFragment.Companion.MEDIA_ID_ROOT
+import cat.xojan.random1.injection.component.BrowseComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -54,7 +54,7 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        mediaBrowserProvider = context as BaseActivity
+        mediaBrowserProvider = context as MediaPlayerBaseActivity
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

@@ -6,15 +6,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.media.MediaBrowserCompat
 import cat.xojan.random1.R
+import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.injection.HasComponent
 import cat.xojan.random1.injection.component.BrowseComponent
 import cat.xojan.random1.injection.component.DaggerBrowseComponent
 import cat.xojan.random1.injection.module.BrowseModule
-import cat.xojan.random1.feature.BaseActivity
 import javax.inject.Inject
 
 
-class BrowseActivity: BaseActivity(), HasComponent<BrowseComponent> {
+class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
     companion object {
         private val EXTRA_PROGRAM = "extra_program"
 

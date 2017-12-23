@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    android:id="@+id/media_controls_view">
 
     <ImageView
         android:id="@+id/playback_icon"

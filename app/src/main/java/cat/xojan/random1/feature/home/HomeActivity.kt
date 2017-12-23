@@ -9,17 +9,17 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import cat.xojan.random1.R
+import cat.xojan.random1.feature.MediaPlayerBaseActivity
+import cat.xojan.random1.feature.browser.BrowserViewModel
 import cat.xojan.random1.injection.HasComponent
 import cat.xojan.random1.injection.component.DaggerHomeComponent
 import cat.xojan.random1.injection.component.HomeComponent
 import cat.xojan.random1.injection.module.HomeModule
-import cat.xojan.random1.feature.BaseActivity
-import cat.xojan.random1.feature.browser.BrowserViewModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HomeActivity: BaseActivity(), HasComponent<HomeComponent> {
+class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     companion object {
         private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
