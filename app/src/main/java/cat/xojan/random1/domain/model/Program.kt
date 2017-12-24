@@ -13,6 +13,8 @@ class Program(val id: String,
 
     fun imageUrl(): String = images.imageUrl
 
+    fun bigImageUrl(): String = images.bigImageUrl
+
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

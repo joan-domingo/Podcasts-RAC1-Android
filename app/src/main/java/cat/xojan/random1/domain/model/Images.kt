@@ -5,4 +5,5 @@ import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Images(@Json(name = "person-small") val imageUrl: String) : Parcelable
+class Images(@Json(name = "person-small") val imageUrl: String,
+             @Json(name = "app") val bigImageUrl: String) : Parcelable

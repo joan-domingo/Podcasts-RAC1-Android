@@ -2,6 +2,8 @@ package cat.xojan.random1.feature.mediaplayback
 
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.util.Log
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
 
 class QueueManager {
 
@@ -25,7 +27,7 @@ class QueueManager {
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
                             itemMediaData.mediaUri.toString())
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
-                            itemMediaData.iconUri.toString())
+                            itemMediaData.extras?.getString(PODCAST_BIG_IMAGE_URL))
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, items.size.toLong())
                     .build()

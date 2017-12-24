@@ -10,5 +10,6 @@ class MediaDescriptionCompatJson(
         val state: Podcast.State,
         val downloadReference: Long?,
         val mediaFilePath: String?,
-        val programId: String?
+        val programId: String?,
+        val bigImageUrl: String?
 )

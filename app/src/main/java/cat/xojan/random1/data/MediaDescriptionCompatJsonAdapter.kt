@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
@@ -23,7 +24,8 @@ class MediaDescriptionCompatJsonAdapter {
                 item.extras?.getSerializable(PODCAST_STATE) as Podcast.State,
                 item.extras?.getLong(PODCAST_DOWNLOAD_REFERENCE),
                 item.extras?.getString(PODCAST_FILE_PATH),
-                item.extras?.getString(PODCAST_PROGRAM_ID))
+                item.extras?.getString(PODCAST_PROGRAM_ID),
+                item.extras?.getString(PODCAST_BIG_IMAGE_URL))
     }
 
     @FromJson
@@ -33,6 +35,7 @@ class MediaDescriptionCompatJsonAdapter {
         extras.putLong(PODCAST_DOWNLOAD_REFERENCE, itemJson.downloadReference!!)
         extras.putString(PODCAST_FILE_PATH, itemJson.mediaFilePath)
         extras.putString(PODCAST_PROGRAM_ID, itemJson.programId)
+        extras.putString(PODCAST_BIG_IMAGE_URL, itemJson.bigImageUrl)
 
         return MediaDescriptionCompat.Builder()
                 .setMediaId(itemJson.id)

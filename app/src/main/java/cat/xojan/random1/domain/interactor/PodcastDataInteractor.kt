@@ -44,6 +44,7 @@ class PodcastDataInteractor @Inject constructor(
                     program?.let {
                         podcast.programId = program.id
                         podcast.imageUrl = program.imageUrl()
+                        podcast.bigImageUrl = program.bigImageUrl()
                     }
                     podcast
                 }
@@ -58,6 +59,7 @@ class PodcastDataInteractor @Inject constructor(
                     program?.let {
                         podcast.programId = program.id
                         podcast.imageUrl = program.imageUrl()
+                        podcast.bigImageUrl = program.bigImageUrl()
                     }
                     podcast
                 }

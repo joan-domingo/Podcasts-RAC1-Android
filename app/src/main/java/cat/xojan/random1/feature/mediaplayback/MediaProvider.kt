@@ -7,13 +7,14 @@ import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
+import cat.xojan.random1.domain.interactor.PodcastDataInteractor
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor
-import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.feature.home.ProgramFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -149,6 +150,7 @@ class MediaProvider @Inject constructor(
         val extras = Bundle()
         extras.putSerializable(PODCAST_STATE, podcast.state)
         extras.putString(PODCAST_PROGRAM_ID, podcast.programId)
+        extras.putString(PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
 
         val description = MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.audioId)

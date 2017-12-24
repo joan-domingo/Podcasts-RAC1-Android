@@ -17,7 +17,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
 
     private val TAG = BaseActivity::class.simpleName
     lateinit var mMediaBrowser: MediaBrowserCompat
-    private lateinit var controlsFragment: MediaPlaybackControlsFragment
+    private var controlsFragment: MediaPlaybackControlsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +39,10 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
 
     override fun onStart() {
         super.onStart()
-        controlsFragment = supportFragmentManager.findFragmentById(R.id.fragment_playback_controls)
-                as MediaPlaybackControlsFragment
+        try {
+            controlsFragment = supportFragmentManager.findFragmentById(R.id.fragment_playback_controls)
+                    as MediaPlaybackControlsFragment
+        } catch (t:Throwable) {}
         hidePlaybackControls()
 
         mMediaBrowser.connect()
@@ -65,7 +67,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
         } else {
             hidePlaybackControls()
         }
-        controlsFragment.onConnected()
+        controlsFragment?.onConnected()
 
         onMediaControllerConnected()
     }
@@ -75,9 +77,11 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     override fun getMediaBrowser(): MediaBrowserCompat = mMediaBrowser
 
     private fun hidePlaybackControls() {
-        supportFragmentManager.beginTransaction()
-                .hide(controlsFragment)
-                .commit()
+        controlsFragment?.let {
+            supportFragmentManager.beginTransaction()
+                    .hide(controlsFragment)
+                    .commit()
+        }
     }
 
     private fun shouldShowControls(): Boolean {
@@ -95,12 +99,14 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     }
 
     private fun showPlaybackControls() {
-        supportFragmentManager.beginTransaction()
-                /*.setCustomAnimations(
-                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
-                        R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)*/
-                .show(controlsFragment)
-                .commit()
+        controlsFragment?.let {
+            supportFragmentManager.beginTransaction()
+                    /*.setCustomAnimations(
+                            R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
+                            R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)*/
+                    .show(controlsFragment)
+                    .commit()
+        }
     }
 
     // Callback that ensures that we are showing the controls

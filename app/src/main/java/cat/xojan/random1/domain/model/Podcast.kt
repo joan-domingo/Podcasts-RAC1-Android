@@ -12,6 +12,7 @@ data class Podcast(private var audio: Audio,
               private var durationSeconds: Long,
               var programId: String?,
               private var _imageUrl: String?,
+              private var _bigImageUrl: String?,
               private var _state: State?,
               private var appMobileTitle: String,
               var downloadReference: Long = 0
@@ -22,6 +23,7 @@ data class Podcast(private var audio: Audio,
         val PODCAST_FILE_PATH = "podcast_downloaded_file_path"
         val PODCAST_DOWNLOAD_REFERENCE = "podcast_download_reference"
         val PODCAST_PROGRAM_ID = "podcast_program_id"
+        val PODCAST_BIG_IMAGE_URL = "podcast_big_image_url"
     }
 
     val title: String
@@ -31,6 +33,12 @@ data class Podcast(private var audio: Audio,
         get() = _imageUrl
         set(value) {
             _imageUrl = value
+        }
+
+    var bigImageUrl: String?
+        get() = _bigImageUrl
+        set(value) {
+            _bigImageUrl = value
         }
 
     var state: State
