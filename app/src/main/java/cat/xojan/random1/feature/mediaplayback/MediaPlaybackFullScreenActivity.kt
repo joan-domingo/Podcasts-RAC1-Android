@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
@@ -42,21 +41,37 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_playback)
         component.inject(this)
+
+        button_play_pause.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            when (controller.playbackState.state) {
+                PlaybackStateCompat.STATE_PLAYING -> controller.transportControls.pause()
+                PlaybackStateCompat.STATE_PAUSED -> controller.transportControls.play()
+            }
+        }
     }
 
     override fun onMediaControllerConnected() {
         val controller = MediaControllerCompat.getMediaController(this)
         controller?.registerCallback(mCallback)
+        updateView()
+    }
 
-        val playbackState = controller.playbackState
-
-        val imageUrl = controller.metadata.description.iconUri.toString()
+    private fun updateView() {
+        val controller = MediaControllerCompat.getMediaController(this)
 
         Picasso.with(this)
-                .load(imageUrl)
-                .fit()
+                .load(controller?.metadata?.description?.iconUri)
                 .placeholder(R.drawable.default_rac1)
                 .into(podcast_art)
+
+        val playbackState = controller?.playbackState?.state
+        when (playbackState) {
+            PlaybackStateCompat.STATE_PLAYING ->
+                button_play_pause.setImageResource(R.drawable.ic_pause)
+            PlaybackStateCompat.STATE_PAUSED ->
+                button_play_pause.setImageResource(R.drawable.ic_play_arrow)
+        }
     }
 
     override fun onStop() {
@@ -71,12 +86,12 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             if (metadata == null) {
                 return
             }
-            Log.d("joan", "onMetadataChanged")
+            updateView()
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
             super.onPlaybackStateChanged(state)
-            Log.d("joan", "onPlaybackStateChanged")
+            updateView()
         }
     }
 }
