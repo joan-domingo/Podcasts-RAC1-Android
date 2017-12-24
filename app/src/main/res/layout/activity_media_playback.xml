@@ -20,12 +20,22 @@
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                app:srcCompat="@drawable/ic_skip_previous_white_24px"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 app:srcCompat="@drawable/ic_pause"/>
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 app:srcCompat="@drawable/ic_play_arrow"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:srcCompat="@drawable/ic_skip_next_white_24px"/>
 
         </LinearLayout>
 
