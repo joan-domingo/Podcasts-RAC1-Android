@@ -13,7 +13,8 @@
         <ImageView
             android:id="@+id/podcast_art"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"/>
 
     </RelativeLayout>
 
@@ -39,8 +40,11 @@
             android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/button_previous"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_previous_white_24px" />
 
             <View
@@ -60,8 +64,11 @@
                 android:layout_height="match_parent" />
 
             <ImageView
+                android:id="@+id/button_next"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
+                android:background="?selectableItemBackgroundBorderless"
+                android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_next_white_24px" />
 
         </LinearLayout>

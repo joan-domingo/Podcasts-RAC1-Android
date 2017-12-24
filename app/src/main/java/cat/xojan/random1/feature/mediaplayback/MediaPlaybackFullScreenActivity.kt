@@ -49,6 +49,16 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                 PlaybackStateCompat.STATE_PAUSED -> controller.transportControls.play()
             }
         }
+
+        button_previous.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            controller.transportControls.skipToPrevious()
+        }
+
+        button_next.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            controller.transportControls.skipToNext()
+        }
     }
 
     override fun onMediaControllerConnected() {
