@@ -11,5 +11,6 @@ class MediaDescriptionCompatJson(
         val downloadReference: Long?,
         val mediaFilePath: String?,
         val programId: String?,
-        val bigImageUrl: String?
+        val bigImageUrl: String?,
+        val duration: Long?
 )

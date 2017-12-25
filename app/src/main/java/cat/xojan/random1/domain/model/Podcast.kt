@@ -9,7 +9,7 @@ data class Podcast(private var audio: Audio,
               var path: String,
               var filePath: String?,
               var dateTime: Date?,
-              private var durationSeconds: Long,
+              var durationSeconds: Long,
               var programId: String?,
               private var _imageUrl: String?,
               private var _bigImageUrl: String?,
@@ -24,6 +24,7 @@ data class Podcast(private var audio: Audio,
         val PODCAST_DOWNLOAD_REFERENCE = "podcast_download_reference"
         val PODCAST_PROGRAM_ID = "podcast_program_id"
         val PODCAST_BIG_IMAGE_URL = "podcast_big_image_url"
+        val PODCAST_DURATION = "podcast_duration"
     }
 
     val title: String

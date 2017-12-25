@@ -26,8 +26,33 @@
         android:orientation="vertical">
 
         <SeekBar
+            android:id="@+id/seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp">
+
+            <TextView
+                android:id="@+id/media_timer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                tools:text="00:00"/>
+
+            <TextView
+                android:id="@+id/media_duration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                tools:text="00:00"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -11,6 +11,7 @@ import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.model.Program
@@ -151,6 +152,7 @@ class MediaProvider @Inject constructor(
         extras.putSerializable(PODCAST_STATE, podcast.state)
         extras.putString(PODCAST_PROGRAM_ID, podcast.programId)
         extras.putString(PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
+        extras.putLong(PODCAST_DURATION, podcast.durationSeconds)
 
         val description = MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.audioId)
