@@ -7,7 +7,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
-import android.util.Log
 import android.widget.SeekBar
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
@@ -48,8 +47,12 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         button_play_pause.setOnClickListener {
             val controller = MediaControllerCompat.getMediaController(this)
             when (controller.playbackState.state) {
-                PlaybackStateCompat.STATE_PLAYING -> controller.transportControls.pause()
-                PlaybackStateCompat.STATE_PAUSED -> controller.transportControls.play()
+                PlaybackStateCompat.STATE_PLAYING -> {
+                    controller.transportControls.pause()
+                }
+                PlaybackStateCompat.STATE_PAUSED -> {
+                    controller.transportControls.play()
+                }
             }
         }
 
@@ -64,17 +67,16 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         }
 
         seek_bar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {
-
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                media_timer.text = DateUtils.formatElapsedTime((progress).toLong())
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-
             }
 
-            override fun onStopTrackingTouch(p0: SeekBar?) {
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
                 MediaControllerCompat.getMediaController(this@MediaPlaybackFullScreenActivity)
-                        .transportControls.seekTo(seek_bar.progress.toLong())
+                        .transportControls.seekTo(seekBar.progress.toLong())
             }
         })
     }
@@ -84,6 +86,13 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         controller?.registerCallback(mCallback)
         updateView()
         updateDuration(controller.metadata)
+        updatePlaybackState(controller.playbackState)
+    }
+
+    private fun updatePlaybackState(state: PlaybackStateCompat?) {
+        if (state == null) {
+            return
+        }
     }
 
     private fun updateView() {
@@ -101,19 +110,14 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             PlaybackStateCompat.STATE_PAUSED ->
                 button_play_pause.setImageResource(R.drawable.ic_play_arrow)
         }
-
-        playbackState?.position?.let {
-            Log.d("joan", "position: " + playbackState.position)
-            seek_bar.progress = playbackState.position.toInt()
-            media_timer.text = DateUtils.formatElapsedTime((playbackState.position/1000))
-        }
     }
 
     private fun updateDuration(metadata: MediaMetadataCompat?) {
         metadata?.let {
             val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).toInt()
             seek_bar.max = duration
-            media_duration.text = DateUtils.formatElapsedTime((duration).toLong())
+            val textDuration = DateUtils.formatElapsedTime((duration).toLong())
+            media_duration.text = textDuration
         }
     }
 
@@ -130,12 +134,12 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                 return
             }
             updateView()
-            updateDuration(metadata)
         }
 
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
             super.onPlaybackStateChanged(state)
             updateView()
+            updatePlaybackState(state)
         }
     }
 }

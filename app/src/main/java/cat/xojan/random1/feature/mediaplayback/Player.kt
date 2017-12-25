@@ -75,6 +75,6 @@ class Player(appContext: Context, private val listener: PlayerListener) {
     }
 
     fun seekTo(pos: Long) {
-
+        mediaPlayer.seekTo((pos * 1000).toInt())
     }
 }
