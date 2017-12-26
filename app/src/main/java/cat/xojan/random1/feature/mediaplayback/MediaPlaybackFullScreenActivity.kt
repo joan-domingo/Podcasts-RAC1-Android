@@ -121,6 +121,8 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     private fun updateView() {
         val controller = MediaControllerCompat.getMediaController(this)
 
+        podcast_title.text = controller.metadata.description.title
+
         Picasso.with(this)
                 .load(controller?.metadata?.description?.iconUri)
                 .placeholder(R.drawable.default_rac1)
