@@ -78,12 +78,21 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
     }*/
 
     override fun onCompletion() {
+        Log.i(TAG, "onCompletion")
     }
 
     override fun onPlaybackStatusChanged(state: Int) {
         if (state != PlaybackStateCompat.STATE_STOPPED) {
             val position: Long = player.getCurrentPosition()
-            val stateBuilder = PlaybackStateCompat.Builder().setActions(getAvailableActions())
+            val stateBuilder: PlaybackStateCompat.Builder = PlaybackStateCompat.Builder()
+                    .setActions(getAvailableActions())
+
+            // Set the activeQueueItemId if the current index is valid.
+            val currentMediaId = queueManager.getCurrentMediaId()
+            if (currentMediaId != -1L) {
+                stateBuilder.setActiveQueueItemId(currentMediaId)
+            }
+
             stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime())
             listener.updatePlaybackState(stateBuilder.build())
         }
@@ -95,6 +104,7 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
     }
 
     override fun onError(error: String) {
+        Log.i(TAG, "onError")
     }
 
     private fun getAvailableActions(): Long {

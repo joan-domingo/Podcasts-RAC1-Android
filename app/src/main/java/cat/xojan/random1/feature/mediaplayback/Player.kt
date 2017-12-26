@@ -56,10 +56,8 @@ class Player(appContext: Context, private val listener: PlayerListener) {
     }
 
     fun getCurrentPosition(): Long {
-        if (mediaPlayer.isPlaying) {
-            return mediaPlayer.currentPosition.toLong()
-        }
-        return PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
+        return mediaPlayer.currentPosition.toLong()
+        //return PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
     }
 
     fun release() {

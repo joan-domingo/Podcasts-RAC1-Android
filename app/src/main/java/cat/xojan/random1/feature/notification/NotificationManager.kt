@@ -10,10 +10,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.BitmapFactory
 import android.os.Build
+import android.os.RemoteException
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.MediaMetadataCompat
+import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
@@ -22,8 +24,11 @@ import cat.xojan.random1.feature.mediaplayback.MediaPlaybackFullScreenActivity
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackService
 
 
-class NotificationManager(private val service: MediaPlaybackService,
-                          private val mediaSession: MediaSessionCompat): BroadcastReceiver() {
+
+
+
+
+class NotificationManager(private val service: MediaPlaybackService): BroadcastReceiver() {
 
     private val NOTIFICATION_ID = 683
     private val REQUEST_CODE = 100
@@ -45,7 +50,16 @@ class NotificationManager(private val service: MediaPlaybackService,
     private val playIntent:PendingIntent
     private val stopIntent:PendingIntent
 
+    private var sessionToken: MediaSessionCompat.Token? = null
+    private var mController: MediaControllerCompat? = null
+    private var mTransportControls: MediaControllerCompat.TransportControls? = null
+    private var mStarted = false
+
+    private var mPlaybackState: PlaybackStateCompat? = null
+    private var mMetadata: MediaMetadataCompat? = null
+
     init {
+        updateMediaSessionToken()
         val pkg = service.packageName
         previousIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
                 Intent(ACTION_PREV).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
@@ -57,17 +71,40 @@ class NotificationManager(private val service: MediaPlaybackService,
                 Intent(ACTION_PLAY).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
         stopIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
                 Intent(ACTION_STOP).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
+        notificationManager.cancelAll()
+    }
+
+    /**
+     * Update the state based on a change on the session token. Called either when
+     * we are running for the first time or when the media session owner has destroyed the session
+     * (see {@link android.media.session.MediaController.Callback#onSessionDestroyed()})
+     */
+    private fun updateMediaSessionToken() {
+        val freshToken = service.sessionToken
+        if (sessionToken == null && freshToken != null || sessionToken != null
+                && sessionToken != freshToken) {
+            if (mController != null) {
+                mController!!.unregisterCallback(mCb)
+            }
+            sessionToken = freshToken
+            if (sessionToken != null) {
+                mController = MediaControllerCompat(service, sessionToken!!)
+                mTransportControls = mController!!.getTransportControls()
+                if (mStarted) {
+                    mController!!.registerCallback(mCb)
+                }
+            }
+        }
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val action = intent?.action
         Log.d(TAG, "Received intent with action " + action!!)
-        val transportControls = mediaSession.controller.transportControls
         when (action) {
-            ACTION_PAUSE -> transportControls.pause()
-            ACTION_PLAY -> transportControls.play()
-            ACTION_NEXT -> transportControls.skipToNext()
-            ACTION_PREV -> transportControls.skipToPrevious()
+            ACTION_PAUSE -> mTransportControls?.pause()
+            ACTION_PLAY -> mTransportControls?.play()
+            ACTION_NEXT -> mTransportControls?.skipToNext()
+            ACTION_PREV -> mTransportControls?.skipToPrevious()
             else -> Log.w(TAG, "Unknown intent ignored. Action= " + action)
         }
     }
@@ -78,24 +115,32 @@ class NotificationManager(private val service: MediaPlaybackService,
      * destroyed before [.stopNotification] is called.
      */
     fun startNotification() {
-        val notification = createNotification()
+        if (!mStarted) {
+            mMetadata = mController?.metadata
+            mPlaybackState = mController?.playbackState
 
-        val filter = IntentFilter()
-        filter.addAction(ACTION_NEXT)
-        filter.addAction(ACTION_PAUSE)
-        filter.addAction(ACTION_PLAY)
-        filter.addAction(ACTION_PREV)
+            val notification = createNotification()
 
-        service.registerReceiver(this, filter)
-        service.startForeground(NOTIFICATION_ID, notification)
+            val filter = IntentFilter()
+            filter.addAction(ACTION_NEXT)
+            filter.addAction(ACTION_PAUSE)
+            filter.addAction(ACTION_PLAY)
+            filter.addAction(ACTION_PREV)
+
+            service.registerReceiver(this, filter)
+            service.startForeground(NOTIFICATION_ID, notification)
+
+            mStarted = true
+        }
     }
 
     private fun createNotification(): Notification? {
         Log.d(TAG, "createNotification")
+        if (mMetadata == null || mPlaybackState == null) {
+            return null
+        }
 
-        val controller = mediaSession.controller
-        val mediaMetadata = controller.metadata
-        val description = mediaMetadata.description
+        val description = mMetadata?.description
 
         // Notification channels are only supported on Android O+.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -104,14 +149,14 @@ class NotificationManager(private val service: MediaPlaybackService,
 
         val notificationBuilder = NotificationCompat.Builder(service, CHANNEL_ID)
 
-        val playPauseButtonPosition = addActions(notificationBuilder, controller.playbackState)
+        val playPauseButtonPosition = addActions(notificationBuilder, mPlaybackState)
         notificationBuilder
                 .setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
                         // show only play/pause in compact view
                         .setShowActionsInCompactView(playPauseButtonPosition)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(stopIntent)
-                        .setMediaSession(mediaSession.sessionToken))
+                        .setMediaSession(sessionToken))
                 .setDeleteIntent(stopIntent)
                 // TODO? .setColor(mNotificationColor)
                 .setSmallIcon(R.mipmap.ic_notification)
@@ -119,11 +164,11 @@ class NotificationManager(private val service: MediaPlaybackService,
                 .setOnlyAlertOnce(true)
                 .setContentIntent(createContentIntent(description))
                 .setContentTitle(service.getString(R.string.app_name))
-                .setContentText(description.title)
+                .setContentText(description?.title)
                 .setLargeIcon(BitmapFactory.decodeResource(service.resources,
                         R.drawable.default_rac1))
 
-        setNotificationPlaybackState(notificationBuilder, controller.playbackState)
+        setNotificationPlaybackState(notificationBuilder, mPlaybackState)
         //TODO ? fetchBitmapFromURLAsync(fetchArtUrl, notificationBuilder)
 
         return notificationBuilder.build()
@@ -146,12 +191,12 @@ class NotificationManager(private val service: MediaPlaybackService,
     }
 
     private fun addActions(notificationBuilder: NotificationCompat.Builder,
-                           playbackState: PlaybackStateCompat): Int {
+                           playbackState: PlaybackStateCompat?): Int {
         Log.d(TAG, "updatePlayPauseAction")
 
         var playPauseButtonPosition = 0
         // If skip to previous action is enabled
-        if (playbackState.actions and PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS != 0L) {
+        if (playbackState?.actions != null && PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS != 0L) {
             notificationBuilder.addAction(android.R.drawable.ic_media_previous,
                     service.getString(R.string.label_previous), previousIntent)
 
@@ -166,7 +211,7 @@ class NotificationManager(private val service: MediaPlaybackService,
         val label: String
         val icon: Int
         val intent: PendingIntent
-        if (playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
+        if (playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
             label = service.getString(R.string.label_pause)
             icon = android.R.drawable.ic_media_pause
             intent = pauseIntent
@@ -178,7 +223,7 @@ class NotificationManager(private val service: MediaPlaybackService,
         notificationBuilder.addAction(NotificationCompat.Action(icon, label, intent))
 
         // If skip to next action is enabled
-        if (playbackState.actions and PlaybackStateCompat.ACTION_SKIP_TO_NEXT != 0L) {
+        if (playbackState?.actions != null && PlaybackStateCompat.ACTION_SKIP_TO_NEXT != 0L) {
             notificationBuilder.addAction(android.R.drawable.ic_media_next,
                     service.getString(R.string.label_next), nextIntent)
         }
@@ -198,11 +243,10 @@ class NotificationManager(private val service: MediaPlaybackService,
     }
 
     private fun setNotificationPlaybackState(builder: NotificationCompat.Builder,
-                                             playbackState: PlaybackStateCompat) {
+                                             playbackState: PlaybackStateCompat?) {
         Log.d(TAG, "updateNotificationPlaybackState. mPlaybackState=" + playbackState)
 
-        if (playbackState == null) {
-            // TODO
+        if (playbackState == null || !mStarted) {
             Log.d(TAG, "updateNotificationPlaybackState. cancelling notification!")
             service.stopForeground(true)
             return
@@ -213,13 +257,53 @@ class NotificationManager(private val service: MediaPlaybackService,
     }
 
     fun stopNotification() {
-        try {
-            notificationManager.cancel(NOTIFICATION_ID)
-            service.unregisterReceiver(this)
-        } catch (ex: IllegalArgumentException) {
-            // ignore if the receiver is not registered.
+        if (mStarted) {
+            mStarted = false
+            try {
+                notificationManager.cancel(NOTIFICATION_ID)
+                service.unregisterReceiver(this)
+            } catch (ex: IllegalArgumentException) {
+                // ignore if the receiver is not registered.
+            }
+
+            service.stopForeground(true)
+        }
+    }
+
+    private val mCb = object : MediaControllerCompat.Callback() {
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
+            mPlaybackState = state
+            Log.d(TAG, "Received new playback state: " + state)
+            if (state!!.state == PlaybackStateCompat.STATE_STOPPED ||
+                    state.state == PlaybackStateCompat.STATE_NONE) {
+                stopNotification()
+            } else {
+                val notification = createNotification()
+                if (notification != null) {
+                    notificationManager.notify(NOTIFICATION_ID, notification)
+                }
+            }
         }
 
-        service.stopForeground(true)
+        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+            mMetadata = metadata
+            Log.d(TAG, "Received new metadata: " + metadata)
+            val notification = createNotification()
+            if (notification != null) {
+                notificationManager.notify(NOTIFICATION_ID, notification)
+            }
+        }
+
+        override fun onSessionDestroyed() {
+            super.onSessionDestroyed()
+            Log.d(TAG, "Session was destroyed, resetting to the new session token")
+            try {
+                updateMediaSessionToken()
+            } catch (e: RemoteException) {
+                Log.e(TAG, "could not connect media controller ")
+                e.printStackTrace()
+            }
+
+        }
     }
 }

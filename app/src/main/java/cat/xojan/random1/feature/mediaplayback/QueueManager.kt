@@ -65,4 +65,8 @@ class QueueManager {
         val previousQueueId:Int = ((currentQueueId + -1) % items.size).toInt()
         return items[previousQueueId].description.mediaId
     }
+
+    fun getCurrentMediaId(): Long {
+        return currentQueueId
+    }
 }

@@ -87,7 +87,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     }*/
 
     private fun initNotificationController() {
-        notificationManager = NotificationManager(this, mediaSession)
+        notificationManager = NotificationManager(this)
     }
 
     private fun initPlaybackManager() {
@@ -193,6 +193,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     }
 
     override fun updatePlaybackState(newState: PlaybackStateCompat) {
+        Log.d("joan", "newState: " + newState)
         mediaSession.setPlaybackState(newState)
     }
 

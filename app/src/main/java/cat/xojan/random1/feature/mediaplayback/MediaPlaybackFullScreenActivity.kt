@@ -3,10 +3,13 @@ package cat.xojan.random1.feature.mediaplayback
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
+import android.util.Log
 import android.widget.SeekBar
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
@@ -19,6 +22,8 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
 
 
+
+
 class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         HasComponent<MediaPlaybackComponent>, MediaBrowserProvider {
 
@@ -28,6 +33,20 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
 
         fun newIntent(context: Context): Intent {
             return Intent(context, MediaPlaybackFullScreenActivity::class.java)
+        }
+    }
+
+    private val handler = Handler()
+    private val updateTimerTask = object : Runnable {
+        override fun run() {
+            val controller = MediaControllerCompat
+                    .getMediaController(this@MediaPlaybackFullScreenActivity)
+            controller?.let {
+                updateProgress(controller.playbackState)
+            }
+
+            // Running this thread after 100 milliseconds
+            handler.postDelayed(this, 100)
         }
     }
 
@@ -72,13 +91,18 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
+                handler.removeCallbacks(updateTimerTask, 100)
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
+                handler.removeCallbacks(updateTimerTask)
                 MediaControllerCompat.getMediaController(this@MediaPlaybackFullScreenActivity)
                         .transportControls.seekTo(seekBar.progress.toLong())
+                handler.postDelayed(updateTimerTask, 100)
             }
         })
+
+        handler.postDelayed(updateTimerTask, 100)
     }
 
     override fun onMediaControllerConnected() {
@@ -125,6 +149,24 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         super.onStop()
         val controller = MediaControllerCompat.getMediaController(this)
         controller?.unregisterCallback(mCallback)
+        handler.removeCallbacks(updateTimerTask)
+    }
+
+    private fun updateProgress(playbackState: PlaybackStateCompat) {
+        var currentPosition = playbackState.position / 1000
+        Log.d("joan", "test: " + playbackState.position)
+        if (playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
+            // Calculate the elapsed time between the last position update and now and unless
+            // paused, we can assume (delta * speed) + current position is approximately the
+            // latest position. This ensure that we do not repeatedly call the getPlaybackState()
+            // on MediaControllerCompat.
+            val timeDelta = (SystemClock.elapsedRealtime() - playbackState
+                    .lastPositionUpdateTime) / 1000
+            currentPosition += timeDelta.toInt() * playbackState.playbackSpeed.toLong()
+        }
+        Log.d("joan", "updateProgress: " + currentPosition)
+        seek_bar.progress = currentPosition.toInt()
+        media_timer.text = DateUtils.formatElapsedTime((currentPosition))
     }
 
     private val mCallback = object : MediaControllerCompat.Callback() {
