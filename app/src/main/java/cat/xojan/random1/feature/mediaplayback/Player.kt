@@ -42,6 +42,9 @@ class Player(appContext: Context, private val listener: PlayerListener) {
             Log.d(TAG, mediaUri)
             mediaPlayer.setDataSource(mediaUri)
             mediaPlayer.setOnPreparedListener { play() }
+            mediaPlayer.setOnCompletionListener {
+                listener.onCompletion()
+            }
             mediaPlayer.prepareAsync()
             listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
         } else {
@@ -73,6 +76,7 @@ class Player(appContext: Context, private val listener: PlayerListener) {
     }
 
     fun seekTo(pos: Long) {
-        mediaPlayer.seekTo((pos * 1000).toInt())
+        mediaPlayer.seekTo((pos).toInt())
+        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
     }
 }

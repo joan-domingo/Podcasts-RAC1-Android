@@ -9,7 +9,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
-import android.util.Log
 import android.widget.SeekBar
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
@@ -46,7 +45,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             }
 
             // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 100)
+            handler.postDelayed(this, 1000)
         }
     }
 
@@ -87,11 +86,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
 
         seek_bar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                media_timer.text = DateUtils.formatElapsedTime((progress).toLong())
+                media_timer.text = DateUtils.formatElapsedTime((progress/1000).toLong())
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {
-                handler.removeCallbacks(updateTimerTask, 100)
+                handler.removeCallbacks(updateTimerTask)
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
@@ -140,7 +139,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         metadata?.let {
             val duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION).toInt()
             seek_bar.max = duration
-            val textDuration = DateUtils.formatElapsedTime((duration).toLong())
+            val textDuration = DateUtils.formatElapsedTime(((duration / 1000).toLong()))
             media_duration.text = textDuration
         }
     }
@@ -153,20 +152,17 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     }
 
     private fun updateProgress(playbackState: PlaybackStateCompat) {
-        var currentPosition = playbackState.position / 1000
-        Log.d("joan", "test: " + playbackState.position)
+        var currentPosition = playbackState.position
         if (playbackState.state == PlaybackStateCompat.STATE_PLAYING) {
             // Calculate the elapsed time between the last position update and now and unless
             // paused, we can assume (delta * speed) + current position is approximately the
             // latest position. This ensure that we do not repeatedly call the getPlaybackState()
             // on MediaControllerCompat.
-            val timeDelta = (SystemClock.elapsedRealtime() - playbackState
-                    .lastPositionUpdateTime) / 1000
+            val timeDelta = SystemClock.elapsedRealtime() - playbackState.lastPositionUpdateTime
             currentPosition += timeDelta.toInt() * playbackState.playbackSpeed.toLong()
         }
-        Log.d("joan", "updateProgress: " + currentPosition)
         seek_bar.progress = currentPosition.toInt()
-        media_timer.text = DateUtils.formatElapsedTime((currentPosition))
+        media_timer.text = DateUtils.formatElapsedTime(currentPosition/1000)
     }
 
     private val mCallback = object : MediaControllerCompat.Callback() {

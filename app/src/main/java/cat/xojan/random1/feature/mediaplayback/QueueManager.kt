@@ -31,7 +31,7 @@ class QueueManager {
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, items.size.toLong())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
-                            itemMediaData.extras?.getLong(PODCAST_DURATION)!!)
+                            itemMediaData.extras?.getLong(PODCAST_DURATION)!! * 1000)
                     .build()
         } else {
             null
