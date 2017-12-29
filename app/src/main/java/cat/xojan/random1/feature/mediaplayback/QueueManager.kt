@@ -2,6 +2,7 @@ package cat.xojan.random1.feature.mediaplayback
 
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 
@@ -21,11 +22,13 @@ class QueueManager {
             val itemMediaData = item[0].description
             currentQueueId = item[0].queueId
 
+            val downloadPath: String? = itemMediaData.extras?.getString(Podcast.PODCAST_FILE_PATH)
+            val mediaUri: String = downloadPath ?: itemMediaData.mediaUri.toString()
+
             MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, itemMediaData.mediaId)
                     .putText(MediaMetadataCompat.METADATA_KEY_TITLE, itemMediaData.title)
-                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
-                            itemMediaData.mediaUri.toString())
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, mediaUri)
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
                             itemMediaData.extras?.getString(PODCAST_BIG_IMAGE_URL))
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
