@@ -41,7 +41,9 @@ class Player(appContext: Context, private val listener: PlayerListener) {
             val mediaUri = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
             Log.d(TAG, mediaUri)
             mediaPlayer.setDataSource(mediaUri)
-            mediaPlayer.setOnPreparedListener { play() }
+            mediaPlayer.setOnPreparedListener {
+                play()
+            }
             mediaPlayer.setOnCompletionListener {
                 listener.onCompletion()
             }
