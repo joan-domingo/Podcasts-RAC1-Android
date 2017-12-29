@@ -71,6 +71,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 Intent(ACTION_PLAY).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
         stopIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
                 Intent(ACTION_STOP).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
+
         notificationManager.cancelAll()
     }
 
@@ -120,17 +121,32 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
             mPlaybackState = mController?.playbackState
 
             val notification = createNotification()
+            if (notification != null) {
+                mController?.registerCallback(mCb)
+                val filter = IntentFilter()
+                filter.addAction(ACTION_NEXT)
+                filter.addAction(ACTION_PAUSE)
+                filter.addAction(ACTION_PLAY)
+                filter.addAction(ACTION_PREV)
+                service.registerReceiver(this, filter)
 
-            val filter = IntentFilter()
-            filter.addAction(ACTION_NEXT)
-            filter.addAction(ACTION_PAUSE)
-            filter.addAction(ACTION_PLAY)
-            filter.addAction(ACTION_PREV)
+                service.startForeground(NOTIFICATION_ID, notification)
+                mStarted = true
+            }
+        }
+    }
 
-            service.registerReceiver(this, filter)
-            service.startForeground(NOTIFICATION_ID, notification)
-
-            mStarted = true
+    fun stopNotification() {
+        if (mStarted) {
+            mStarted = false
+            mController?.unregisterCallback(mCb)
+            try {
+                notificationManager.cancel(NOTIFICATION_ID)
+                service.unregisterReceiver(this)
+            } catch (ex: IllegalArgumentException) {
+                // ignore if the receiver is not registered.
+            }
+            service.stopForeground(true)
         }
     }
 
@@ -254,20 +270,6 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
         // Make sure that the notification can be dismissed by the user when we are not playing:
         builder.setOngoing(playbackState.state == PlaybackStateCompat.STATE_PLAYING)
-    }
-
-    fun stopNotification() {
-        if (mStarted) {
-            mStarted = false
-            try {
-                notificationManager.cancel(NOTIFICATION_ID)
-                service.unregisterReceiver(this)
-            } catch (ex: IllegalArgumentException) {
-                // ignore if the receiver is not registered.
-            }
-
-            service.stopForeground(true)
-        }
     }
 
     private val mCb = object : MediaControllerCompat.Callback() {
