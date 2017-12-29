@@ -7,15 +7,19 @@ import java.io.IOException
 
 class RemotePodcastRepository(private val service: Rac1ApiService): PodcastRepository {
 
-    var hourPodcasts = listOf<Podcast>()
-    var sectionPodcasts = listOf<Podcast>()
+    private var hourPodcasts = listOf<Podcast>()
+    private var sectionPodcasts = listOf<Podcast>()
+    private var programId:String? = null
+    private var sectionId:String? = null
 
     @Throws(IOException::class)
-    override fun getPodcasts(programId: String, sectionId: String?): Single<List<Podcast>> {
+    override fun getPodcasts(programId: String, sectionId: String?, refresh:Boolean):
+            Single<List<Podcast>> {
         return Single.create { subscriber ->
             sectionId?.let {
                 try {
-                    if (sectionPodcasts.isEmpty()) {
+                    if (sectionPodcasts.isEmpty() || refresh || programId != this.programId ||
+                            sectionId != this.sectionId) {
                         sectionPodcasts = service.getPodcastData(programId, sectionId).execute()
                                 .body()!!.podcasts
                     }
@@ -26,7 +30,7 @@ class RemotePodcastRepository(private val service: Rac1ApiService): PodcastRepos
             }
 
             try {
-                if (hourPodcasts.isEmpty()) {
+                if (hourPodcasts.isEmpty() || refresh || programId != this.programId) {
                     hourPodcasts = service.getPodcastData(programId).execute()
                             .body()!!.podcasts
                 }
@@ -34,6 +38,9 @@ class RemotePodcastRepository(private val service: Rac1ApiService): PodcastRepos
             } catch (e: IOException) {
                 subscriber.onError(e)
             }
+
+            this.programId = programId
+            this.sectionId = sectionId
         }
     }
 }

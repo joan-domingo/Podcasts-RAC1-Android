@@ -6,5 +6,6 @@ import java.io.IOException
 
 interface PodcastRepository {
     @Throws(IOException::class)
-    fun getPodcasts(programId: String, sectionId: String? = null): Single<List<Podcast>>
+    fun getPodcasts(programId: String, sectionId: String?, refresh: Boolean):
+            Single<List<Podcast>>
 }

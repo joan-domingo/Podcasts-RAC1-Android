@@ -20,7 +20,6 @@ import cat.xojan.random1.feature.BaseFragment
 import cat.xojan.random1.feature.IsMediaBrowserFragment
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
-import cat.xojan.random1.feature.home.ProgramFragment
 import cat.xojan.random1.injection.component.BrowseComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,6 +36,7 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
     private val compositeDisposable = CompositeDisposable()
 
     private var mediaBrowserProvider: MediaBrowserProvider? = null
+    private var refresh = false
 
     companion object {
         val TAG = SectionPodcastListFragment::class.java.simpleName
@@ -69,7 +69,10 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipe_refresh.setColorSchemeResources(R.color.colorAccent)
-        swipe_refresh.setOnRefreshListener { onMediaControllerConnected() }
+        swipe_refresh.setOnRefreshListener {
+            refresh = true
+            onMediaControllerConnected()
+        }
         recycler_view.layoutManager = LinearLayoutManager(activity)
 
         adapter = PodcastListAdapter(viewModel, activity as Activity)
@@ -119,7 +122,7 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         val mediaBrowser = mediaBrowserProvider?.getMediaBrowser()
         mediaBrowser?.let {
             val mediaId = mediaId()
-            if (mediaBrowser.isConnected && mediaId != null) {
+            if (mediaBrowser.isConnected) {
                 mediaBrowser.unsubscribe(mediaId)
             }
         }
@@ -132,8 +135,10 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         mediaBrowserProvider = null
     }
 
-    private fun mediaId(): String? {
-        return arguments?.getString(ARG_MEDIA_ID)
+    private fun mediaId(): String {
+        val mediaId = arguments!!.getString(ARG_MEDIA_ID) + "/" + refresh
+        refresh = false
+        return mediaId
     }
 
     override fun onMediaControllerConnected() {
@@ -153,7 +158,7 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         // subscriber or if the media content changes on the service side, so we need to
         // unsubscribe first.
         mediaBrowser?.let {
-            val mediaId = mediaId() ?: ProgramFragment.MEDIA_ID_ROOT
+            val mediaId = mediaId()
             mediaBrowser.unsubscribe(mediaId)
             mediaBrowser.subscribe(mediaId, mediaBrowserSubscriptionCallback)
         }

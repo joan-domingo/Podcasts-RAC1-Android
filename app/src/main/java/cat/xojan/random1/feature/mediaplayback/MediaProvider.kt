@@ -63,9 +63,9 @@ class MediaProvider @Inject constructor(
                 )
             }
             parentId.contains("/") -> {
-                val programId = parentId.split("/")[0]
-                val sectionId = parentId.split("/")[1]
-                compositeDisposable.add(podcastInteractor.getSectionPodcasts(programId, sectionId)
+                val (programId, sectionId, refresh) = parentId.split("/")
+                compositeDisposable.add(podcastInteractor.getSectionPodcasts(programId,
+                        sectionId, refresh.toBoolean())
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -74,14 +74,18 @@ class MediaProvider @Inject constructor(
                         )
                 )
             }
-            else -> compositeDisposable.add(podcastInteractor.getHourByHourPodcasts(parentId)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { p -> handleNextPodcasts(p, result)},
-                            { e -> handleError(e, result)}
-                    )
-            )
+            else ->  {
+                val (programId, refresh) = parentId.split(":")
+                compositeDisposable.add(podcastInteractor.getHourByHourPodcasts(programId,
+                        refresh.toBoolean())
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { p -> handleNextPodcasts(p, result)},
+                                { e -> handleError(e, result)}
+                        )
+                )
+            }
         }
     }
 

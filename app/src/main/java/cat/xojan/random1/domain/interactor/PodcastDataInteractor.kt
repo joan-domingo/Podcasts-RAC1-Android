@@ -37,9 +37,9 @@ class PodcastDataInteractor @Inject constructor(
     private val stateUpdatesSubject: PublishSubject<List<MediaBrowserCompat.MediaItem>> =
             PublishSubject.create()
 
-    fun getHourByHourPodcasts(programId: String): Single<List<Podcast>> {
+    fun getHourByHourPodcasts(programId: String, refresh: Boolean): Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
-        return podcastRepo.getPodcasts(programId)
+        return podcastRepo.getPodcasts(programId, null, refresh)
                 .flatMap { podcasts -> Observable.just(podcasts)
                         .flatMapIterable { list -> list }
                         .map { podcast ->
@@ -54,9 +54,10 @@ class PodcastDataInteractor @Inject constructor(
                 }
     }
 
-    fun getSectionPodcasts(programId: String, sectionId: String): Single<List<Podcast>> {
+    fun getSectionPodcasts(programId: String, sectionId: String, refresh: Boolean):
+            Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
-        return podcastRepo.getPodcasts(programId, sectionId)
+        return podcastRepo.getPodcasts(programId, sectionId, refresh)
                 .flatMap {
                     podcasts -> Observable.just(podcasts)
                         .flatMapIterable { list -> list }
