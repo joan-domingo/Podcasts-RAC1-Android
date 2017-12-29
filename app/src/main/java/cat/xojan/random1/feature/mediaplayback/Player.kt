@@ -77,6 +77,10 @@ class Player(appContext: Context, private val listener: PlayerListener) {
 
     fun seekTo(pos: Long) {
         mediaPlayer.seekTo((pos).toInt())
-        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
+        if (mediaPlayer.isPlaying) {
+            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
+        } else {
+            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
+        }
     }
 }
