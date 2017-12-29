@@ -13,6 +13,7 @@ import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
 import cat.xojan.random1.domain.repository.ProgramRepository
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import java.io.File
@@ -39,31 +40,36 @@ class PodcastDataInteractor @Inject constructor(
     fun getHourByHourPodcasts(programId: String): Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
         return podcastRepo.getPodcasts(programId)
-                .flatMapIterable { list -> list }
-                .map { podcast ->
-                    program?.let {
-                        podcast.programId = program.id
-                        podcast.imageUrl = program.imageUrl()
-                        podcast.bigImageUrl = program.bigImageUrl()
-                    }
-                    podcast
+                .flatMap { podcasts -> Observable.just(podcasts)
+                        .flatMapIterable { list -> list }
+                        .map { podcast ->
+                            program?.let {
+                                podcast.programId = program.id
+                                podcast.imageUrl = program.imageUrl()
+                                podcast.bigImageUrl = program.bigImageUrl()
+                            }
+                            podcast
+                        }
+                        .toList()
                 }
-                .toList()
     }
 
     fun getSectionPodcasts(programId: String, sectionId: String): Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
         return podcastRepo.getPodcasts(programId, sectionId)
-                .flatMapIterable { list -> list }
-                .map { podcast ->
-                    program?.let {
-                        podcast.programId = program.id
-                        podcast.imageUrl = program.imageUrl()
-                        podcast.bigImageUrl = program.bigImageUrl()
-                    }
-                    podcast
+                .flatMap {
+                    podcasts -> Observable.just(podcasts)
+                        .flatMapIterable { list -> list }
+                        .map { podcast ->
+                            program?.let {
+                                podcast.programId = program.id
+                                podcast.imageUrl = program.imageUrl()
+                                podcast.bigImageUrl = program.bigImageUrl()
+                            }
+                            podcast
+                        }
+                        .toList()
                 }
-                .toList()
     }
 
     fun isSectionSelected(): Boolean {

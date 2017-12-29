@@ -3,7 +3,10 @@ import android.content.Context
 import android.os.Environment
 import android.text.TextUtils
 import cat.xojan.random1.data.SharedPrefDownloadPodcastRepository
-import cat.xojan.random1.domain.model.*
+import cat.xojan.random1.domain.model.EventLogger
+import cat.xojan.random1.domain.model.Program
+import cat.xojan.random1.domain.model.Section
+import cat.xojan.random1.domain.model.SectionType
 import cat.xojan.random1.domain.repository.ProgramRepository
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -22,7 +25,7 @@ class ProgramDataInteractor @Inject constructor(
     fun loadPrograms(): Single<List<Program>> {
         return programRepo.getPrograms()
                 .flatMap {
-                    podcasts -> Observable.just(podcasts)
+                    programs -> Observable.just(programs)
                         .flatMapIterable { p -> p }
                         .filter { p -> p.active }
                         .toList()
@@ -67,7 +70,8 @@ class ProgramDataInteractor @Inject constructor(
 
             for (podcastFile in iternalFileDir!!.listFiles()) {
                 val audioId = podcastFile.getPath()
-                        .split((Environment.DIRECTORY_PODCASTS + "/").toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()[1].replace(".mp3", "")
+                        .split((Environment.DIRECTORY_PODCASTS + "/").toRegex())
+                        .dropLastWhile({ it.isEmpty() }).toTypedArray()[1].replace(".mp3", "")
                 var podcastTitle = getDownloadedPodcastTitle(audioId)
 
                 if (!TextUtils.isEmpty(podcastTitle)) {

@@ -24,10 +24,6 @@ import cat.xojan.random1.feature.mediaplayback.MediaPlaybackFullScreenActivity
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackService
 
 
-
-
-
-
 class NotificationManager(private val service: MediaPlaybackService): BroadcastReceiver() {
 
     private val NOTIFICATION_ID = 683
