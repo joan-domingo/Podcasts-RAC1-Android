@@ -78,9 +78,7 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
     }*/
 
     override fun onCompletion() {
-        Log.i(TAG, "onCompletion")
         val nextMediaId = queueManager.getNextMediaId()
-        Log.d(TAG, "nextMediaId: " + nextMediaId)
         handlePlayRequest(nextMediaId)
         queueManager.updateMetadata(nextMediaId)
 

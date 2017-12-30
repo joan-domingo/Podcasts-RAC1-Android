@@ -236,7 +236,7 @@ public class MusicPlayerService extends Service implements AudioManager.OnAudioF
         public void run() {
             long totalDuration = mMediaPlayer.getDuration();
             int currentDuration = mMediaPlayer.getCurrentPosition();
-            int progress = PlayerUtil.getProgressPercentage(currentDuration, totalDuration);
+            int progress = 0;
             mListener.onProgressUpdate(progress, currentDuration);
 
             // Running this thread after 100 milliseconds
