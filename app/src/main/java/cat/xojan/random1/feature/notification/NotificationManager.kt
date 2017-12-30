@@ -8,7 +8,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.RemoteException
 import android.support.annotation.RequiresApi
@@ -22,6 +23,8 @@ import android.util.Log
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackFullScreenActivity
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackService
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Target
 
 
 class NotificationManager(private val service: MediaPlaybackService): BroadcastReceiver() {
@@ -86,7 +89,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
             sessionToken = freshToken
             if (sessionToken != null) {
                 mController = MediaControllerCompat(service, sessionToken!!)
-                mTransportControls = mController!!.getTransportControls()
+                mTransportControls = mController!!.transportControls
                 if (mStarted) {
                     mController!!.registerCallback(mCb)
                 }
@@ -161,7 +164,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
         val notificationBuilder = NotificationCompat.Builder(service, CHANNEL_ID)
 
-        val playPauseButtonPosition = addActions(notificationBuilder, mPlaybackState)
+        val playPauseButtonPosition = addActions(notificationBuilder)
         notificationBuilder
                 .setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
                         // show only play/pause in compact view
@@ -170,18 +173,31 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                         .setCancelButtonIntent(stopIntent)
                         .setMediaSession(sessionToken))
                 .setDeleteIntent(stopIntent)
-                // TODO? .setColor(mNotificationColor)
                 .setSmallIcon(R.mipmap.ic_notification)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(createContentIntent(description))
                 .setContentTitle(service.getString(R.string.app_name))
                 .setContentText(description?.title)
-                .setLargeIcon(BitmapFactory.decodeResource(service.resources,
-                        R.drawable.default_rac1))
 
         setNotificationPlaybackState(notificationBuilder, mPlaybackState)
-        //TODO ? fetchBitmapFromURLAsync(fetchArtUrl, notificationBuilder)
+
+        Picasso.with(service)
+                .load(description?.iconUri)
+                .placeholder(R.drawable.default_rac1)
+                .into(object: Target {
+                    override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+                    }
+
+                    override fun onBitmapFailed(errorDrawable: Drawable?) {
+                    }
+
+                    override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                        notificationBuilder.setLargeIcon(bitmap)
+                        addActions(notificationBuilder)
+                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
+                    }
+                })
 
         return notificationBuilder.build()
     }
@@ -202,13 +218,13 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         }
     }
 
-    private fun addActions(notificationBuilder: NotificationCompat.Builder,
-                           playbackState: PlaybackStateCompat?): Int {
+    private fun addActions(notificationBuilder: NotificationCompat.Builder): Int {
         Log.d(TAG, "updatePlayPauseAction")
+        //notificationBuilder.mActions.clear()
 
         var playPauseButtonPosition = 0
         // If skip to previous action is enabled
-        if (playbackState?.actions != null && PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS != 0L) {
+        if ((mPlaybackState!!.actions and PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS) != 0L) {
             notificationBuilder.addAction(android.R.drawable.ic_media_previous,
                     service.getString(R.string.label_previous), previousIntent)
 
@@ -223,7 +239,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         val label: String
         val icon: Int
         val intent: PendingIntent
-        if (playbackState?.state == PlaybackStateCompat.STATE_PLAYING) {
+        if (mPlaybackState?.state == PlaybackStateCompat.STATE_PLAYING) {
             label = service.getString(R.string.label_pause)
             icon = android.R.drawable.ic_media_pause
             intent = pauseIntent
@@ -235,7 +251,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         notificationBuilder.addAction(NotificationCompat.Action(icon, label, intent))
 
         // If skip to next action is enabled
-        if (playbackState?.actions != null && PlaybackStateCompat.ACTION_SKIP_TO_NEXT != 0L) {
+        if ((mPlaybackState!!.actions and PlaybackStateCompat.ACTION_SKIP_TO_NEXT) != 0L) {
             notificationBuilder.addAction(android.R.drawable.ic_media_next,
                     service.getString(R.string.label_next), nextIntent)
         }
