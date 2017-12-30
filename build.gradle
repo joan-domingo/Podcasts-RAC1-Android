@@ -41,9 +41,9 @@ task clean(type: Delete) {
 
 ext {
     buildTools = '27.0.3'
-    compileSdk = 26
-    minSdk = 16
-    targetSdk = 26
+    compileSdk = 27
+    minSdk = 21
+    targetSdk = 27
 
     supportLib = '27.0.2'
     retrofit = '2.3.0'
