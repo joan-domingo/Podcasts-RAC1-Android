@@ -4,29 +4,36 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.os.Build
 import android.os.PowerManager
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 
-class Player(appContext: Context, private val listener: PlayerListener) {
+class Player(appContext: Context,
+             private val listener: PlayerListener,
+             private val audioManager: AudioManager): AudioManager.OnAudioFocusChangeListener {
 
     private val TAG = Player::class.simpleName
     private val mediaPlayer: MediaPlayer = MediaPlayer()
 
     init {
         mediaPlayer.setWakeMode(appContext, PowerManager.PARTIAL_WAKE_LOCK)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val audioAttributes = AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-            //TODO find setaudtioattributes compat
-            mediaPlayer.setAudioAttributes(audioAttributes)
+
+        val result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN)
+
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            Log.d(TAG, "Got audio focus")
         } else {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            Log.d(TAG, "Could not get audio focus")
         }
+
+        val audioAttributes = AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .build()
+        //TODO find setaudtioattributes compat
+        mediaPlayer.setAudioAttributes(audioAttributes)
         mediaPlayer.setVolume(1.0f, 1.0f)
         mediaPlayer.setOnCompletionListener { mediaPlayer ->
             mediaPlayer.release()
@@ -62,12 +69,9 @@ class Player(appContext: Context, private val listener: PlayerListener) {
 
     fun getCurrentPosition(): Long {
         return mediaPlayer.currentPosition.toLong()
-        //return PlaybackStateCompat.PLAYBACK_POSITION_UNKNOWN
     }
 
     fun release() {
-        /*giveUpAudioFocus();
-        unregisterAudioNoisyReceiver();*/
         if (mediaPlayer.isPlaying) {
             mediaPlayer.stop()
         }
@@ -75,6 +79,8 @@ class Player(appContext: Context, private val listener: PlayerListener) {
         mediaPlayer.release()
 
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_STOPPED)
+
+        audioManager.abandonAudioFocus(this)
     }
 
     fun seekTo(pos: Long) {
@@ -83,6 +89,25 @@ class Player(appContext: Context, private val listener: PlayerListener) {
             listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
         } else {
             listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
+        }
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        when (focusChange) {
+            AudioManager.AUDIOFOCUS_GAIN -> {
+                Log.d(TAG, "resume playback")
+                mediaPlayer.setVolume(1.0f, 1.0f)
+            }
+
+            AudioManager.AUDIOFOCUS_LOSS, AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
+                Log.d(TAG, "Stop playback but don't release media player")
+                pause()
+            }
+
+            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
+                Log.d(TAG, "keep playing at an attenuated level")
+                mediaPlayer.setVolume(0.1f, 0.1f)
+            }
         }
     }
 }

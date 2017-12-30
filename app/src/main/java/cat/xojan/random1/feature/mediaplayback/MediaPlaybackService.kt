@@ -2,7 +2,9 @@ package cat.xojan.random1.feature.mediaplayback
 
 import android.app.PendingIntent
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -21,9 +23,8 @@ import javax.inject.Inject
 
 
 class MediaPlaybackService: MediaBrowserServiceCompat(),
-        //AudioManager.OnAudioFocusChangeListener,
         MetaDataUpdateListener,
-        PlaybackStateListener{
+        PlaybackStateListener {
 
     private val TAG = MediaPlaybackService::class.java.simpleName
 
@@ -31,6 +32,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     private lateinit var notificationManager: NotificationManager
     private lateinit var playbackManager: PlaybackManager
     private val delayedStopHandler = DelayedStopHandler(this)
+    private lateinit var audioManager: AudioManager
 
     @Inject internal lateinit var mediaProvider: MediaProvider
     @Inject internal lateinit var queueManager: QueueManager
@@ -51,7 +53,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         super.onCreate()
         initInjector()
 
-        //initNoisyReceiver()
         initPlaybackManager()
         initMediaSession()
         initNotificationController()
@@ -80,18 +81,13 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         sessionToken = mediaSession.sessionToken
     }
 
-    /*private fun initNoisyReceiver() {
-        //Handles headphones coming unplugged. cannot be done through a manifest receiver
-        val filter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
-        registerReceiver(noisyReceiver, filter)
-    }*/
-
     private fun initNotificationController() {
         notificationManager = NotificationManager(this)
     }
 
     private fun initPlaybackManager() {
-        playbackManager = PlaybackManager(this, queueManager, this)
+        audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        playbackManager = PlaybackManager(this, queueManager, this, audioManager)
     }
 
     private fun initQueueManager() {
@@ -130,10 +126,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         delayedStopHandler.removeCallbacksAndMessages(null)
         mediaSession.release()
         mediaProvider.clear()
-
-        /*val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        audioManager.abandonAudioFocus(this)*/
-        //unregisterReceiver(noisyReceiver)
     }
 
     override fun onLoadChildren(
@@ -148,36 +140,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         Log.d(TAG, "onGetRoot: " + MEDIA_ID_ROOT)
         return MediaBrowserServiceCompat.BrowserRoot(MEDIA_ID_ROOT, null)
     }
-
-    /*override fun onAudioFocusChange(focusChange: Int) {
-        when (focusChange) {
-            AudioManager.AUDIOFOCUS_LOSS -> {
-                if (mediaPlayer.isPlaying) {
-                    mediaPlayer.stop()
-                }
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
-                mediaPlayer.pause()
-            }
-            AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
-                mediaPlayer.setVolume(0.3f, 0.3f)
-            }
-            AudioManager.AUDIOFOCUS_GAIN -> {
-                if (!mediaPlayer.isPlaying) {
-                    mediaPlayer.start()
-                }
-                mediaPlayer.setVolume(1.0f, 1.0f)
-            }
-        }
-    }
-
-    private val noisyReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if (mediaPlayer.isPlaying) {
-                mediaPlayer.pause()
-            }
-        }
-    }*/
 
     override fun updateMetadata(metadata: MediaMetadataCompat?) {
         metadata?.let { mediaSession.setMetadata(metadata) }

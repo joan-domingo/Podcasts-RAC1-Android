@@ -1,6 +1,7 @@
 package cat.xojan.random1.feature.mediaplayback
 
 import android.content.Context
+import android.media.AudioManager
 import android.os.Bundle
 import android.os.ResultReceiver
 import android.os.SystemClock
@@ -9,10 +10,11 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 
 class PlaybackManager(appContext: Context, val queueManager: QueueManager,
-                      private val listener: PlaybackStateListener): PlayerListener {
+                      private val listener: PlaybackStateListener, audioManager: AudioManager):
+        PlayerListener {
 
     private val TAG = PlaybackManager::class.simpleName
-    val player = Player(appContext, this)
+    val player = Player(appContext, this, audioManager)
 
     val mediaSessionCallback = object : MediaSessionCompat.Callback() {
 
@@ -23,8 +25,6 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
 
         override fun onSkipToQueueItem(queueId: Long) {
             Log.d(TAG, "OnSkipToQueueItem: " + queueId)
-            /*queueManager.setCurrentQueueItem(queueId)
-            queueManager.updateMetadata()*/
         }
 
         override fun onSkipToNext() {
@@ -67,15 +67,6 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
             Log.i(TAG, "onCustomAction: " + action)
         }
     }
-
-    /*private fun successfullyRetrievedAudioFocus(): Boolean {
-        val audioManager = mediaPlaybackService.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-
-        val result = audioManager.requestAudioFocus(mediaPlaybackService,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
-
-        return result == AudioManager.AUDIOFOCUS_GAIN
-    }*/
 
     override fun onCompletion() {
         val nextMediaId = queueManager.getNextMediaId()
