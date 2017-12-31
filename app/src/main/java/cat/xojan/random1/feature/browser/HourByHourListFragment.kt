@@ -133,7 +133,7 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
         val mediaBrowser = mediaBrowserProvider?.getMediaBrowser()
         mediaBrowser?.let {
             val mediaId = mediaId()
-            if (mediaBrowser.isConnected && mediaId != null) {
+            if (mediaBrowser.isConnected) {
                 mediaBrowser.unsubscribe(mediaId)
             }
         }

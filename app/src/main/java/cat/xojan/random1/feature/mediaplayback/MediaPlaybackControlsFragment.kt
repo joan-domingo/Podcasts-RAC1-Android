@@ -1,18 +1,15 @@
 package cat.xojan.random1.feature.mediaplayback
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cat.xojan.random1.R
-import cat.xojan.random1.feature.browser.BrowseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_playback_controls.*
 import java.util.*
@@ -95,11 +92,17 @@ class MediaPlaybackControlsFragment : Fragment() {
         if (state == PlaybackStateCompat.STATE_PAUSED ||
                 state == PlaybackStateCompat.STATE_STOPPED ||
                 state == PlaybackStateCompat.STATE_NONE) {
+            buffer_icon.visibility = View.GONE
+            play_pause.visibility = View.VISIBLE
             play_pause.setImageResource(R.drawable.ic_play_arrow)
-        } else if (state == PlaybackStateCompat.STATE_PLAYING ||
-                state == PlaybackStateCompat.STATE_BUFFERING ||
-                state == PlaybackStateCompat.STATE_CONNECTING) {
+        } else if (state == PlaybackStateCompat.STATE_PLAYING) {
+            buffer_icon.visibility = View.GONE
+            play_pause.visibility = View.VISIBLE
             play_pause.setImageResource(R.drawable.ic_pause)
+        } else if (state == PlaybackStateCompat.STATE_BUFFERING ||
+                state == PlaybackStateCompat.STATE_CONNECTING) {
+            buffer_icon.visibility = View.VISIBLE
+            play_pause.visibility = View.GONE
         }
     }
 

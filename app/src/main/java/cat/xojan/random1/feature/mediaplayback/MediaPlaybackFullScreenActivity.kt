@@ -9,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
+import android.view.View
 import android.widget.SeekBar
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
@@ -19,8 +20,6 @@ import cat.xojan.random1.injection.component.MediaPlaybackComponent
 import cat.xojan.random1.injection.module.MediaPlaybackModule
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
-
-
 
 
 class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
@@ -121,19 +120,28 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     private fun updateView() {
         val controller = MediaControllerCompat.getMediaController(this)
 
-        podcast_title.text = controller.metadata.description.title
+        title = controller.metadata.description.title
 
         Picasso.with(this)
                 .load(controller?.metadata?.description?.iconUri)
                 .placeholder(R.drawable.default_rac1)
                 .into(podcast_art)
 
-        val playbackState = controller?.playbackState
-        when (playbackState?.state) {
-            PlaybackStateCompat.STATE_PLAYING ->
+        when (controller?.playbackState?.state) {
+            PlaybackStateCompat.STATE_PLAYING -> {
+                buffer_progress_bar.visibility = View.GONE
+                button_play_pause.visibility = View.VISIBLE
                 button_play_pause.setImageResource(R.drawable.ic_pause)
-            PlaybackStateCompat.STATE_PAUSED ->
+            }
+            PlaybackStateCompat.STATE_PAUSED -> {
+                buffer_progress_bar.visibility = View.GONE
+                button_play_pause.visibility = View.VISIBLE
                 button_play_pause.setImageResource(R.drawable.ic_play_arrow)
+            }
+            PlaybackStateCompat.STATE_BUFFERING -> {
+                buffer_progress_bar.visibility = View.VISIBLE
+                button_play_pause.visibility = View.GONE
+            }
         }
     }
 

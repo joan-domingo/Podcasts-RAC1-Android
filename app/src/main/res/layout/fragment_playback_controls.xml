@@ -11,8 +11,8 @@
     <ImageView
         android:id="@+id/playback_icon"
         android:scaleType="centerCrop"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_alignParentLeft="true"/>
 
     <LinearLayout
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_toRightOf="@id/playback_icon"
-        android:layout_toLeftOf="@+id/play_pause"
+        android:layout_toLeftOf="@+id/buttons_container"
         android:layout_marginLeft="8dp"
         android:layout_centerVertical="true">
 
@@ -37,14 +37,26 @@
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/play_pause"
+    <FrameLayout
+        android:id="@+id/buttons_container"
         android:layout_centerVertical="true"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_alignParentRight="true"
-        android:background="?selectableItemBackgroundBorderless"
-        app:srcCompat="@drawable/ic_pause"
-        android:tintMode="src_in"/>
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_alignParentRight="true">
+
+        <ImageButton
+            android:id="@+id/play_pause"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:background="?selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_pause"
+            android:tintMode="src_in"/>
+
+        <ProgressBar
+            android:id="@+id/buffer_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 </RelativeLayout>
