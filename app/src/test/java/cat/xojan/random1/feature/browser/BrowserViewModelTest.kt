@@ -1,30 +1,22 @@
-package cat.xojan.random1.feature.browser;
+package cat.xojan.random1.feature.browser
 
-import org.junit.Before;
+import org.junit.Before
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList
 
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor;
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor;
-import cat.xojan.random1.domain.model.Podcast;
+import cat.xojan.random1.domain.interactor.PodcastDataInteractor
+import cat.xojan.random1.domain.interactor.ProgramDataInteractor
+import cat.xojan.random1.domain.model.Podcast
 
-import static cat.xojan.random1.testutil.DataKt.getPodcast1;
-import static cat.xojan.random1.testutil.DataKt.getPodcast3;
-import static org.mockito.Mockito.mock;
+import cat.xojan.random1.testutil.podcast1
+import cat.xojan.random1.testutil.podcast3
+import org.mockito.Mockito.mock
 
-public class BrowserViewModelTest {
+class BrowserViewModelTest {
 
-    private ProgramDataInteractor programDataInteractor;
-    private PodcastDataInteractor podcastDataInteractor;
-    private BrowserViewModel mViewModel;
-
-    @Before
-    public void setUp() {
-        programDataInteractor = mock(ProgramDataInteractor.class);
-        podcastDataInteractor = mock(PodcastDataInteractor.class);
-        mViewModel = new BrowserViewModel(podcastDataInteractor, programDataInteractor);
-    }
+    private var programDataInteractor: ProgramDataInteractor? = null
+    private var podcastDataInteractor: PodcastDataInteractor? = null
+    private var mViewModel: BrowserViewModel? = null
 
     /*@Test
     public void load_downloaded_podcasts_successfully() {
@@ -84,12 +76,20 @@ public class BrowserViewModelTest {
         verify(programDataIntera).setSectionSelected(true);
     }*/
 
-    private List<Podcast> getDownloadedPodcastList() {
-        List<Podcast> podcasts = new ArrayList<>();
+    private val downloadedPodcastList: List<Podcast>
+        get() {
+            val podcasts = ArrayList<Podcast>()
 
-        podcasts.add(getPodcast1());
-        podcasts.add(getPodcast3());
+            podcasts.add(podcast1)
+            podcasts.add(podcast3)
 
-        return podcasts;
+            return podcasts
+        }
+
+    @Before
+    fun setUp() {
+        programDataInteractor = mock(ProgramDataInteractor::class.java)
+        podcastDataInteractor = mock(PodcastDataInteractor::class.java)
+        mViewModel = BrowserViewModel(podcastDataInteractor!!, programDataInteractor!!)
     }
 }

@@ -54,10 +54,6 @@ class AppModule(private val application: Application) {
                 .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
                 .build()
 
-        /*val gson = GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .create()*/
-
         val retrofit = Retrofit.Builder()
                 .baseUrl(RAC1_URL)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))

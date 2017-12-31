@@ -14,7 +14,7 @@ class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepos
         return Single.create { subscriber ->
             try {
                 if (programs.isEmpty()) {
-                    for (item in service.getProgramData().execute().body()?.programs!!) {
+                    for (item in service.getProgramData().execute().body()!!.programs) {
                         programs.put(item.id, item)
                     }
                 }

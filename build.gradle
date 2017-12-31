@@ -35,10 +35,6 @@ allprojects {
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
-
 ext {
     buildTools = '27.0.3'
     compileSdk = 27
@@ -47,6 +43,7 @@ ext {
 
     supportLib = '27.0.2'
     retrofit = '2.3.0'
+    okhttp = '3.9.1'
     jUnit = '4.12'
     dagger = '2.11'
     leakCanary = '1.5.3'

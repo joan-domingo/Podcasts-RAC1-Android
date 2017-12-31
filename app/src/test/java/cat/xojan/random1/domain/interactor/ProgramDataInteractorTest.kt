@@ -1,9 +1,8 @@
-package cat.xojan.random1.domain
+package cat.xojan.random1.domain.interactor
 
 import android.app.DownloadManager
 import android.content.Context
 import cat.xojan.random1.data.SharedPrefDownloadPodcastRepository
-import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
@@ -29,7 +28,7 @@ class ProgramDataInteractorTest {
     private lateinit var mDownloadManager: DownloadManager
     private lateinit var mEventLogger: EventLogger
 
-    private val dummyProgram: Program
+    /*private val dummyProgram: Program
         get() {
             val program = program1
             program.sections = sectionList
@@ -56,7 +55,7 @@ class ProgramDataInteractorTest {
         val testSubscriber = TestObserver<List<Program>>()
         mProgramDataInteractor.loadPrograms().subscribe(testSubscriber)
         testSubscriber.assertValue(programList)
-    }
+    }*/
 
     /*@Test
     fun load_programs_successfully_after_first_call() {
