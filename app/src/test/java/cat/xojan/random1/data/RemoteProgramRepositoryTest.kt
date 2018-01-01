@@ -1,30 +1,21 @@
 package cat.xojan.random1.data
 
 import cat.xojan.random1.domain.model.Program
-import cat.xojan.random1.domain.model.ProgramData
-import cat.xojan.random1.testutil.programList
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
-import io.reactivex.SingleObserver
-import io.reactivex.internal.operators.single.SingleObserveOn
 import io.reactivex.observers.TestObserver
-import io.reactivex.subscribers.TestSubscriber
+import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.apache.commons.io.IOUtils
 import org.junit.After
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.IOException
 import java.util.*
-import okhttp3.mockwebserver.MockResponse
-import org.apache.commons.io.IOUtils
-import org.mockito.internal.util.io.IOUtil
-import java.io.InputStream
 
 
 class RemoteProgramRepositoryTest {
@@ -63,6 +54,15 @@ class RemoteProgramRepositoryTest {
                 listOf(Program("el-mon"),
                         Program("la-competencia"),
                         Program("la-segona-hora")))
+    }
+
+    @Test
+    fun get_program_list_fail() {
+        mockWebServer.enqueue(MockResponse().setResponseCode(404))
+        val testSubscriber = TestObserver<List<Program>>()
+
+        remoteProgramRepository.getPrograms().subscribe(testSubscriber)
+        testSubscriber.assertErrorMessage("Client Error")
     }
 
     @After
