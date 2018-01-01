@@ -4,11 +4,16 @@ import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
 import cat.xojan.random1.domain.repository.ProgramRepository
 import io.reactivex.Single
-import java.io.IOException
+import org.jetbrains.annotations.TestOnly
+import java.security.InvalidKeyException
 
 class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepository {
 
     var programs: LinkedHashMap<String,  Program> = linkedMapOf()
+        @TestOnly
+        set(value) {
+            field = value
+        }
 
     override fun getPrograms(): Single<List<Program>> {
         return Single.create { subscriber ->
@@ -39,10 +44,10 @@ class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepos
 
     override fun getSections(programId: String): Single<List<Section>> {
         return Single.create { subscriber ->
-            try {
+            if (programs.containsKey(programId)) {
                 subscriber.onSuccess(programs[programId]!!.sections)
-            } catch (e: IOException) {
-                subscriber.onError(e)
+            } else {
+                subscriber.onError(InvalidKeyException())
             }
         }
     }

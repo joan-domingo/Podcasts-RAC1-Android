@@ -7,16 +7,11 @@ import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
 import cat.xojan.random1.domain.repository.ProgramRepository
-import cat.xojan.random1.testutil.program1
-import cat.xojan.random1.testutil.programList
 import cat.xojan.random1.testutil.sectionList
-import io.reactivex.Single
 import io.reactivex.observers.TestObserver
-import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import java.io.IOException
 
 class ProgramDataInteractorTest {

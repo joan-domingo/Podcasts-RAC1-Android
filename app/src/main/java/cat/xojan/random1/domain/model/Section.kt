@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Section(val id: String,
+data class Section(val id: String,
               val title: String,
               var imageUrl: String?,
               val active: Boolean,

@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 import org.jetbrains.annotations.TestOnly
 
 @Parcelize
-class Program(val id: String,
+data class Program(val id: String,
               var title: String,
               var sections: List<Section>,
               private var images: Images,
