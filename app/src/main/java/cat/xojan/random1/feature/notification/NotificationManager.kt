@@ -220,7 +220,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
     private fun addActions(notificationBuilder: NotificationCompat.Builder): Int {
         Log.d(TAG, "updatePlayPauseAction")
-        //notificationBuilder.mActions.clear()
+        notificationBuilder.mActions.clear()
 
         var playPauseButtonPosition = 0
         // If skip to previous action is enabled
