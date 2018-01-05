@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion compileSdk
@@ -92,7 +93,8 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger"
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:11.8.0'
+    implementation "com.google.firebase:firebase-core:$firebase"
+    implementation "com.google.firebase:firebase-perf:$firebase"
 
     // Hamcrest
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
