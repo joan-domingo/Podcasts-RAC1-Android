@@ -120,27 +120,32 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     private fun updateView() {
         val controller = MediaControllerCompat.getMediaController(this)
 
-        title = controller.metadata.description.title
+        val metadata = controller.metadata
+        metadata?.let {
+            title = metadata.description.title
+            Picasso.with(this)
+                    .load(metadata.description?.iconUri)
+                    .placeholder(R.drawable.default_rac1)
+                    .into(podcast_art)
+        }
 
-        Picasso.with(this)
-                .load(controller?.metadata?.description?.iconUri)
-                .placeholder(R.drawable.default_rac1)
-                .into(podcast_art)
-
-        when (controller?.playbackState?.state) {
-            PlaybackStateCompat.STATE_PLAYING -> {
-                buffer_progress_bar.visibility = View.GONE
-                button_play_pause.visibility = View.VISIBLE
-                button_play_pause.setImageResource(R.drawable.ic_pause)
-            }
-            PlaybackStateCompat.STATE_PAUSED -> {
-                buffer_progress_bar.visibility = View.GONE
-                button_play_pause.visibility = View.VISIBLE
-                button_play_pause.setImageResource(R.drawable.ic_play_arrow)
-            }
-            PlaybackStateCompat.STATE_BUFFERING -> {
-                buffer_progress_bar.visibility = View.VISIBLE
-                button_play_pause.visibility = View.GONE
+        val playbackState = controller.playbackState
+        playbackState?.let {
+            when (playbackState.state) {
+                PlaybackStateCompat.STATE_PLAYING -> {
+                    buffer_progress_bar.visibility = View.GONE
+                    button_play_pause.visibility = View.VISIBLE
+                    button_play_pause.setImageResource(R.drawable.ic_pause)
+                }
+                PlaybackStateCompat.STATE_PAUSED -> {
+                    buffer_progress_bar.visibility = View.GONE
+                    button_play_pause.visibility = View.VISIBLE
+                    button_play_pause.setImageResource(R.drawable.ic_play_arrow)
+                }
+                PlaybackStateCompat.STATE_BUFFERING -> {
+                    buffer_progress_bar.visibility = View.VISIBLE
+                    button_play_pause.visibility = View.GONE
+                }
             }
         }
     }
