@@ -105,9 +105,11 @@ class SectionFragment : BaseFragment(), IsMediaBrowserFragment {
         super.onStop()
         val mediaBrowser = mediaBrowserProvider?.getMediaBrowser()
         mediaBrowser?.let {
-            val mediaId = mediaId()
-            if (mediaBrowser.isConnected && mediaId != null) {
-                mediaBrowser.unsubscribe(mediaId)
+            if (mediaBrowser.isConnected) {
+                val mediaId = mediaId()
+                mediaId?.let {
+                    mediaBrowser.unsubscribe(mediaId)
+                }
             }
         }
     }

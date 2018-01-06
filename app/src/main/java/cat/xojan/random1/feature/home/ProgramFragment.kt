@@ -125,9 +125,8 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
         super.onStop()
         val mediaBrowser =  mediaBrowserProvider?.getMediaBrowser()
         mediaBrowser?.let {
-            val mediaId = mediaBrowser.root
             if (mediaBrowser.isConnected) {
-                mediaBrowser.unsubscribe(mediaId)
+                mediaBrowser.unsubscribe(mediaBrowser.root)
             }
         }
     }

@@ -121,9 +121,8 @@ class SectionPodcastListFragment : BaseFragment(), IsMediaBrowserFragment {
         super.onStop()
         val mediaBrowser = mediaBrowserProvider?.getMediaBrowser()
         mediaBrowser?.let {
-            val mediaId = mediaId()
             if (mediaBrowser.isConnected) {
-                mediaBrowser.unsubscribe(mediaId)
+                mediaBrowser.unsubscribe(mediaId())
             }
         }
         val controller = MediaControllerCompat.getMediaController(activity as Activity)
