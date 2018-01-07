@@ -178,14 +178,16 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
         val downloaded = mutableListOf<MediaBrowserCompat.MediaItem>()
         if (podcasts.isEmpty()) {
             empty_list.visibility = View.VISIBLE
+            recycler_view.visibility = View.GONE
         } else {
-            podcasts.filterTo(downloaded) {
+            podcasts.sortedByDescending { it.description.extras?.getSerializable(PODCAST_DATE) as
+                    Date }
+                    .filterTo(downloaded) {
                 it.description.extras?.getSerializable(PODCAST_STATE)
                         as Podcast.State == Podcast.State.DOWNLOADED
             }
-            podcasts.sortedByDescending { it.description.extras?.getSerializable(PODCAST_DATE) as
-                    Date }
             empty_list.visibility = View.GONE
+            recycler_view.visibility = View.VISIBLE
         }
         adapter.podcasts = downloaded
     }

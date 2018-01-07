@@ -53,7 +53,7 @@
 
     </LinearLayout>
 
-    <ImageView
+    <ImageButton
         android:id="@+id/podcast_icon"
         android:padding="16dp"
         android:layout_width="wrap_content"
@@ -62,6 +62,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:contentDescription="@string/download_program"
-        android:layout_marginLeft="8dp"/>
+        android:layout_marginLeft="8dp"
+        android:background="?selectableItemBackgroundBorderless"
+        android:tintMode="src_in" />
 
 </RelativeLayout>
