@@ -75,7 +75,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
             val podcast = item.description
 
             itemView.setOnClickListener {
-                MediaControllerCompat.getMediaController(itemView.context as BrowseActivity)
+                MediaControllerCompat.getMediaController(itemView.context as Activity)
                         .transportControls.playFromMediaId(item.mediaId, null)
             }
 
