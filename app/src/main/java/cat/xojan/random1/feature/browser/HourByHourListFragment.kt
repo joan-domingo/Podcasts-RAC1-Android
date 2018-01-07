@@ -119,7 +119,7 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         {p -> adapter.updatePodcastsState(p)},
-                        {e -> e.printStackTrace()}
+                        {e -> crashReporter.logException(e)}
                 ))
     }
 

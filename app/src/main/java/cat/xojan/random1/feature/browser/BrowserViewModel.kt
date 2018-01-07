@@ -2,10 +2,9 @@ package cat.xojan.random1.feature.browser
 
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
-import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
-import io.reactivex.Single
+import cat.xojan.random1.domain.model.Podcast
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
@@ -39,10 +38,6 @@ constructor(
 
     fun refreshDownloadedPodcast() {
         podcastInteractor.refreshDownloadedPodcasts()
-    }
-
-    fun loadDownloadedPodcasts(): Single<List<MediaBrowserCompat.MediaItem>> {
-        return podcastInteractor.getDownloadedPodcasts()
     }
 
     fun updatePodcastState(loaded: List<MediaBrowserCompat.MediaItem>):

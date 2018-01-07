@@ -24,8 +24,6 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
 
-    private val TAG = HomeActivity::class.simpleName
-
     @Inject internal lateinit var mViewModel: BrowserViewModel
     private val mCompositeDisposable = CompositeDisposable()
 
@@ -53,6 +51,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
 
     override fun onMediaControllerConnected() {
         getProgramFragment().onMediaControllerConnected()
+        getDownloadsFragment().onMediaControllerConnected()
     }
 
     private fun initView(savedInstanceState: Bundle?) {
@@ -126,8 +125,13 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     }
 
     private fun notifyUser(b: Boolean?) {
-        Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_LONG).show()
+        Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_LONG)
+                .show()
     }
 
-    private fun getProgramFragment(): ProgramFragment = pageAdapter.getItem(0) as ProgramFragment
+    private fun getProgramFragment(): ProgramFragment = pageAdapter.getItem(0) as
+            ProgramFragment
+
+    private fun getDownloadsFragment(): DownloadsFragment = pageAdapter.getItem(1) as
+            DownloadsFragment
 }

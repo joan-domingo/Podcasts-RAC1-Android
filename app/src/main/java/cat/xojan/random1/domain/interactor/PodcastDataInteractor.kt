@@ -9,6 +9,7 @@ import android.util.Log
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
@@ -105,6 +106,13 @@ class PodcastDataInteractor @Inject constructor(
 
     fun getDownloadedPodcasts(): Single<List<MediaBrowserCompat.MediaItem>> {
         return Single.just(fetchDownloadedPodcasts())
+                .flatMap {
+                    items -> Observable.just(items)
+                        .flatMapIterable { i -> i }
+                        .doOnNext { item -> Log.d("joan", item.description.extras?.getSerializable
+                        (PODCAST_STATE).toString()) }
+                        .toList()
+                }
     }
 
     fun getPodcastStateUpdates(): PublishSubject<List<MediaBrowserCompat.MediaItem>> {

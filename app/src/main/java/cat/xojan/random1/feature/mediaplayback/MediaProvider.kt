@@ -16,6 +16,7 @@ import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
+import cat.xojan.random1.feature.home.DownloadsFragment
 import cat.xojan.random1.feature.home.ProgramFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -44,13 +45,21 @@ class MediaProvider @Inject constructor(
         when {
             parentId == ProgramFragment.MEDIA_ID_ROOT ->
                 compositeDisposable.add(programInteractor.loadPrograms()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { n -> handleNextPrograms(n, result) },
-                            { e -> handleError(e, result) }
-                    )
-            )
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                { n -> handleNextPrograms(n, result) },
+                                { e -> handleError(e, result) }
+                        )
+                )
+            parentId == DownloadsFragment.MEDIA_ID_DOWNLOADS ->
+                compositeDisposable.add(podcastInteractor.getDownloadedPodcasts()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                {p -> result.sendResult(p as MutableList<MediaBrowserCompat.MediaItem>?)},
+                                {e -> handleError(e, result)}
+                        ))
             parentId.contains("/SECTIONS") -> {
                 val programId = parentId.split("/")[0]
                 compositeDisposable.add(programInteractor.loadSections(programId)
