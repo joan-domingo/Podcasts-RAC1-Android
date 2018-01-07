@@ -15,19 +15,20 @@ import android.view.ViewGroup
 import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.CrashReporter
 import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.feature.BaseFragment
 import cat.xojan.random1.feature.IsMediaBrowserFragment
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.feature.browser.BrowserViewModel
-import cat.xojan.random1.feature.browser.HourByHourListFragment
 import cat.xojan.random1.feature.browser.PodcastListAdapter
 import cat.xojan.random1.injection.component.HomeComponent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recycler_view_fragment.*
+import java.util.*
 import javax.inject.Inject
 
 class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
@@ -153,7 +154,7 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
 
         override fun onError(id: String) {
             val msg = "downloads fragment subscription onError, id=" + id
-            Log.e(HourByHourListFragment.TAG, msg)
+            Log.e(TAG, msg)
             crashReporter.logException(msg)
         }
     }
@@ -182,9 +183,8 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
                 it.description.extras?.getSerializable(PODCAST_STATE)
                         as Podcast.State == Podcast.State.DOWNLOADED
             }
-            /*Collections.sort(downloaded) { (_, _, _, dateTime), (_, _, _, dateTime) ->
-                dateTime.compareTo(dateTime)
-            }*/
+            podcasts.sortedByDescending { it.description.extras?.getSerializable(PODCAST_DATE) as
+                    Date }
             empty_list.visibility = View.GONE
         }
         adapter.podcasts = downloaded

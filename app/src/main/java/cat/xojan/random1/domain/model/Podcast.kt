@@ -25,6 +25,7 @@ data class Podcast(private var audio: Audio,
         val PODCAST_PROGRAM_ID = "podcast_program_id"
         val PODCAST_BIG_IMAGE_URL = "podcast_big_image_url"
         val PODCAST_DURATION = "podcast_duration"
+        val PODCAST_DATE = "podcast_date"
     }
 
     val title: String

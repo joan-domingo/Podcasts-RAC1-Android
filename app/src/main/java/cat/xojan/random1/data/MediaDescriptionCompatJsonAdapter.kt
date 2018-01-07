@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
@@ -12,6 +13,7 @@ import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import java.util.*
 
 class MediaDescriptionCompatJsonAdapter {
 
@@ -27,7 +29,8 @@ class MediaDescriptionCompatJsonAdapter {
                 item.extras?.getString(PODCAST_FILE_PATH),
                 item.extras?.getString(PODCAST_PROGRAM_ID),
                 item.extras?.getString(PODCAST_BIG_IMAGE_URL),
-                item.extras?.getLong(PODCAST_DURATION))
+                item.extras?.getLong(PODCAST_DURATION),
+                item.extras?.getSerializable(PODCAST_DATE) as Date?)
     }
 
     @FromJson
@@ -39,6 +42,7 @@ class MediaDescriptionCompatJsonAdapter {
         extras.putString(PODCAST_PROGRAM_ID, itemJson.programId)
         extras.putString(PODCAST_BIG_IMAGE_URL, itemJson.bigImageUrl)
         extras.putLong(PODCAST_DURATION, itemJson.duration!!)
+        extras.putSerializable(PODCAST_DATE, itemJson.date)
 
         return MediaDescriptionCompat.Builder()
                 .setMediaId(itemJson.id)

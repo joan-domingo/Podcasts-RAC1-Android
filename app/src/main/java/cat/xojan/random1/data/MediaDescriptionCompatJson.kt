@@ -1,6 +1,7 @@
 package cat.xojan.random1.data
 
 import cat.xojan.random1.domain.model.Podcast
+import java.util.*
 
 class MediaDescriptionCompatJson(
         val id: String?,
@@ -12,5 +13,6 @@ class MediaDescriptionCompatJson(
         val mediaFilePath: String?,
         val programId: String?,
         val bigImageUrl: String?,
-        val duration: Long?
+        val duration: Long?,
+        val date: Date?
 )
