@@ -14,9 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.CrashReporter
-import cat.xojan.random1.domain.model.Podcast
-import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
-import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.feature.BaseFragment
 import cat.xojan.random1.feature.IsMediaBrowserFragment
 import cat.xojan.random1.feature.MediaBrowserProvider
@@ -28,7 +25,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.recycler_view_fragment.*
-import java.util.*
 import javax.inject.Inject
 
 class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
@@ -84,7 +80,7 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        {p -> updateView(p)},
+                        {onMediaControllerConnected()},
                         {e -> crashReporter.logException(e)}
                 ))
     }
@@ -148,7 +144,9 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
                 empty_list.visibility = View.VISIBLE
                 recycler_view.visibility = View.GONE
             } else {
-                updateView(children)
+                empty_list.visibility = View.GONE
+                recycler_view.visibility = View.VISIBLE
+                adapter.podcasts = children
             }
         }
 
@@ -172,23 +170,5 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
             super.onPlaybackStateChanged(state)
             adapter.notifyDataSetChanged()
         }
-    }
-
-    private fun updateView(podcasts: List<MediaBrowserCompat.MediaItem>) {
-        val downloaded = mutableListOf<MediaBrowserCompat.MediaItem>()
-        if (podcasts.isEmpty()) {
-            empty_list.visibility = View.VISIBLE
-            recycler_view.visibility = View.GONE
-        } else {
-            podcasts.sortedByDescending { it.description.extras?.getSerializable(PODCAST_DATE) as
-                    Date }
-                    .filterTo(downloaded) {
-                it.description.extras?.getSerializable(PODCAST_STATE)
-                        as Podcast.State == Podcast.State.DOWNLOADED
-            }
-            empty_list.visibility = View.GONE
-            recycler_view.visibility = View.VISIBLE
-        }
-        adapter.podcasts = downloaded
     }
 }
