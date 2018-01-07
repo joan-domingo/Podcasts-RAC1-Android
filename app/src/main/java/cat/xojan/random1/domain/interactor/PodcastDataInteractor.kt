@@ -7,8 +7,10 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.util.Log
 import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
@@ -105,6 +107,16 @@ class PodcastDataInteractor @Inject constructor(
 
     fun getDownloadedPodcasts(): Single<List<MediaBrowserCompat.MediaItem>> {
         return Single.just(fetchDownloadedPodcasts())
+                .flatMap {
+                    podcasts -> Observable.just(podcasts)
+                        .flatMapIterable { p -> p }
+                        .filter { p -> p.description.extras?.getSerializable(PODCAST_STATE) ==
+                                Podcast.State.DOWNLOADED }
+                        .sorted { p1, p2 -> (p1.description.extras?.getSerializable(PODCAST_DATE)
+                                as Date).compareTo(p2.description.extras?.getSerializable
+                            (PODCAST_DATE) as Date) }
+                        .toList()
+                }
     }
 
     fun getPodcastStateUpdates(): PublishSubject<List<MediaBrowserCompat.MediaItem>> {

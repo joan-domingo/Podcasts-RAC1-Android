@@ -58,7 +58,7 @@ class MediaProvider @Inject constructor(
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
-                                {p -> result.sendResult(p as MutableList<MediaBrowserCompat.MediaItem>?)},
+                                {p -> handleNextDownloadedPodcasts(p, result)},
                                 {e -> handleError(e, result)}
                         ))
             parentId.contains("/SECTIONS") -> {
@@ -115,6 +115,13 @@ class MediaProvider @Inject constructor(
         result.sendResult(mediaItems)
 
         queueManager.items = mediaItemsToQueueItems(mediaItems)
+    }
+
+    private fun handleNextDownloadedPodcasts(
+            podcasts: List<MediaBrowserCompat.MediaItem>,
+            result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>) {
+        result.sendResult(podcasts as MutableList<MediaBrowserCompat.MediaItem>?)
+        queueManager.items = mediaItemsToQueueItems(podcasts as ArrayList<MediaBrowserCompat.MediaItem>)
     }
 
     private fun handleNextSections(
