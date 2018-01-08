@@ -3,7 +3,6 @@ package cat.xojan.random1.feature.mediaplayback
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import cat.xojan.random1.domain.model.Podcast
-import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 
 class QueueManager {
@@ -30,7 +29,7 @@ class QueueManager {
                     .putText(MediaMetadataCompat.METADATA_KEY_TITLE, itemMediaData.title)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, mediaUri)
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
-                            itemMediaData.extras?.getString(PODCAST_BIG_IMAGE_URL))
+                            itemMediaData.iconUri.toString())
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, items.size.toLong())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,

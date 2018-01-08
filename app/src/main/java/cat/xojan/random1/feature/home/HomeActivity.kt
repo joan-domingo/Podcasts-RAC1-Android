@@ -9,13 +9,15 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import cat.xojan.random1.R
+import cat.xojan.random1.domain.model.CrashReporter
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
-import cat.xojan.random1.feature.browser.BrowserViewModel
 import cat.xojan.random1.injection.HasComponent
 import cat.xojan.random1.injection.component.DaggerHomeComponent
 import cat.xojan.random1.injection.component.HomeComponent
 import cat.xojan.random1.injection.module.HomeModule
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
@@ -24,8 +26,9 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
 
-    @Inject internal lateinit var mViewModel: BrowserViewModel
-    private val mCompositeDisposable = CompositeDisposable()
+    @Inject internal lateinit var viewModel: HomeViewModel
+    @Inject internal lateinit var crashReporter: CrashReporter
+    private val compositeDisposable = CompositeDisposable()
 
     private lateinit var programFragment: ProgramFragment
     private lateinit var downloadsFragment: DownloadsFragment
@@ -108,7 +111,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
 
     override fun onStop() {
         super.onStop()
-        mCompositeDisposable.clear()
+        compositeDisposable.clear()
     }
 
     override fun onSaveInstanceState(outState: Bundle?) {
@@ -118,13 +121,16 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     }
 
     private fun exportPodcasts() {
-       /* mCompositeDisposable.add(mViewModel.exportPodcasts()
-                .subscribeOn(Schedulers.io())
+        compositeDisposable.add(viewModel.exportPodcasts()
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ this.notifyUser(it) }))*/
+                .subscribe(
+                        {notifyUser()},
+                        {e -> crashReporter.logException(e)}
+                ))
     }
 
-    private fun notifyUser(b: Boolean?) {
+    private fun notifyUser() {
         Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_LONG)
                 .show()
     }

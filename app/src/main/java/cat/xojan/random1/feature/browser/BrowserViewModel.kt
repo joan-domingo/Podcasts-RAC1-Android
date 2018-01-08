@@ -64,8 +64,4 @@ constructor(
         }
         return loaded
     }
-
-    /*fun exportPodcasts(): Observable<Boolean> {
-        return mProgramDataInteractor.exportPodcasts()
-    }*/
 }

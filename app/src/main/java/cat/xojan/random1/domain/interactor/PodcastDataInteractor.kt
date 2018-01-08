@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
+import android.text.TextUtils
 import android.util.Log
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
@@ -19,6 +20,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.*
 import javax.inject.Inject
 
@@ -168,5 +171,48 @@ class PodcastDataInteractor @Inject constructor(
 
     fun getProgramId(audioId: String): String? {
         return downloadRepo.getDownloadedPodcastProgramId(audioId)
+    }
+
+    fun exportPodcasts(): Single<Unit> {
+        return Single.create { subscriber ->
+            try {
+                val iternalFileDir = context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)
+                val externalFilesDir = Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PODCASTS)
+
+                externalFilesDir.mkdirs()
+
+                for (podcastFile in iternalFileDir!!.listFiles()) {
+                    val audioId = podcastFile.path
+                            .split((Environment.DIRECTORY_PODCASTS + "/").toRegex())
+                            .dropLastWhile({ it.isEmpty() })
+                            .toTypedArray()[1].replace(".mp3", "")
+                    var podcastTitle = getDownloadedPodcastTitle(audioId)
+
+                    if (!TextUtils.isEmpty(podcastTitle)) {
+                        podcastTitle = podcastTitle!!.replace("/", "-")
+                        val dest = File(externalFilesDir, podcastTitle + ".mp3")
+                        copy(podcastFile, dest)
+                    }
+                }
+                subscriber.onSuccess(Unit)
+            } catch (e: Throwable) {
+                subscriber.onError(e)
+            }
+        }
+    }
+
+    private fun getDownloadedPodcastTitle(audioId: String): String? {
+        return downloadRepo.getDownloadedPodcastTitle(audioId)
+    }
+
+    private fun copy(src: File, dst: File) {
+        val inStream = FileInputStream(src)
+        val outStream = FileOutputStream(dst)
+        val inChannel = inStream.channel
+        val outChannel = outStream.channel
+        inChannel.transferTo(0, inChannel.size(), outChannel)
+        inStream.close()
+        outStream.close()
     }
 }

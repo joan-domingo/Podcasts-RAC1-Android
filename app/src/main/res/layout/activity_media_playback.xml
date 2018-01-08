@@ -8,8 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/media_playback_buttons"
-        android:background="@android:color/white">
+        android:layout_above="@+id/media_playback_buttons">
 
         <ImageView
             android:id="@+id/podcast_art"

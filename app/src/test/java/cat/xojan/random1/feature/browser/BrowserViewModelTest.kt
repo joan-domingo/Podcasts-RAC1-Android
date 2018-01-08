@@ -23,7 +23,7 @@ class BrowserViewModelTest {
         when(programDataIntera.getDownloadedPodcasts()).thenReturn(Single.just(getPodcastList()));
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
-        mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
+        viewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertValue(getPodcastList());
     }
 
@@ -32,7 +32,7 @@ class BrowserViewModelTest {
         when(programDataIntera.getDownloadedPodcasts()).thenReturn(Single.error(new IOException()));
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
-        mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
+        viewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
     }
 
@@ -44,7 +44,7 @@ class BrowserViewModelTest {
         when(programDataIntera.loadPodcasts(program, section, false)).thenReturn(Flowable.just(getPodcastList()));
         when(programDataIntera.getDownloadedPodcasts()).thenReturn(Single.just(getDownloadedPodcastList()));
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
-        mViewModel.loadPodcasts(program, section, false).subscribe(testSubscriber);
+        viewModel.loadPodcasts(program, section, false).subscribe(testSubscriber);
 
         testSubscriber.assertValue(getPodcastList());
     }
@@ -54,7 +54,7 @@ class BrowserViewModelTest {
         when(programDataIntera.getDownloadedPodcasts()).thenReturn(Single.error(new IOException()));
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
 
-        mViewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
+        viewModel.loadDownloadedPodcasts().subscribe(testSubscriber);
         testSubscriber.assertError(IOException.class);
     }
 
@@ -64,7 +64,7 @@ class BrowserViewModelTest {
 
         when(programDataIntera.getDownloadedPodcastsUpdates()).thenReturn(ps);
         TestObserver<List<Podcast>> testSubscriber = new TestObserver<>();
-        mViewModel.getDownloadedPodcastsUpdates().subscribe(testSubscriber);
+        viewModel.getDownloadedPodcastsUpdates().subscribe(testSubscriber);
         ps.onNext(getDownloadedPodcastList());
 
         testSubscriber.assertValue(getDownloadedPodcastList());
@@ -72,7 +72,7 @@ class BrowserViewModelTest {
 
     @Test
     public void set_selected_mode() {
-        mViewModel.selectedSection(true);
+        viewModel.selectedSection(true);
         verify(programDataIntera).setSectionSelected(true);
     }*/
 
