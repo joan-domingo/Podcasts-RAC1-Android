@@ -28,11 +28,12 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
         }
 
         override fun onSkipToNext() {
-            Log.d(TAG, "skipToNext")
             val nextMediaId = queueManager.getNextMediaId()
-            Log.d(TAG, "nextMediaId: " + nextMediaId)
-            handlePlayRequest(nextMediaId)
-            queueManager.updateMetadata(nextMediaId)
+            Log.d(TAG, "skipToNext: " + nextMediaId)
+            nextMediaId?.let {
+                handlePlayRequest(nextMediaId)
+                queueManager.updateMetadata(nextMediaId)
+            }
         }
 
         override fun onSkipToPrevious() {
@@ -70,9 +71,10 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
 
     override fun onCompletion() {
         val nextMediaId = queueManager.getNextMediaId()
-        handlePlayRequest(nextMediaId)
-        queueManager.updateMetadata(nextMediaId)
-
+        nextMediaId?.let {
+            handlePlayRequest(nextMediaId)
+            queueManager.updateMetadata(nextMediaId)
+        }
     }
 
     override fun onPlaybackStatusChanged(state: Int) {

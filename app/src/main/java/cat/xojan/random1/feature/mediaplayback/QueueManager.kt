@@ -7,7 +7,8 @@ import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 
 class QueueManager {
 
-    var items: List<MediaSessionCompat.QueueItem> = listOf()
+    var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
+    private var currentPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     lateinit var listener: MetaDataUpdateListener
     private var currentQueueId: Long = -1
 
@@ -17,7 +18,7 @@ class QueueManager {
 
     fun getMediaItem(mediaId: String?): MediaMetadataCompat? {
         return if (mediaId != null) {
-            val item = items.filter { it -> it.description.mediaId == mediaId }
+            val item = currentPlaylist.filter { it -> it.description.mediaId == mediaId }
             val itemMediaData = item[0].description
             currentQueueId = item[0].queueId
 
@@ -31,7 +32,8 @@ class QueueManager {
                     .putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI,
                             itemMediaData.iconUri.toString())
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item[0].queueId + 1)
-                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS, items.size.toLong())
+                    .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
+                            currentPlaylist.size.toLong())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                             itemMediaData.extras?.getLong(PODCAST_DURATION)!! * 1000)
                     .build()
@@ -41,14 +43,15 @@ class QueueManager {
     }
 
     fun setQueue(mediaId: String?) {
-        // TODO reuse queue or different queue
-        setCurrentQueue()
-        updateMetadata(mediaId)
+        mediaId?.let {
+            setCurrentQueue()
+            updateMetadata(mediaId)
+        }
     }
 
     private fun setCurrentQueue() {
-        val newQueue = items
-        listener.updateQueue("title queue", newQueue)
+        currentPlaylist = potentialPlaylist
+        listener.updateQueue("title queue", potentialPlaylist)
     }
 
     fun updateMetadata(mediaId: String?) {
@@ -59,13 +62,15 @@ class QueueManager {
     }
 
     fun getNextMediaId(): String? {
-        val nextQueueId:Int = ((currentQueueId + 1) % items.size).toInt()
-        return items[nextQueueId].description.mediaId
+        if ((currentQueueId + 1) < currentPlaylist.size.toLong()) {
+            return currentPlaylist[(currentQueueId + 1).toInt()].description.mediaId
+        }
+        return null
     }
 
     fun getPreviousMediaId(): String? {
-        val previousQueueId:Int = ((currentQueueId + -1) % items.size).toInt()
-        return items[previousQueueId].description.mediaId
+        val previousQueueId:Int = ((currentQueueId + -1) % currentPlaylist.size).toInt()
+        return currentPlaylist[previousQueueId].description.mediaId
     }
 
     fun getCurrentMediaId(): Long {

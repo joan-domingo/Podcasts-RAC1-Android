@@ -114,14 +114,15 @@ class MediaProvider @Inject constructor(
         val mediaItems = podcasts.mapTo(ArrayList()) { createBrowsableMediaItemForPodcast(it) }
         result.sendResult(mediaItems)
 
-        queueManager.items = mediaItemsToQueueItems(mediaItems)
+        queueManager.potentialPlaylist = mediaItemsToQueueItems(mediaItems)
     }
 
     private fun handleNextDownloadedPodcasts(
             podcasts: List<MediaBrowserCompat.MediaItem>,
             result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>) {
         result.sendResult(podcasts as MutableList<MediaBrowserCompat.MediaItem>?)
-        queueManager.items = mediaItemsToQueueItems(podcasts as ArrayList<MediaBrowserCompat.MediaItem>)
+        queueManager.potentialPlaylist = mediaItemsToQueueItems(podcasts
+                as ArrayList<MediaBrowserCompat.MediaItem>)
     }
 
     private fun handleNextSections(
