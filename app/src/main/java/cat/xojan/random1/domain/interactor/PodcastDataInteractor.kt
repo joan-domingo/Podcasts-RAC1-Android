@@ -115,8 +115,8 @@ class PodcastDataInteractor @Inject constructor(
                         .flatMapIterable { p -> p }
                         .filter { p -> p.description.extras?.getSerializable(PODCAST_STATE) ==
                                 Podcast.State.DOWNLOADED }
-                        .sorted { p1, p2 -> (p1.description.extras?.getSerializable(PODCAST_DATE)
-                                as Date).compareTo(p2.description.extras?.getSerializable
+                        .sorted { p1, p2 -> (p2.description.extras?.getSerializable(PODCAST_DATE)
+                                as Date).compareTo(p1.description.extras?.getSerializable
                             (PODCAST_DATE) as Date) }
                         .toList()
                 }
