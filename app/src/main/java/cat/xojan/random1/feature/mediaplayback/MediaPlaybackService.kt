@@ -65,8 +65,11 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
 
     private fun initMediaSession() {
         val mediaButtonReceiver = ComponentName(applicationContext, MediaButtonReceiver::class.java)
-        mediaSession = MediaSessionCompat(applicationContext, " MediaPlaybackService",
-                mediaButtonReceiver, null)
+        mediaSession = MediaSessionCompat(
+                applicationContext,
+                MediaPlaybackService::class.java.simpleName,
+                mediaButtonReceiver,
+                null)
 
         mediaSession.setCallback(playbackManager.mediaSessionCallback)
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
@@ -97,6 +100,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     override fun onStartCommand(startIntent: Intent, flags: Int, startId: Int): Int {
         val action = startIntent.action
         val command = startIntent.getStringExtra(CMD_NAME)
+        Log.d(TAG, "action: $action, command: $command")
         if (ACTION_CMD == action) {
             if (CMD_PAUSE == command) {
                 playbackManager.handlePauseRequest()

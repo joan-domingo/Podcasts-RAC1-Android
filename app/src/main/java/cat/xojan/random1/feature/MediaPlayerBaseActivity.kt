@@ -56,7 +56,6 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
         mMediaBrowser.disconnect()
     }
 
-    @Throws(RemoteException::class)
     private fun connectToSession(token: MediaSessionCompat.Token) {
         val mediaController = MediaControllerCompat(this, token)
         MediaControllerCompat.setMediaController(this, mediaController)
