@@ -99,8 +99,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                 handler.postDelayed(updateTimerTask, 100)
             }
         })
+    }
 
-        handler.postDelayed(updateTimerTask, 100)
+    override fun onResume() {
+        super.onResume()
+        handler.postDelayed(updateTimerTask, 0)
     }
 
     override fun onMediaControllerConnected() {
@@ -125,6 +128,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             title = metadata.description.title
             Picasso.with(this)
                     .load(metadata.description?.iconUri)
+                    .resize(800, 800)
                     .placeholder(R.drawable.default_rac1)
                     .into(podcast_art)
         }
