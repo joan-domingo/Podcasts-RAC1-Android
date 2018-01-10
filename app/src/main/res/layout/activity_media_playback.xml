@@ -12,9 +12,9 @@
 
         <ImageView
             android:id="@+id/podcast_art"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/podcast_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             tools:src="@drawable/default_rac1" />
 
     </RelativeLayout>
@@ -70,7 +70,7 @@
                 android:id="@+id/button_previous"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="?selectableItemBackgroundBorderless"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_previous_white_24px"/>
 
@@ -86,7 +86,7 @@
                     android:id="@+id/button_play_pause"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?selectableItemBackgroundBorderless"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_pause"
                     android:visibility="gone"/>
@@ -106,7 +106,7 @@
                 android:id="@+id/button_next"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="?selectableItemBackgroundBorderless"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_next_white_24px"/>
 

@@ -48,7 +48,7 @@
             android:id="@+id/play_pause"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="?selectableItemBackgroundBorderless"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_pause"
             android:tintMode="src_in"/>
 
