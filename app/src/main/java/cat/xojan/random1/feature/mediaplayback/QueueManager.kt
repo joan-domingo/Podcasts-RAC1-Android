@@ -69,8 +69,10 @@ class QueueManager {
     }
 
     fun getPreviousMediaId(): String? {
-        val previousQueueId:Int = ((currentQueueId + -1) % currentPlaylist.size).toInt()
-        return currentPlaylist[previousQueueId].description.mediaId
+        if ((currentQueueId - 1) >= 0) {
+            return currentPlaylist[(currentQueueId - 1).toInt()].description.mediaId
+        }
+        return null
     }
 
     fun getCurrentMediaId(): Long {
