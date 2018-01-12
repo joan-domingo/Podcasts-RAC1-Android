@@ -1,7 +1,6 @@
 package cat.xojan.random1.feature.home
 
 import android.support.v4.media.MediaBrowserCompat
-import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -18,26 +17,8 @@ class ProgramListAdapter: RecyclerView.Adapter<ProgramListAdapter.MediaItemViewH
 
     var programs: List<MediaBrowserCompat.MediaItem> = emptyList()
         set(value) {
-            val diffResult = DiffUtil.calculateDiff(object: DiffUtil.Callback() {
-                override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return programs[oldItemPosition].mediaId == programs[newItemPosition].mediaId
-                }
-
-                override fun getOldListSize(): Int {
-                    return programs.size
-                }
-
-                override fun getNewListSize(): Int {
-                    return value.size
-                }
-
-                override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                    return programs[oldItemPosition] == programs[newItemPosition]
-                }
-
-            })
             field = value
-            diffResult.dispatchUpdatesTo(this)
+            notifyDataSetChanged()
         }
 
     override fun getItemCount(): Int = programs.size

@@ -85,9 +85,11 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
         if (isDetached) {
             return
         }
-        programs_empty_view.visibility = GONE
-        programs_progress_bar.visibility = VISIBLE
-        programs_recycler_view.visibility = GONE
+        if (adapter.programs.isEmpty()) {
+            programs_empty_view.visibility = GONE
+            programs_progress_bar.visibility = VISIBLE
+            programs_recycler_view.visibility = GONE
+        }
 
 
         val mediaId = MEDIA_ID_ROOT
