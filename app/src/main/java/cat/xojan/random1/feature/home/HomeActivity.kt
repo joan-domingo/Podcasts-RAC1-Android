@@ -53,8 +53,8 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     }
 
     override fun onMediaControllerConnected() {
-        getProgramFragment().onMediaControllerConnected()
-        getDownloadsFragment().onMediaControllerConnected()
+        programFragment.onMediaControllerConnected()
+        downloadsFragment.onMediaControllerConnected()
     }
 
     private fun initView(savedInstanceState: Bundle?) {
@@ -134,10 +134,4 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         Toast.makeText(this, getString(R.string.podcasts_exported), Toast.LENGTH_LONG)
                 .show()
     }
-
-    private fun getProgramFragment(): ProgramFragment = pageAdapter.getItem(0) as
-            ProgramFragment
-
-    private fun getDownloadsFragment(): DownloadsFragment = pageAdapter.getItem(1) as
-            DownloadsFragment
 }
