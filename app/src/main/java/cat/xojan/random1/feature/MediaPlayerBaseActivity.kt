@@ -17,6 +17,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
 
     private val TAG = BaseActivity::class.simpleName
     lateinit var mMediaBrowser: MediaBrowserCompat
+    private lateinit var mediaControllerCallback: MediaControllerCompat.Callback
     private var controlsFragment: MediaPlaybackControlsFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +36,23 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
                     }
                 },
                 null)
+        mediaControllerCallback = object : MediaControllerCompat.Callback() {
+            override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+                if (shouldShowControls()) {
+                    showPlaybackControls()
+                } else {
+                    hidePlaybackControls()
+                }
+            }
+
+            override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
+                if (shouldShowControls()) {
+                    showPlaybackControls()
+                } else {
+                    hidePlaybackControls()
+                }
+            }
+        }
     }
 
     override fun onStart() {
@@ -105,25 +123,6 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
                             R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)*/
                     .show(controlsFragment)
                     .commit()
-        }
-    }
-
-    // Callback that ensures that we are showing the controls
-    private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
-            if (shouldShowControls()) {
-                showPlaybackControls()
-            } else {
-                hidePlaybackControls()
-            }
-        }
-
-        override fun onMetadataChanged(metadata: MediaMetadataCompat?) {
-            if (shouldShowControls()) {
-                showPlaybackControls()
-            } else {
-                hidePlaybackControls()
-            }
         }
     }
 }
