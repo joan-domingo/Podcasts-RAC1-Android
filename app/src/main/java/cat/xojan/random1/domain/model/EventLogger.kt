@@ -17,12 +17,12 @@ class EventLogger(context: Context) {
         firebaseAnalytics.logEvent("podcast_download_success", bundle)
     }
 
-    fun logPlayedPodcast(podcast: Podcast) {
+    /*fun logPlayedPodcast(podcast: Podcast) {
     }
 
     fun logExportedPodcast(podcastTitle: String) {
     }
 
     fun logExportedPodcastAction() {
-    }
+    }*/
 }

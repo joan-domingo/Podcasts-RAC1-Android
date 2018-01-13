@@ -36,6 +36,7 @@ class Player(appContext: Context,
     fun isPlaying() = mediaPlayer.isPlaying
 
     fun play(currentMedia: MediaMetadataCompat? = null) {
+        @Suppress("DEPRECATION")
         val result = audioManager
                 .requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
 
@@ -63,6 +64,7 @@ class Player(appContext: Context,
     fun pause() {
         mediaPlayer.pause()
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
+        @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
     }
 
@@ -79,6 +81,7 @@ class Player(appContext: Context,
 
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_STOPPED)
 
+        @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
     }
 

@@ -41,5 +41,16 @@
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
 
-# GsonConverter issue
--keep class cat.xojan.random1.domain.entities.** { *; }
+# Moshi
+-dontwarn okio.**
+-dontwarn javax.annotation.**
+-keepclasseswithmembers class * {
+    @com.squareup.moshi.* <methods>;
+}
+-keep @com.squareup.moshi.JsonQualifier interface *
+-keepclassmembers class kotlin.Metadata {
+    public <methods>;
+}
+
+#Kotlin compiler
+-dontwarn kotlin.reflect.jvm.internal.**
