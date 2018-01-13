@@ -39,12 +39,10 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         override fun run() {
             val controller = MediaControllerCompat
                     .getMediaController(this@MediaPlaybackFullScreenActivity)
-            controller?.let {
+            controller?.playbackState?.let {
                 updateProgress(controller.playbackState)
             }
-
-            // Running this thread after 100 milliseconds
-            handler.postDelayed(this, 1000)
+            handler.postDelayed(this, 250)
         }
     }
 
@@ -73,6 +71,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             }
         }
 
+        button_fast_rewind.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            controller.transportControls.rewind()
+        }
+
         button_previous.setOnClickListener {
             val controller = MediaControllerCompat.getMediaController(this)
             controller.transportControls.skipToPrevious()
@@ -81,6 +84,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         button_next.setOnClickListener {
             val controller = MediaControllerCompat.getMediaController(this)
             controller.transportControls.skipToNext()
+        }
+
+        button_fast_forward.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            controller.transportControls.fastForward()
         }
 
         seek_bar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener {

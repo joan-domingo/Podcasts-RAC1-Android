@@ -84,11 +84,17 @@ class Player(appContext: Context,
 
     fun seekTo(pos: Long) {
         mediaPlayer.seekTo((pos).toInt())
-        if (mediaPlayer.isPlaying) {
-            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
-        } else {
-            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
-        }
+        notifyListener()
+    }
+
+    fun rewind() {
+        mediaPlayer.seekTo(mediaPlayer.currentPosition - 30000)
+        notifyListener()
+    }
+
+    fun forward() {
+        mediaPlayer.seekTo(mediaPlayer.currentPosition + 30000)
+        notifyListener()
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
@@ -105,6 +111,14 @@ class Player(appContext: Context,
                 Log.d(TAG, "keep playing at an attenuated level")
                 mediaPlayer.setVolume(0.1f, 0.1f)
             }
+        }
+    }
+
+    private fun notifyListener() {
+        if (mediaPlayer.isPlaying) {
+            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
+        } else {
+            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
         }
     }
 }

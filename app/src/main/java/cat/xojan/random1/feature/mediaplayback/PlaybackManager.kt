@@ -3,7 +3,6 @@ package cat.xojan.random1.feature.mediaplayback
 import android.content.Context
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.ResultReceiver
 import android.os.SystemClock
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -21,10 +20,6 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
         override fun onPlay() {
             Log.d(TAG, "onPlay")
             handlePlayRequest()
-        }
-
-        override fun onSkipToQueueItem(queueId: Long) {
-            Log.d(TAG, "OnSkipToQueueItem: " + queueId)
         }
 
         override fun onSkipToNext() {
@@ -56,17 +51,19 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
             handlePlayRequest(mediaId)
         }
 
-        override fun onCommand(command: String?, extras: Bundle?, cb: ResultReceiver?) {
-            Log.d(TAG, "onCommand " + command)
-        }
-
         override fun onSeekTo(pos: Long) {
             Log.d(TAG, "onSeekTo: " + pos)
             player.seekTo(pos)
         }
 
-        override fun onCustomAction(action: String?, extras: Bundle?) {
-            Log.i(TAG, "onCustomAction: " + action)
+        override fun onRewind() {
+            Log.d(TAG, "onRewind")
+            player.rewind()
+        }
+
+        override fun onFastForward() {
+            Log.d(TAG, "onFastForward")
+            player.forward()
         }
     }
 
@@ -98,10 +95,6 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
                 state == PlaybackStateCompat.STATE_PAUSED) {
             listener.onNotificationRequired()
         }
-    }
-
-    override fun onError(error: String) {
-        Log.i(TAG, "onError")
     }
 
     private fun getAvailableActions(): Long {

@@ -12,9 +12,4 @@ interface PlayerListener {
      * playback state on the media sessions.
      */
     fun onPlaybackStatusChanged(state: Int)
-
-    /**
-     * @param error to be added to the PlaybackState
-     */
-    fun onError(error: String)
 }
