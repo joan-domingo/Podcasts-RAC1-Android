@@ -2,6 +2,7 @@ package cat.xojan.random1.feature.mediaplayback
 
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import android.support.v4.media.session.PlaybackStateCompat
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 
@@ -9,6 +10,7 @@ class QueueManager {
 
     var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     private var currentPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
+    private var currentAllPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     lateinit var listener: MetaDataUpdateListener
     private var currentQueueId: Long = -1
 
@@ -50,7 +52,8 @@ class QueueManager {
     }
 
     private fun setCurrentQueue() {
-        currentPlaylist = potentialPlaylist
+        currentPlaylist =  potentialPlaylist
+        currentAllPlaylist =  potentialPlaylist
         listener.updateQueue("title queue", potentialPlaylist)
     }
 
@@ -62,6 +65,9 @@ class QueueManager {
     }
 
     fun getNextMediaId(): String? {
+        if (currentPlaylist.size == 1) {
+            return null
+        }
         if ((currentQueueId + 1) < currentPlaylist.size.toLong()) {
             return currentPlaylist[(currentQueueId + 1).toInt()].description.mediaId
         }
@@ -69,6 +75,9 @@ class QueueManager {
     }
 
     fun getPreviousMediaId(): String? {
+        if (currentPlaylist.size == 1) {
+            return null
+        }
         if ((currentQueueId - 1) >= 0) {
             return currentPlaylist[(currentQueueId - 1).toInt()].description.mediaId
         }
@@ -77,5 +86,13 @@ class QueueManager {
 
     fun getCurrentMediaId(): Long {
         return currentQueueId
+    }
+
+    fun setPlaylistMode(playListMode: Int) {
+        when(playListMode) {
+            PlaybackStateCompat.SHUFFLE_MODE_ALL -> currentPlaylist = currentAllPlaylist
+            PlaybackStateCompat.SHUFFLE_MODE_GROUP -> currentPlaylist =
+                    listOf(currentPlaylist[currentQueueId.toInt()])
+        }
     }
 }

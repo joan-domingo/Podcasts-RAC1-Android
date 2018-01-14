@@ -25,14 +25,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:layout_marginTop="16dp">
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/button_repeat_one"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:tintMode="src_in"
+            app:srcCompat="@drawable/ic_repeat_one_white_24px"
+            android:layout_gravity="center"/>
 
         <SeekBar
             android:id="@+id/seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hapticFeedbackEnabled="true"/>
+            android:hapticFeedbackEnabled="true"
+            android:layout_marginTop="16dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"

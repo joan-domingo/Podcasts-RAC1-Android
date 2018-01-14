@@ -17,9 +17,7 @@ import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
 
-
-class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
-        MediaBrowserProvider {
+class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserProvider {
 
     companion object {
         val EXTRA_START_FULLSCREEN = "EXTRA_START_FULLSCREEN"
@@ -94,6 +92,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                 handler.postDelayed(updateTimerTask, 100)
             }
         })
+
+        button_repeat_one.setOnClickListener {
+            val controller = MediaControllerCompat.getMediaController(this)
+            controller.transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_GROUP)
+        }
     }
 
     override fun onResume() {
