@@ -110,13 +110,13 @@
                     android:layout_height="match_parent"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:tintMode="src_in"
-                    app:srcCompat="@drawable/ic_pause"
-                    android:visibility="gone"/>
+                    app:srcCompat="@drawable/ic_pause" />
 
                 <ProgressBar
                     android:id="@+id/buffer_progress_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
 
             </FrameLayout>
 

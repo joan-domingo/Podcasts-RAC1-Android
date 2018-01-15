@@ -9,6 +9,7 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import cat.xojan.random1.R
@@ -27,6 +28,8 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
             return Intent(context, MediaPlaybackFullScreenActivity::class.java)
         }
     }
+
+    private val TAG = MediaPlaybackFullScreenActivity::class.java.simpleName
 
     private val handler = Handler()
     private val updateTimerTask = object : Runnable {
@@ -99,6 +102,16 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        mMediaBrowser.let {
+            if (mMediaBrowser.isConnected) {
+                Log.d(TAG, "onStart: connected")
+                onMediaControllerConnected()
+            }
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         handler.postDelayed(updateTimerTask, 0)
@@ -109,13 +122,6 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
         controller?.registerCallback(mCallback)
         updateView()
         updateDuration(controller.metadata)
-        updatePlaybackState(controller.playbackState)
-    }
-
-    private fun updatePlaybackState(state: PlaybackStateCompat?) {
-        if (state == null) {
-            return
-        }
     }
 
     private fun updateView() {
@@ -195,7 +201,6 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
         override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
             super.onPlaybackStateChanged(state)
             updateView()
-            updatePlaybackState(state)
         }
     }
 }
