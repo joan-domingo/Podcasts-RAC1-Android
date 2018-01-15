@@ -44,7 +44,7 @@
         android:layout_height="56dp"
         android:layout_alignParentRight="true">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/play_pause"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
