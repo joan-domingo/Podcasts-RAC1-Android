@@ -6,8 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaBrowserServiceCompat
 import android.support.v4.media.MediaMetadataCompat
@@ -18,7 +16,6 @@ import android.util.Log
 import cat.xojan.random1.Application
 import cat.xojan.random1.feature.home.ProgramFragment.Companion.MEDIA_ID_ROOT
 import cat.xojan.random1.feature.notification.NotificationManager
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 
@@ -31,7 +28,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var notificationManager: NotificationManager
     private lateinit var playbackManager: PlaybackManager
-    private val delayedStopHandler = DelayedStopHandler(this)
     private lateinit var audioManager: AudioManager
 
     @Inject internal lateinit var mediaProvider: MediaProvider
@@ -109,10 +105,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
             // Try to handle the intent as a media button event wrapped by MediaButtonReceiver
             MediaButtonReceiver.handleIntent(mediaSession, startIntent)
         }
-        // Reset the delay handler to enqueue a message to stop the service if
-        // nothing is playing.
-        delayedStopHandler.removeCallbacksAndMessages(null)
-        delayedStopHandler.sendEmptyMessageDelayed(0, 30000)
         return START_STICKY
     }
 
@@ -127,7 +119,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         playbackManager.handleStopRequest()
         notificationManager.stopNotification()
 
-        delayedStopHandler.removeCallbacksAndMessages(null)
         mediaSession.release()
         mediaProvider.clear()
     }
@@ -165,7 +156,6 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
 
     override fun onPlaybackStart() {
         mediaSession.isActive = true
-        delayedStopHandler.removeCallbacksAndMessages(null)
         // The service needs to continue running even after the bound client (usually a
         // MediaController) disconnects, otherwise the music player will stop.
         // Calling startService(Intent) will keep the service running until it is explicitly killed.
@@ -174,33 +164,10 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
 
     override fun onPlaybackStop() {
         mediaSession.isActive = false
-        // Reset the delayed stop handler, so after STOP_DELAY it will be executed again,
-        // potentially stopping the service.
-        delayedStopHandler.removeCallbacksAndMessages(null)
-        delayedStopHandler.sendEmptyMessageDelayed(0, 30000)
         stopForeground(true)
     }
 
     override fun onNotificationRequired() {
         notificationManager.startNotification()
-    }
-
-    /**
-     * A simple handler that stops the service if player is not active (playing)
-     */
-    private class DelayedStopHandler constructor(service: MediaPlaybackService) : Handler() {
-        private val mWeakReference: WeakReference<MediaPlaybackService> = WeakReference(service)
-
-        override fun handleMessage(msg: Message) {
-            val service = mWeakReference.get()
-            if (service != null) {
-                if (service.playbackManager.player.isPlaying()) {
-                    Log.d("DelayedStopHandler", "Ignoring delayed stop since the media player is in use.")
-                    return
-                }
-                Log.d("DelayedStopHandler", "Stopping service with delay handler.")
-                service.stopSelf()
-            }
-        }
     }
 }
