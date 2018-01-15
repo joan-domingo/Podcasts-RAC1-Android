@@ -127,6 +127,6 @@ class AppModule(private val application: Application) {
     @Provides
     @Singleton
     fun provideQueueManager(): QueueManager {
-        return QueueManager(application)
+        return QueueManager()
     }
 }

@@ -1,18 +1,12 @@
 package cat.xojan.random1.feature.mediaplayback
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Target
 
-class QueueManager(val context: Context) {
+class QueueManager {
 
     var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     private var currentPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
@@ -64,37 +58,8 @@ class QueueManager(val context: Context) {
     }
 
     fun updateMetadata(mediaId: String?) {
-        var metadata = getMediaItem(mediaId)
+        val metadata = getMediaItem(mediaId)
         listener.updateMetadata(metadata)
-
-        // Set the proper album artwork on the media session, so it can be shown in the
-        // locked screen and in other places.
-        val iconUri = metadata?.description?.iconUri
-        iconUri?.let {
-            Picasso.with(context)
-                    .load(iconUri)
-                    .placeholder(R.drawable.default_rac1)
-                    .into(object: Target {
-                        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                        }
-
-                        override fun onBitmapFailed(errorDrawable: Drawable?) {
-                        }
-
-                        override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                            metadata = MediaMetadataCompat.Builder(metadata)
-                                    // set high resolution bitmap in METADATA_KEY_ALBUM_ART. This is used, for
-                                    // example, on the lockscreen background when the media session is active.
-                                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, bitmap)
-                                    // set small version of the album art in the DISPLAY_ICON. This is used on
-                                    // the MediaDescription and thus it should be small to be serialized if
-                                    // necessary
-                                    .putBitmap(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON, bitmap)
-                                    .build()
-                            listener.updateMetadata(metadata)
-                        }
-                    })
-        }
     }
 
     fun getNextMediaId(): String? {
