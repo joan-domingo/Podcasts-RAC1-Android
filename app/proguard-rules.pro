@@ -51,6 +51,3 @@
 -keepclassmembers class kotlin.Metadata {
     public <methods>;
 }
-
-#Kotlin compiler
--dontwarn kotlin.reflect.jvm.internal.**

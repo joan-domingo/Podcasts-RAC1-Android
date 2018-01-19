@@ -5,6 +5,6 @@
 /build
 /captures
 .idea/
-app/app-release.apk
 app/build
 /gradle.properties
+/app/release
