@@ -9,11 +9,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.RemoteException
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
@@ -116,6 +118,9 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
      */
     fun startNotification() {
         if (!mStarted) {
+            mStarted = true
+            Log.d(TAG, "startNotification")
+
             mMetadata = mController?.metadata
             mPlaybackState = mController?.playbackState
 
@@ -128,15 +133,14 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 filter.addAction(ACTION_PLAY)
                 filter.addAction(ACTION_PREV)
                 service.registerReceiver(this, filter)
-
                 service.startForeground(NOTIFICATION_ID, notification)
-                mStarted = true
             }
         }
     }
 
     fun stopNotification() {
         if (mStarted) {
+            Log.d(TAG, "stopNotification")
             mStarted = false
             mController?.unregisterCallback(mCb)
             try {
@@ -154,7 +158,6 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         if (mMetadata == null || mPlaybackState == null) {
             return null
         }
-
         val description = mMetadata?.description
 
         // Notification channels are only supported on Android O+.
@@ -163,17 +166,18 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         }
 
         val notificationBuilder = NotificationCompat.Builder(service, CHANNEL_ID)
-
-        val playPauseButtonPosition = addActions(notificationBuilder)
+        addActions(notificationBuilder)
         notificationBuilder
                 .setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
                         // show only play/pause in compact view
-                        .setShowActionsInCompactView(playPauseButtonPosition)
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(stopIntent)
                         .setMediaSession(sessionToken))
                 .setDeleteIntent(stopIntent)
                 .setSmallIcon(R.mipmap.ic_notification)
+                .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
+                .setColorized(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
                 .setContentIntent(createContentIntent(description))
@@ -182,21 +186,23 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
         setNotificationPlaybackState(notificationBuilder, mPlaybackState)
 
+        val placeholder = BitmapFactory.decodeResource(service.resources, R.drawable.default_rac1)
         Picasso.with(service)
                 .load(description?.iconUri)
-                .placeholder(R.drawable.default_rac1)
                 .into(object: Target {
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
                     }
 
                     override fun onBitmapFailed(errorDrawable: Drawable?) {
+                        notificationBuilder.setLargeIcon(placeholder)
+                        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         notificationBuilder.setLargeIcon(bitmap)
-                        addActions(notificationBuilder)
                         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                     }
+
                 })
 
         return notificationBuilder.build()
@@ -218,24 +224,13 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         }
     }
 
-    private fun addActions(notificationBuilder: NotificationCompat.Builder): Int {
-        Log.d(TAG, "updatePlayPauseAction")
+    private fun addActions(notificationBuilder: NotificationCompat.Builder) {
+        Log.d(TAG, "addActions")
         notificationBuilder.mActions.clear()
 
-        var playPauseButtonPosition = 0
-        // If skip to previous action is enabled
-        if ((mPlaybackState!!.actions and PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS) != 0L) {
-            notificationBuilder.addAction(R.drawable.ic_skip_previous_white_24px,
-                    service.getString(R.string.label_previous), previousIntent)
+        notificationBuilder.addAction(R.drawable.ic_skip_previous_white_24px,
+                service.getString(R.string.label_previous), previousIntent)
 
-            // If there is a "skip to previous" button, the play/pause button will
-            // be the second one. We need to keep track of it, because the MediaStyle notification
-            // requires to specify the index of the buttons (actions) that should be visible
-            // when in compact view.
-            playPauseButtonPosition = 1
-        }
-
-        // Play or pause button, depending on the current state.
         val label: String
         val icon: Int
         val intent: PendingIntent
@@ -250,13 +245,8 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         }
         notificationBuilder.addAction(NotificationCompat.Action(icon, label, intent))
 
-        // If skip to next action is enabled
-        if ((mPlaybackState!!.actions and PlaybackStateCompat.ACTION_SKIP_TO_NEXT) != 0L) {
-            notificationBuilder.addAction(R.drawable.ic_skip_next_white_24px,
-                    service.getString(R.string.label_next), nextIntent)
-        }
-
-        return playPauseButtonPosition
+        notificationBuilder.addAction(R.drawable.ic_skip_next_white_24px,
+                service.getString(R.string.label_next), nextIntent)
     }
 
     private fun createContentIntent(description: MediaDescriptionCompat?): PendingIntent {
@@ -273,7 +263,6 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
     private fun setNotificationPlaybackState(builder: NotificationCompat.Builder,
                                              playbackState: PlaybackStateCompat?) {
         Log.d(TAG, "updateNotificationPlaybackState. mPlaybackState=" + playbackState)
-
         if (playbackState == null || !mStarted) {
             Log.d(TAG, "updateNotificationPlaybackState. cancelling notification!")
             service.stopForeground(true)
