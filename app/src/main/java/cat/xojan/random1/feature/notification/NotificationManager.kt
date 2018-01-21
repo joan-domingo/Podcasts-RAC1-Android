@@ -16,7 +16,6 @@ import android.os.RemoteException
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.media.MediaDescriptionCompat
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
@@ -192,7 +191,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 .setColorized(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setOnlyAlertOnce(true)
-                .setContentIntent(createContentIntent(description))
+                .setContentIntent(createContentIntent())
                 .setContentTitle(service.getString(R.string.app_name))
                 .setContentText(description?.title)
 
@@ -267,13 +266,9 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 service.getString(R.string.label_forward), forwardIntent)
     }
 
-    private fun createContentIntent(description: MediaDescriptionCompat?): PendingIntent {
+    private fun createContentIntent(): PendingIntent {
         val openUI = Intent(service, MediaPlaybackFullScreenActivity::class.java)
         openUI.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-        openUI.putExtra(MediaPlaybackFullScreenActivity.EXTRA_START_FULLSCREEN, true)
-        if (description != null) {
-            openUI.putExtra(MediaPlaybackFullScreenActivity.EXTRA_CURRENT_MEDIA_DESCRIPTION, description)
-        }
         return PendingIntent.getActivity(service, REQUEST_CODE, openUI,
                 PendingIntent.FLAG_CANCEL_CURRENT)
     }

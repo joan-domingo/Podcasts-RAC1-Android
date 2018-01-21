@@ -1,6 +1,7 @@
 package cat.xojan.random1.domain.model
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -55,6 +56,7 @@ data class Podcast(private var audio: Audio,
         }
 
     @Transient
+    @IgnoredOnParcel
     var audioId: String? = null
         get() = audio.id
 

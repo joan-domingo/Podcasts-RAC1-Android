@@ -10,6 +10,7 @@ import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.text.format.DateUtils
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
 import cat.xojan.random1.R
@@ -21,9 +22,6 @@ import kotlinx.android.synthetic.main.activity_media_playback.*
 class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserProvider {
 
     companion object {
-        val EXTRA_START_FULLSCREEN = "EXTRA_START_FULLSCREEN"
-        val EXTRA_CURRENT_MEDIA_DESCRIPTION = "EXTRA_CURRENT_MEDIA_DESCRIPTION"
-
         fun newIntent(context: Context): Intent {
             return Intent(context, MediaPlaybackFullScreenActivity::class.java)
         }
@@ -46,6 +44,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_playback)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         button_play_pause.setOnClickListener {
             val controller = MediaControllerCompat.getMediaController(this)
@@ -100,6 +99,16 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
             val controller = MediaControllerCompat.getMediaController(this)
             controller.transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_GROUP)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
