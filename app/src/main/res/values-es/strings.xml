@@ -15,4 +15,10 @@
     <string name="export_podcasts">Exportar podcasts descarregats</string>
     <string name="podcasts_exported">Podcasts exportats a la carpeta Podcasts</string>
     <string name="try_again">Torna-ho a intentar</string>
+    <string name="label_previous">Anterior</string>
+    <string name="label_pause">Pausar</string>
+    <string name="label_play">Reproduir</string>
+    <string name="label_next">Següent</string>
+    <string name="label_forward">Endavant 30 segons</string>
+    <string name="label_rewind">Endarrere 30 segons</string>
 </resources>

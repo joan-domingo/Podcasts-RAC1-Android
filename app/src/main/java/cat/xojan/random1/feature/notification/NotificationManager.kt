@@ -40,6 +40,8 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
     private val ACTION_PREV = "cat.xojan.random1.feature.notification.prev"
     private val ACTION_NEXT = "cat.xojan.random1.feature.notification.next"
     private val ACTION_STOP = "cat.xojan.random1.feature.notification.stop"
+    private val ACTION_FORWARD = "cat.xojan.random1.feature.notification.forward"
+    private val ACTION_REWIND = "cat.xojan.random1.feature.notification.rewind"
 
     private val TAG = NotificationManager::class.simpleName
 
@@ -50,6 +52,8 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
     private val pauseIntent:PendingIntent
     private val playIntent:PendingIntent
     private val stopIntent:PendingIntent
+    private val forwardIntent:PendingIntent
+    private val rewindIntent:PendingIntent
 
     private var sessionToken: MediaSessionCompat.Token? = null
     private var mController: MediaControllerCompat? = null
@@ -72,6 +76,10 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 Intent(ACTION_PLAY).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
         stopIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
                 Intent(ACTION_STOP).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
+        forwardIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
+                Intent(ACTION_FORWARD).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
+        rewindIntent = PendingIntent.getBroadcast(service, REQUEST_CODE,
+                Intent(ACTION_REWIND).setPackage(pkg), PendingIntent.FLAG_CANCEL_CURRENT)
 
         notificationManager.cancelAll()
     }
@@ -107,6 +115,8 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
             ACTION_PLAY -> mTransportControls?.play()
             ACTION_NEXT -> mTransportControls?.skipToNext()
             ACTION_PREV -> mTransportControls?.skipToPrevious()
+            ACTION_FORWARD -> mTransportControls?.fastForward()
+            ACTION_REWIND -> mTransportControls?.rewind()
             else -> Log.w(TAG, "Unknown intent ignored. Action= " + action)
         }
     }
@@ -132,6 +142,8 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 filter.addAction(ACTION_PAUSE)
                 filter.addAction(ACTION_PLAY)
                 filter.addAction(ACTION_PREV)
+                filter.addAction(ACTION_REWIND)
+                filter.addAction(ACTION_FORWARD)
                 service.registerReceiver(this, filter)
                 service.startForeground(NOTIFICATION_ID, notification)
             }
@@ -170,7 +182,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         notificationBuilder
                 .setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
                         // show only play/pause in compact view
-                        .setShowActionsInCompactView(0, 1, 2)
+                        .setShowActionsInCompactView(1, 2, 3)
                         .setShowCancelButton(true)
                         .setCancelButtonIntent(stopIntent)
                         .setMediaSession(sessionToken))
@@ -228,6 +240,9 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         Log.d(TAG, "addActions")
         notificationBuilder.mActions.clear()
 
+        notificationBuilder.addAction(R.drawable.ic_replay_30_white_24px,
+                service.getString(R.string.label_rewind), rewindIntent)
+
         notificationBuilder.addAction(R.drawable.ic_skip_previous_white_24px,
                 service.getString(R.string.label_previous), previousIntent)
 
@@ -247,6 +262,9 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
         notificationBuilder.addAction(R.drawable.ic_skip_next_white_24px,
                 service.getString(R.string.label_next), nextIntent)
+
+        notificationBuilder.addAction(R.drawable.ic_forward_30_white_24px,
+                service.getString(R.string.label_forward), forwardIntent)
     }
 
     private fun createContentIntent(description: MediaDescriptionCompat?): PendingIntent {
