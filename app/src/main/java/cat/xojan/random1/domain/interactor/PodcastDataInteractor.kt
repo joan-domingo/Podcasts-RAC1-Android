@@ -2,11 +2,14 @@ package cat.xojan.random1.domain.interactor
 
 import android.app.DownloadManager
 import android.content.Context
+import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
+import cat.xojan.random1.data.PodcastJsonAdapter
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
@@ -16,6 +19,9 @@ import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
 import cat.xojan.random1.domain.repository.ProgramRepository
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -214,5 +220,68 @@ class PodcastDataInteractor @Inject constructor(
         inChannel.transferTo(0, inChannel.size(), outChannel)
         inStream.close()
         outStream.close()
+    }
+
+    /*fun convertOldPodcasts(): Single<Boolean> {
+        return Single.create { subscriber ->
+            try {
+                val podcastList = HashSet<MediaDescriptionCompat>()
+                val sharedPref = context.getSharedPreferences("dowload_podcasts_repo", Context.MODE_PRIVATE)
+                val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
+                if (oldPodcastsJson != null) {
+                    val type = Types.newParameterizedType(MutableSet::class.java, Podcast::class.java)
+                    val moshi = Moshi.Builder()
+                            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
+                            .build()
+                    val jsonAdapter: JsonAdapter<MutableSet<Podcast>> = moshi.adapter(type)
+                    val podcasts: MutableSet<Podcast>? = jsonAdapter.fromJson(oldPodcastsJson)
+                    val podcastList = podcasts?.mapTo(ArrayList()) { createBrowsableMediaItemForPodcast(it) }
+                }
+
+                subscriber.onSuccess(true)
+            } catch (e: Throwable) {
+                subscriber.onError(e)
+            }
+        }
+    }*/
+
+    fun convertOldPodcasts(): List<MediaBrowserCompat.MediaItem> {
+        val sharedPref = context.getSharedPreferences("dowload_podcasts_repo", Context.MODE_PRIVATE)
+        val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
+        return getMediaItemsFromJson(oldPodcastsJson)
+    }
+
+    fun getMediaItemsFromJson(oldPodcastsJson: String?): List<MediaBrowserCompat.MediaItem> {
+        val resultList = mutableListOf<MediaBrowserCompat.MediaItem>()
+        oldPodcastsJson?.let {
+            val type = Types.newParameterizedType(MutableList::class.java, Podcast::class.java)
+            val moshi = Moshi.Builder()
+                    .add(Date::class.java)
+                    .add(PodcastJsonAdapter())
+                    .build()
+            val jsonAdapter: JsonAdapter<MutableSet<Podcast>> = moshi.adapter(type)
+            jsonAdapter.fromJson(oldPodcastsJson)?.mapTo(resultList) {
+                createBrowsableMediaItemForPodcast(it)
+            }
+        }
+        return resultList
+    }
+
+    private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaBrowserCompat.MediaItem {
+        val extras = Bundle()
+        extras.putSerializable(PODCAST_STATE, podcast.state)
+        extras.putString(Podcast.PODCAST_PROGRAM_ID, podcast.programId)
+        extras.putString(Podcast.PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
+        extras.putLong(Podcast.PODCAST_DURATION, podcast.durationSeconds)
+        extras.putSerializable(PODCAST_DATE, podcast.dateTime)
+
+        val description = MediaDescriptionCompat.Builder()
+                .setMediaId(podcast.audioId)
+                .setTitle(podcast.title)
+                .setMediaUri(Uri.parse(podcast.path))
+                .setIconUri(Uri.parse(podcast.imageUrl))
+                .setExtras(extras)
+                .build()
+        return MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
 }
