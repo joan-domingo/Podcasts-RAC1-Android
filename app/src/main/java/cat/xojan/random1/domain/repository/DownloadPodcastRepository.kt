@@ -19,4 +19,6 @@ interface DownloadPodcastRepository {
     fun getDownloadedPodcastTitle(mediaId: String): String?
 
     fun getDownloadedPodcastProgramId(audioId: String): String?
+
+    fun addDownloadedPodcast(item: MediaDescriptionCompat)
 }

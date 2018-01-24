@@ -100,9 +100,9 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
         return getDownloadingPodcasts().firstOrNull { it.mediaId == mediaId }
     }
 
-    private fun addDownloadedPodcast(podcast: MediaDescriptionCompat) {
+    override fun addDownloadedPodcast(item: MediaDescriptionCompat) {
         val podcasts = getDownloadedPodcasts()
-        podcasts.add(podcast)
+        podcasts.add(item)
         sharedPref.edit()
                 .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
                 .apply()

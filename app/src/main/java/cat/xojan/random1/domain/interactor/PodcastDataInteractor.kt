@@ -245,14 +245,17 @@ class PodcastDataInteractor @Inject constructor(
         }
     }*/
 
-    fun convertOldPodcasts(): List<MediaBrowserCompat.MediaItem> {
+    fun convertOldPodcasts() {
         val sharedPref = context.getSharedPreferences("dowload_podcasts_repo", Context.MODE_PRIVATE)
         val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
-        return getMediaItemsFromJson(oldPodcastsJson)
+        oldPodcastsJson?.let {
+            val mediaItems = getMediaItemsFromJson(oldPodcastsJson)
+            mediaItems.map { item -> downloadRepo.addDownloadedPodcast(item) }
+        }
     }
 
-    fun getMediaItemsFromJson(oldPodcastsJson: String?): List<MediaBrowserCompat.MediaItem> {
-        val resultList = mutableListOf<MediaBrowserCompat.MediaItem>()
+    fun getMediaItemsFromJson(oldPodcastsJson: String?): List<MediaDescriptionCompat> {
+        val resultList = mutableListOf<MediaDescriptionCompat>()
         oldPodcastsJson?.let {
             val type = Types.newParameterizedType(List::class.java, Podcast::class.java)
             val moshi = Moshi.Builder()
@@ -266,7 +269,7 @@ class PodcastDataInteractor @Inject constructor(
         return resultList
     }
 
-    private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaBrowserCompat.MediaItem {
+    private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaDescriptionCompat {
         val extras = Bundle()
         extras.putSerializable(PODCAST_STATE, podcast.state)
         extras.putString(Podcast.PODCAST_PROGRAM_ID, podcast.programId)
@@ -274,13 +277,12 @@ class PodcastDataInteractor @Inject constructor(
         extras.putLong(Podcast.PODCAST_DURATION, podcast.durationSeconds)
         extras.putSerializable(PODCAST_DATE, podcast.dateTime)
 
-        val description = MediaDescriptionCompat.Builder()
+        return MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.audioId)
                 .setTitle(podcast.title)
                 .setMediaUri(Uri.parse(podcast.path))
                 .setIconUri(Uri.parse(podcast.imageUrl))
                 .setExtras(extras)
                 .build()
-        return MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
 }
