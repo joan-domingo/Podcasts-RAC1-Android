@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-data class Podcast(private var audio: Audio,
+data class Podcast(var audio: Audio,
               var path: String,
               var filePath: String?,
               var dateTime: Date?,

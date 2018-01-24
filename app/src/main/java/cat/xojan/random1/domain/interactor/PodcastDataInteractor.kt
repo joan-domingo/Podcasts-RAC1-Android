@@ -254,12 +254,11 @@ class PodcastDataInteractor @Inject constructor(
     fun getMediaItemsFromJson(oldPodcastsJson: String?): List<MediaBrowserCompat.MediaItem> {
         val resultList = mutableListOf<MediaBrowserCompat.MediaItem>()
         oldPodcastsJson?.let {
-            val type = Types.newParameterizedType(MutableList::class.java, Podcast::class.java)
+            val type = Types.newParameterizedType(List::class.java, Podcast::class.java)
             val moshi = Moshi.Builder()
-                    .add(Date::class.java)
                     .add(PodcastJsonAdapter())
                     .build()
-            val jsonAdapter: JsonAdapter<MutableSet<Podcast>> = moshi.adapter(type)
+            val jsonAdapter: JsonAdapter<List<Podcast>> = moshi.adapter(type)
             jsonAdapter.fromJson(oldPodcastsJson)?.mapTo(resultList) {
                 createBrowsableMediaItemForPodcast(it)
             }

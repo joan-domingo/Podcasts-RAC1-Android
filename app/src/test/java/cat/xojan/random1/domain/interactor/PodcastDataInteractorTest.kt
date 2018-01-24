@@ -47,6 +47,6 @@ class PodcastDataInteractorTest {
         val oldPodcastsJson = IOUtils.toString(this.javaClass.classLoader
                 .getResourceAsStream("oldpodcasts.json"))
         val actualResult = podcastDataInteractor.getMediaItemsFromJson(oldPodcastsJson)
-        assertThat(null, equalTo(actualResult))
+        assertThat(actualResult.size, equalTo(3))
     }
 }
