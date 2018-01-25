@@ -10,4 +10,8 @@ constructor(private val podcastInteractor: PodcastDataInteractor) {
     fun exportPodcasts(): Single<Unit> {
         return podcastInteractor.exportPodcasts()
     }
+
+    fun importOldPodcasts(): Single<Boolean> {
+        return podcastInteractor.convertOldPodcasts()
+    }
 }

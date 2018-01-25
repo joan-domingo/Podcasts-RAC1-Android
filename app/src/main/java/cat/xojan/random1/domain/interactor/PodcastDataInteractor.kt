@@ -222,35 +222,20 @@ class PodcastDataInteractor @Inject constructor(
         outStream.close()
     }
 
-    /*fun convertOldPodcasts(): Single<Boolean> {
+    fun convertOldPodcasts():  Single<Boolean> {
         return Single.create { subscriber ->
             try {
-                val podcastList = HashSet<MediaDescriptionCompat>()
-                val sharedPref = context.getSharedPreferences("dowload_podcasts_repo", Context.MODE_PRIVATE)
+                val sharedPref = context.getSharedPreferences("dowload_podcasts_repo",
+                        Context.MODE_PRIVATE)
                 val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
-                if (oldPodcastsJson != null) {
-                    val type = Types.newParameterizedType(MutableSet::class.java, Podcast::class.java)
-                    val moshi = Moshi.Builder()
-                            .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
-                            .build()
-                    val jsonAdapter: JsonAdapter<MutableSet<Podcast>> = moshi.adapter(type)
-                    val podcasts: MutableSet<Podcast>? = jsonAdapter.fromJson(oldPodcastsJson)
-                    val podcastList = podcasts?.mapTo(ArrayList()) { createBrowsableMediaItemForPodcast(it) }
+                oldPodcastsJson?.let {
+                    val mediaItems = getMediaItemsFromJson(oldPodcastsJson)
+                    mediaItems.map { item -> downloadRepo.addDownloadedPodcast(item) }
                 }
-
                 subscriber.onSuccess(true)
             } catch (e: Throwable) {
                 subscriber.onError(e)
             }
-        }
-    }*/
-
-    fun convertOldPodcasts() {
-        val sharedPref = context.getSharedPreferences("dowload_podcasts_repo", Context.MODE_PRIVATE)
-        val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
-        oldPodcastsJson?.let {
-            val mediaItems = getMediaItemsFromJson(oldPodcastsJson)
-            mediaItems.map { item -> downloadRepo.addDownloadedPodcast(item) }
         }
     }
 

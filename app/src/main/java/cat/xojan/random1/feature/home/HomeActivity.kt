@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -25,6 +26,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     companion object {
         private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
+    private val TAG = HomeActivity::class.java.simpleName
 
     @Inject internal lateinit var viewModel: HomeViewModel
     @Inject internal lateinit var crashReporter: CrashReporter
@@ -50,6 +52,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         setContentView(R.layout.activity_home)
         initView(savedInstanceState)
         component.inject(this)
+        importOldPodcasts()
     }
 
     override fun onMediaControllerConnected() {
@@ -127,6 +130,17 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
                 .subscribe(
                         {notifyUser()},
                         {e -> crashReporter.logException(e)}
+                ))
+    }
+
+    private fun importOldPodcasts() {
+        compositeDisposable.add(viewModel.importOldPodcasts()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        {Log.d(TAG, "Old podcasts exported")},
+                        {e -> Log.d(TAG, "Error exporting old podcasts: "
+                                + e.printStackTrace())}
                 ))
     }
 
