@@ -1,22 +1,21 @@
 package cat.xojan.random1.feature.browser
 
-import org.junit.Before
-
-import java.util.ArrayList
-
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
-
 import cat.xojan.random1.testutil.podcast1
 import cat.xojan.random1.testutil.podcast3
+import org.junit.Before
 import org.mockito.Mockito.mock
+import java.util.*
 
 class BrowserViewModelTest {
 
     private var programDataInteractor: ProgramDataInteractor? = null
     private var podcastDataInteractor: PodcastDataInteractor? = null
     private var mViewModel: BrowserViewModel? = null
+    private lateinit var eventLogger: EventLogger
 
     /*@Test
     public void load_downloaded_podcasts_successfully() {
@@ -90,6 +89,7 @@ class BrowserViewModelTest {
     fun setUp() {
         programDataInteractor = mock(ProgramDataInteractor::class.java)
         podcastDataInteractor = mock(PodcastDataInteractor::class.java)
-        mViewModel = BrowserViewModel(podcastDataInteractor!!, programDataInteractor!!)
+        eventLogger = mock(EventLogger::class.java)
+        mViewModel = BrowserViewModel(podcastDataInteractor!!, programDataInteractor!!, eventLogger)
     }
 }
