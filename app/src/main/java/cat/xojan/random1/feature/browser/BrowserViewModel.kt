@@ -4,14 +4,17 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.interactor.ProgramDataInteractor
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
 class BrowserViewModel @Inject
 constructor(
         private val podcastInteractor: PodcastDataInteractor,
-        private val programInteractor: ProgramDataInteractor) {
+        private val programInteractor: ProgramDataInteractor,
+        private val eventLogger: EventLogger) {
 
     fun getPodcastStateUpdates(): PublishSubject<List<MediaBrowserCompat.MediaItem>> {
          return podcastInteractor.getPodcastStateUpdates()
@@ -29,6 +32,10 @@ constructor(
     }
 
     fun downloadPodcast(podcast: MediaDescriptionCompat) {
+        eventLogger.logDownloadPodcastTry(
+                podcast.mediaId,
+                podcast.title.toString(),
+                podcast.extras?.getString(PODCAST_PROGRAM_ID))
         podcastInteractor.download(podcast)
     }
 

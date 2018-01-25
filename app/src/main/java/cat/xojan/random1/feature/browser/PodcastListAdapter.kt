@@ -51,7 +51,8 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.podcast_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.podcast_item, parent,
+                false)
         return MediaItemViewHolder(itemView)
     }
 

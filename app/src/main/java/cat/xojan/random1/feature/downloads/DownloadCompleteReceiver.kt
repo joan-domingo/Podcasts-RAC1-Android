@@ -9,9 +9,9 @@ import android.util.Log
 import android.widget.Toast
 import cat.xojan.random1.Application
 import cat.xojan.random1.R
+import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import cat.xojan.random1.domain.model.CrashReporter
 import cat.xojan.random1.domain.model.EventLogger
-import cat.xojan.random1.domain.interactor.PodcastDataInteractor
 import javax.inject.Inject
 
 
@@ -73,6 +73,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                     }
 
                     crashReporter.logException("Download failed: $reason $reasonText")
+                    eventLogger.logDownloadedPodcastFail(reason, reasonText)
                     podcastDataInteractor.deleteDownloading(reference)
                     Toast.makeText(context, context.getString(R.string.download_failed) + ": "
                             + reasonText, Toast.LENGTH_SHORT).show()
@@ -81,6 +82,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
             cursor.close()
         } else {
             podcastDataInteractor.deleteDownloading(reference)
+            eventLogger.logDownloadedPodcastCancel()
             Toast.makeText(context, context.getString(R.string.download_cancelled),
                     Toast.LENGTH_SHORT).show()
         }
