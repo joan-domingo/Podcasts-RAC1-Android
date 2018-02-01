@@ -16,7 +16,7 @@ import java.util.*
 
 class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRepository {
 
-    private val DOWNLOAD_PODCASTS = "dowload_media_repo"
+    private val DOWNLOAD_PODCASTS = "download_media_repo"
     private val DOWNLOADING_PODCASTS = "downloading_media"
     private val DOWNLOADED_PODCASTS = "downloaded_media"
 

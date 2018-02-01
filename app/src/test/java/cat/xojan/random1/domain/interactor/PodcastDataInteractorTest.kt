@@ -42,7 +42,6 @@ class PodcastDataInteractorTest {
                 downloadRepository)
     }
 
-    //Caused by: java.text.ParseException: Unparseable date: "Jan 19, 2018 8:55:00 AM"
     @Test
     fun test_converting_old_podcasts() {
         val oldPodcastsJson = IOUtils.toString(this.javaClass.classLoader

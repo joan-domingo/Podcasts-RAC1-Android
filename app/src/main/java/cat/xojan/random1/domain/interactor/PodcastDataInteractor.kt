@@ -261,6 +261,7 @@ class PodcastDataInteractor @Inject constructor(
         extras.putString(Podcast.PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
         extras.putLong(Podcast.PODCAST_DURATION, podcast.durationSeconds)
         extras.putSerializable(PODCAST_DATE, podcast.dateTime)
+        extras.putSerializable(PODCAST_FILE_PATH, podcast.filePath)
 
         return MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.audioId)

@@ -1,6 +1,7 @@
 package cat.xojan.random1.feature.home
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -134,14 +135,19 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     }
 
     private fun importOldPodcasts() {
-        compositeDisposable.add(viewModel.importOldPodcasts()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {Log.d(TAG, "Old podcasts exported")},
-                        {e -> Log.d(TAG, "Error exporting old podcasts: "
-                                + e.printStackTrace())}
-                ))
+        val sharedPref = getSharedPreferences("old_podcasts", Context.MODE_PRIVATE)
+        val areConverted = sharedPref.getBoolean("converted", false)
+        if (!areConverted) {
+            sharedPref.edit().putBoolean("converted", true).apply()
+            compositeDisposable.add(viewModel.importOldPodcasts()
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(
+                            { Log.d(TAG, "Old podcasts exported")},
+                            {e -> Log.d(TAG, "Error exporting old podcasts: "
+                                    + e.printStackTrace())}
+                    ))
+        }
     }
 
     private fun notifyUser() {
