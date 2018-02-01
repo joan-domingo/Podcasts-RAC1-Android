@@ -4,10 +4,11 @@ import cat.xojan.random1.domain.model.Podcast
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.text.SimpleDateFormat
+import java.util.*
 
 class PodcastJsonAdapter {
 
-    private val df = SimpleDateFormat("MMM dd, yyyy HH:mm:ss a")
+    private val df = SimpleDateFormat("MMM dd, yyyy H:mm:ss aaa", Locale.ENGLISH)
 
     @ToJson
     fun toJson(podcast: Podcast): PodcastJson {
