@@ -14,21 +14,11 @@
 
         <ImageView
             android:id="@+id/podcast_art"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="@drawable/gradient_background"
             tools:src="@drawable/default_rac1" />
-
-        <ImageView
-            android:id="@+id/button_repeat_one"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:tintMode="src_in"
-            app:srcCompat="@drawable/ic_repeat_one_white_24px"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 

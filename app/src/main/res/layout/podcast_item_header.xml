@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/podcast_item"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/image_frame"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp">
+
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/ic_playlist_play_white_24px"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/text_container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/image_frame"
+        android:layout_toEndOf="@+id/image_frame">
+
+        <TextView
+            android:id="@+id/podcast_title"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:textSize="16sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/play_all_podcasts"
+            android:textStyle="bold"
+            android:textAllCaps="true"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

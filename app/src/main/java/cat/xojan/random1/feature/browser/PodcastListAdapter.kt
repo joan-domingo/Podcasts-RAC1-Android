@@ -21,7 +21,10 @@ import java.util.*
 
 class PodcastListAdapter(private val viewModel: BrowserViewModel,
                          private val activity: Activity) : RecyclerView
-.Adapter<PodcastListAdapter.MediaItemViewHolder>() {
+.Adapter<RecyclerView.ViewHolder>() {
+
+    private val TYPE_HEADER = 0
+    private val TYPE_ITEM = 1
 
     var podcasts = emptyList<MediaBrowserCompat.MediaItem>()
         set(value) {
@@ -50,17 +53,42 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.podcast_item, parent,
-                false)
-        return MediaItemViewHolder(itemView)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == TYPE_HEADER) {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.podcast_item_header, parent, false)
+            HeaderViewHolder(itemView)
+        } else {
+            val itemView = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.podcast_item, parent,false)
+            MediaItemViewHolder(itemView)
+        }
     }
 
-    override fun onBindViewHolder(holder: MediaItemViewHolder?, position: Int) {
-        holder?.bind(podcasts[position], viewModel, activity)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is HeaderViewHolder) {
+            holder.bind()
+        } else {
+            (holder as MediaItemViewHolder).bind(getItem(position), viewModel, activity)
+        }
     }
 
-    override fun getItemCount(): Int = podcasts.size
+    override fun getItemCount(): Int = podcasts.size + 1
+
+    override fun getItemViewType(position: Int): Int {
+        if (isPositionHeader(position)) {
+            return TYPE_HEADER
+        }
+        return TYPE_ITEM
+    }
+
+    private fun isPositionHeader(position: Int): Boolean {
+        return position == 0
+    }
+
+    private fun getItem(position: Int): MediaBrowserCompat.MediaItem {
+        return podcasts[position - 1]
+    }
 
     class MediaItemViewHolder(override val containerView: View)
         : RecyclerView.ViewHolder(containerView), LayoutContainer {
@@ -146,6 +174,17 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                 }
             }
             return STATE_NONE
+        }
+    }
+
+    class HeaderViewHolder(override val containerView: View)
+        : RecyclerView.ViewHolder(containerView), LayoutContainer {
+
+        fun bind() {
+            itemView.setOnClickListener {
+               /* MediaControllerCompat.getMediaController(itemView.context as Activity)
+                        .transportControls.playFromMediaId(item.mediaId, null)*/
+            }
         }
     }
 }
