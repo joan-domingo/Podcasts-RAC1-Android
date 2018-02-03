@@ -69,9 +69,11 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
 
     override fun onCompletion() {
         val nextMediaId = queueManager.getNextMediaId()
-        nextMediaId?.let {
+        if (nextMediaId != null) {
             handlePlayRequest(nextMediaId)
             queueManager.updateMetadata(nextMediaId)
+        } else {
+            handlePauseRequest()
         }
     }
 
@@ -120,10 +122,8 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
 
     fun handlePauseRequest() {
         Log.d(TAG, "handlePauseRequest")
-        if(player.isPlaying()) {
-            player.pause()
-            listener.onPlaybackStop()
-        }
+        player.pause()
+        listener.onPlaybackStop()
     }
 
     fun handleStopRequest() {

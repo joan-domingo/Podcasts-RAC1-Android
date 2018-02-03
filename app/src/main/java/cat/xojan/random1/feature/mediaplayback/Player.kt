@@ -9,8 +9,6 @@ import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 
-
-
 class Player(appContext: Context,
              private val listener: PlayerListener,
              private val audioManager: AudioManager): AudioManager.OnAudioFocusChangeListener {

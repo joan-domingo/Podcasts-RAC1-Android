@@ -61,7 +61,7 @@ class QueueManager {
 
     private fun setCurrentQueue(mediaId: String?) {
         currentPlaylist = if (mediaId != MEDIA_ID_PLAY_ALL) {
-            listOf(currentPlaylist[0])
+            listOf(potentialPlaylist.filter { it -> it.description.mediaId == mediaId }[0])
         } else {
             potentialPlaylist
         }
