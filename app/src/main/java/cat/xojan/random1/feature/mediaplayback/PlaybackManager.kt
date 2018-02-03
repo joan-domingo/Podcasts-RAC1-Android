@@ -65,11 +65,6 @@ class PlaybackManager(appContext: Context, val queueManager: QueueManager,
             Log.d(TAG, "onFastForward")
             player.forward()
         }
-
-        override fun onSetShuffleMode(shuffleMode: Int) {
-            Log.d(TAG, "onSetPlaylistMode")
-            queueManager.setPlaylistMode(shuffleMode)
-        }
     }
 
     override fun onCompletion() {

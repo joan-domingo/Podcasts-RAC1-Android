@@ -94,11 +94,6 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
                 handler.postDelayed(updateTimerTask, 100)
             }
         })
-
-        button_repeat_one.setOnClickListener {
-            val controller = MediaControllerCompat.getMediaController(this)
-            controller.transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_GROUP)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

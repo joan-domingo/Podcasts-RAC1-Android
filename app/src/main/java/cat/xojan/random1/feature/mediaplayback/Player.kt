@@ -42,23 +42,27 @@ class Player(appContext: Context,
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
-                mediaPlayer.reset()
-                val mediaUri = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
-                Log.d(TAG, mediaUri)
-                mediaPlayer.setDataSource(mediaUri)
-                mediaPlayer.setOnPreparedListener {
-                    play()
-                }
-                mediaPlayer.setOnCompletionListener {
-                    listener.onCompletion()
-                }
-                mediaPlayer.prepareAsync()
-                listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
+               playMediaId(currentMedia)
             } else {
                 mediaPlayer.start()
                 listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
             }
         }
+    }
+
+    private fun playMediaId(currentMedia: MediaMetadataCompat) {
+        mediaPlayer.reset()
+        val mediaUri = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
+        Log.d(TAG, mediaUri)
+        mediaPlayer.setDataSource(mediaUri)
+        mediaPlayer.setOnPreparedListener {
+            play()
+        }
+        mediaPlayer.setOnCompletionListener {
+            listener.onCompletion()
+        }
+        mediaPlayer.prepareAsync()
+        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
     }
 
     fun pause() {

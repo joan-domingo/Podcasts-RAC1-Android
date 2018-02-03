@@ -13,6 +13,7 @@ import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.MEDIA_ID_PLAY_ALL
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.podcast_item.*
@@ -182,8 +183,8 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
 
         fun bind() {
             itemView.setOnClickListener {
-               /* MediaControllerCompat.getMediaController(itemView.context as Activity)
-                        .transportControls.playFromMediaId(item.mediaId, null)*/
+               MediaControllerCompat.getMediaController(itemView.context as Activity)
+                        .transportControls.playFromMediaId(MEDIA_ID_PLAY_ALL, null)
             }
         }
     }
