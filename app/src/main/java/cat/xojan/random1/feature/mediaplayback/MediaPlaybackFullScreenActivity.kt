@@ -16,6 +16,7 @@ import android.widget.SeekBar
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
+import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_HAS_NEXT_OR_PREVIOUS
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
 
@@ -89,7 +90,8 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
 
             override fun onStopTrackingTouch(seekBar: SeekBar) {
                 handler.removeCallbacks(updateTimerTask)
-                MediaControllerCompat.getMediaController(this@MediaPlaybackFullScreenActivity)
+                MediaControllerCompat
+                        .getMediaController(this@MediaPlaybackFullScreenActivity)
                         .transportControls.seekTo(seekBar.progress.toLong())
                 handler.postDelayed(updateTimerTask, 100)
             }
@@ -134,11 +136,20 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
         val metadata = controller.metadata
         metadata?.let {
             title = metadata.description.title
+
             Picasso.with(this)
                     .load(metadata.description?.iconUri)
                     .resize(800, 800)
                     .placeholder(R.drawable.default_rac1)
                     .into(podcast_art)
+
+            if (metadata.getLong(METADATA_HAS_NEXT_OR_PREVIOUS) == 1L) {
+                button_next.visibility = View.VISIBLE
+                button_previous.visibility = View.VISIBLE
+            } else {
+                button_next.visibility = View.GONE
+                button_previous.visibility = View.GONE
+            }
         }
 
         val playbackState = controller.playbackState

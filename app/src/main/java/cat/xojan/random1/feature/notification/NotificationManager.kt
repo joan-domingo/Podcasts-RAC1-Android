@@ -24,9 +24,9 @@ import android.util.Log
 import cat.xojan.random1.R
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackFullScreenActivity
 import cat.xojan.random1.feature.mediaplayback.MediaPlaybackService
+import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_HAS_NEXT_OR_PREVIOUS
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-
 
 class NotificationManager(private val service: MediaPlaybackService): BroadcastReceiver() {
 
@@ -178,13 +178,20 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
         val notificationBuilder = NotificationCompat.Builder(service, CHANNEL_ID)
         addActions(notificationBuilder)
+
+        val style = android.support.v4.media.app.NotificationCompat.MediaStyle()
+                .setShowCancelButton(true)
+                .setCancelButtonIntent(stopIntent)
+                .setMediaSession(sessionToken)
+
+        if (mController?.metadata?.getLong(METADATA_HAS_NEXT_OR_PREVIOUS) == 1L) {
+            style.setShowActionsInCompactView(1, 2, 3)
+        } else {
+            style.setShowActionsInCompactView(0, 1, 2)
+        }
+
         notificationBuilder
-                .setStyle(android.support.v4.media.app.NotificationCompat.MediaStyle()
-                        // show only play/pause in compact view
-                        .setShowActionsInCompactView(1, 2, 3)
-                        .setShowCancelButton(true)
-                        .setCancelButtonIntent(stopIntent)
-                        .setMediaSession(sessionToken))
+                .setStyle(style)
                 .setDeleteIntent(stopIntent)
                 .setSmallIcon(R.mipmap.ic_notification)
                 .setColor(ContextCompat.getColor(service, R.color.colorPrimary))
@@ -242,8 +249,10 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         notificationBuilder.addAction(R.drawable.ic_replay_30_white_24px,
                 service.getString(R.string.label_rewind), rewindIntent)
 
-        notificationBuilder.addAction(R.drawable.ic_skip_previous_white_24px,
-                service.getString(R.string.label_previous), previousIntent)
+        if (mController?.metadata?.getLong(METADATA_HAS_NEXT_OR_PREVIOUS) == 1L) {
+            notificationBuilder.addAction(R.drawable.ic_skip_previous_white_24px,
+                    service.getString(R.string.label_previous), previousIntent)
+        }
 
         val label: String
         val icon: Int
@@ -259,8 +268,10 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
         }
         notificationBuilder.addAction(NotificationCompat.Action(icon, label, intent))
 
-        notificationBuilder.addAction(R.drawable.ic_skip_next_white_24px,
-                service.getString(R.string.label_next), nextIntent)
+        if (mController?.metadata?.getLong(METADATA_HAS_NEXT_OR_PREVIOUS) == 1L) {
+            notificationBuilder.addAction(R.drawable.ic_skip_next_white_24px,
+                    service.getString(R.string.label_next), nextIntent)
+        }
 
         notificationBuilder.addAction(R.drawable.ic_forward_30_white_24px,
                 service.getString(R.string.label_forward), forwardIntent)

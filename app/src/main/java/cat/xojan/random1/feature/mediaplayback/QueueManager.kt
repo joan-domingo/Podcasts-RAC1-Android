@@ -9,6 +9,7 @@ class QueueManager {
 
     companion object {
         val MEDIA_ID_PLAY_ALL = "play_all_podcasts_playlist"
+        val METADATA_HAS_NEXT_OR_PREVIOUS = "android.media.metadata.NEXT_or_PREVIOUS"
     }
 
     var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
@@ -46,10 +47,18 @@ class QueueManager {
                             currentPlaylist.size.toLong())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                             itemMediaData.extras?.getLong(PODCAST_DURATION)!! * 1000)
+                    .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious())
                     .build()
         } else {
             null
         }
+    }
+
+    private fun hasNextOrPrevious(): Long {
+        if (currentPlaylist.size == 1) {
+            return 0
+        }
+        return 1
     }
 
     fun setQueue(mediaId: String?) {

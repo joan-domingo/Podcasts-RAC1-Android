@@ -75,9 +75,7 @@ class Player(appContext: Context,
     }
 
     fun release() {
-        if (mediaPlayer.isPlaying) {
-            mediaPlayer.stop()
-        }
+        mediaPlayer.stop()
         mediaPlayer.reset()
         mediaPlayer.release()
 
