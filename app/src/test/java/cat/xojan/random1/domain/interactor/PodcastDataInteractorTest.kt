@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.interactor
 
 import android.app.DownloadManager
 import android.content.Context
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
@@ -21,6 +22,7 @@ class PodcastDataInteractorTest {
     private lateinit var downloadManager: DownloadManager
     private lateinit var context: Context
     private lateinit var downloadRepository: DownloadPodcastRepository
+    private lateinit var eventLogger: EventLogger
 
     private lateinit var podcastDataInteractor: PodcastDataInteractor
 
@@ -32,6 +34,7 @@ class PodcastDataInteractorTest {
         downloadManager = mock(DownloadManager::class.java)
         context = mock(Context::class.java)
         downloadRepository = mock(DownloadPodcastRepository::class.java)
+        eventLogger = EventLogger(null)
 
         podcastDataInteractor = PodcastDataInteractor(
                 programRepository,
@@ -39,7 +42,8 @@ class PodcastDataInteractorTest {
                 podcastPreferencesRepository,
                 downloadManager,
                 context,
-                downloadRepository)
+                downloadRepository,
+                eventLogger)
     }
 
     @Test

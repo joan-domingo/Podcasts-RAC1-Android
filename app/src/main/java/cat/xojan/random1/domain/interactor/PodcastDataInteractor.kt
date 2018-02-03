@@ -10,6 +10,7 @@ import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
 import cat.xojan.random1.data.PodcastJsonAdapter
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
@@ -37,7 +38,8 @@ class PodcastDataInteractor @Inject constructor(
         private val podcastPref: PodcastPreferencesRepository,
         private val downloadManager: DownloadManager,
         private val context: Context,
-        private val downloadRepo: DownloadPodcastRepository)
+        private val downloadRepo: DownloadPodcastRepository,
+        private val eventLogger: EventLogger)
 {
 
     companion object {
@@ -180,6 +182,7 @@ class PodcastDataInteractor @Inject constructor(
     }
 
     fun exportPodcasts(): Single<Unit> {
+        eventLogger.logExportPodcastsAction()
         return Single.create { subscriber ->
             try {
                 val iternalFileDir = context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS)
@@ -200,10 +203,13 @@ class PodcastDataInteractor @Inject constructor(
                         val dest = File(externalFilesDir, podcastTitle + ".mp3")
                         copy(podcastFile, dest)
                     }
+                    eventLogger.logExportedPodcast(audioId, podcastTitle)
                 }
                 subscriber.onSuccess(Unit)
+                eventLogger.logExportedPodcastsSuccess()
             } catch (e: Throwable) {
                 subscriber.onError(e)
+                eventLogger.logExportedPodcastsFail()
             }
         }
     }

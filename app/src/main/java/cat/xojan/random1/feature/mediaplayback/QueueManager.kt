@@ -2,14 +2,16 @@ package cat.xojan.random1.feature.mediaplayback
 
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DURATION
 
-class QueueManager {
+class QueueManager(val eventLogger: EventLogger) {
 
     companion object {
         val MEDIA_ID_PLAY_ALL = "play_all_podcasts_playlist"
         val METADATA_HAS_NEXT_OR_PREVIOUS = "android.media.metadata.NEXT_or_PREVIOUS"
+        val METADATA_PROGRAM_ID = "android.media.metadata.PROGRAM_ID"
     }
 
     var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
@@ -30,10 +32,17 @@ class QueueManager {
                 currentPlaylist.filter { it -> it.description.mediaId == mediaId }[0]
             }
 
+            if (mediaId == MEDIA_ID_PLAY_ALL) {
+                eventLogger.logPlayAllPodcasts()
+            } else {
+                eventLogger.logPlaySinglePodcast()
+            }
+
             val itemMediaData = item.description
             currentQueueId = item.queueId
 
             val downloadPath: String? = itemMediaData.extras?.getString(Podcast.PODCAST_FILE_PATH)
+            val programId: String? = itemMediaData.extras?.getString(Podcast.PODCAST_PROGRAM_ID)
             val mediaUri: String = downloadPath ?: itemMediaData.mediaUri.toString()
 
             MediaMetadataCompat.Builder()
@@ -48,6 +57,7 @@ class QueueManager {
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                             itemMediaData.extras?.getLong(PODCAST_DURATION)!! * 1000)
                     .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious())
+                    .putString(METADATA_PROGRAM_ID, programId)
                     .build()
         } else {
             null

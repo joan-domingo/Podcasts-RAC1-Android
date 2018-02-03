@@ -8,10 +8,12 @@ import android.os.PowerManager
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import cat.xojan.random1.domain.model.EventLogger
 
 class Player(appContext: Context,
              private val listener: PlayerListener,
-             private val audioManager: AudioManager): AudioManager.OnAudioFocusChangeListener {
+             private val audioManager: AudioManager,
+             private val eventLogger: EventLogger): AudioManager.OnAudioFocusChangeListener {
 
     private val TAG = Player::class.simpleName
     private val mediaPlayer: MediaPlayer = MediaPlayer()
@@ -41,6 +43,7 @@ class Player(appContext: Context,
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
                playMediaId(currentMedia)
+                eventLogger.logPlayedPodcast(currentMedia)
             } else {
                 mediaPlayer.start()
                 listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)

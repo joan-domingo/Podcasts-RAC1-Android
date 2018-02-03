@@ -7,13 +7,16 @@ import android.os.SystemClock
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import cat.xojan.random1.domain.model.EventLogger
 
-class PlaybackManager(appContext: Context, val queueManager: QueueManager,
-                      private val listener: PlaybackStateListener, audioManager: AudioManager):
-        PlayerListener {
+class PlaybackManager(appContext: Context,
+                      val queueManager: QueueManager,
+                      private val listener: PlaybackStateListener,
+                      audioManager: AudioManager,
+                      eventLogger: EventLogger): PlayerListener {
 
     private val TAG = PlaybackManager::class.simpleName
-    val player = Player(appContext, this, audioManager)
+    val player = Player(appContext, this, audioManager, eventLogger)
 
     val mediaSessionCallback = object : MediaSessionCompat.Callback() {
 

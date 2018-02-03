@@ -14,6 +14,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import cat.xojan.random1.Application
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.feature.home.ProgramFragment.Companion.MEDIA_ID_ROOT
 import cat.xojan.random1.feature.notification.NotificationManager
 import javax.inject.Inject
@@ -32,6 +33,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
 
     @Inject internal lateinit var mediaProvider: MediaProvider
     @Inject internal lateinit var queueManager: QueueManager
+    @Inject internal lateinit var eventLogger: EventLogger
 
     companion object {
         // The action of the incoming Intent indicating that it contains a command
@@ -86,7 +88,11 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
 
     private fun initPlaybackManager() {
         audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
-        playbackManager = PlaybackManager(this, queueManager, this, audioManager)
+        playbackManager = PlaybackManager(this,
+                queueManager,
+                this,
+                audioManager,
+                eventLogger)
     }
 
     private fun initQueueManager() {

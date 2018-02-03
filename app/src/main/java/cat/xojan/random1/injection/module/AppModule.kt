@@ -14,6 +14,7 @@ import cat.xojan.random1.domain.repository.PodcastRepository
 import cat.xojan.random1.domain.repository.ProgramRepository
 import cat.xojan.random1.feature.mediaplayback.MediaProvider
 import cat.xojan.random1.feature.mediaplayback.QueueManager
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.squareup.moshi.KotlinJsonAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Rfc3339DateJsonAdapter
@@ -75,7 +76,8 @@ class AppModule(private val application: Application) {
     fun providePodcastDataInteractor(podcastRepository: PodcastRepository,
                                      programRepository: ProgramRepository,
                                      podcastPrefRepository: PodcastPreferencesRepository,
-                                     downloadManager: DownloadManager)
+                                     downloadManager: DownloadManager,
+                                     eventLogger: EventLogger)
             : PodcastDataInteractor {
         return PodcastDataInteractor(
                 programRepository,
@@ -83,13 +85,14 @@ class AppModule(private val application: Application) {
                 podcastPrefRepository,
                 downloadManager,
                 application,
-                SharedPrefDownloadPodcastRepository(application))
+                SharedPrefDownloadPodcastRepository(application),
+                eventLogger)
     }
 
     @Provides
     @Singleton
     fun provideEventLogger(): EventLogger {
-        return EventLogger(application)
+        return EventLogger(FirebaseAnalytics.getInstance(application))
     }
 
     @Provides
@@ -126,7 +129,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideQueueManager(): QueueManager {
-        return QueueManager()
+    fun provideQueueManager(eventLogger: EventLogger): QueueManager {
+        return QueueManager(eventLogger)
     }
 }
