@@ -63,6 +63,10 @@ android {
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
 }
 
 androidExtensions {
