@@ -15,11 +15,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SeekBar
 import cat.xojan.random1.R
+import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_HAS_NEXT_OR_PREVIOUS
+import cat.xojan.random1.injection.component.DaggerMediaPlaybackFullScreenComponent
+import cat.xojan.random1.injection.component.MediaPlaybackFullScreenComponent
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
+import javax.inject.Inject
 
 class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         MediaBrowserProvider, SleepTimeSelectorDialogFragment.Listener {
@@ -32,7 +36,19 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
 
     private val TAG = MediaPlaybackFullScreenActivity::class.java.simpleName
 
+    val component: MediaPlaybackFullScreenComponent by lazy {
+        DaggerMediaPlaybackFullScreenComponent.builder()
+                .appComponent(applicationComponent)
+                .baseActivityModule(activityModule)
+                .build()
+    }
+
+    @Inject
+    internal lateinit var eventLogger: EventLogger
+
     private val handler = Handler()
+    private var countDownTimer: CountDownTimer? = null
+
     private val updateTimerTask = object : Runnable {
         override fun run() {
             val controller = MediaControllerCompat
@@ -46,6 +62,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        component.inject(this)
         setContentView(R.layout.activity_media_playback)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
@@ -100,24 +117,29 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
         })
 
         sleep_timer.setOnClickListener {
-            sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
-
             val dialogFragment = SleepTimeSelectorDialogFragment()
             dialogFragment.show(supportFragmentManager, SleepTimeSelectorDialogFragment.TAG)
         }
     }
 
     override fun onTimeSelected(milliseconds: Long) {
-        object : CountDownTimer(milliseconds, 1000) {
-            override fun onTick(millisUntilFinished: Long) {}
+        if (milliseconds == 0L) {
+            sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
+            countDownTimer?.cancel()
+        } else {
+            sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
+            countDownTimer = object: CountDownTimer(milliseconds, 1000) {
+                override fun onTick(millisUntilFinished: Long) {}
 
-            override fun onFinish() {
-                val controller = MediaControllerCompat.getMediaController(
-                        this@MediaPlaybackFullScreenActivity)
-                controller.transportControls.pause()
-                sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
-            }
-        }.start()
+                override fun onFinish() {
+                    val controller = MediaControllerCompat.getMediaController(
+                            this@MediaPlaybackFullScreenActivity)
+                    controller.transportControls.pause()
+                    sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
+                }
+            }.start()
+        }
+        eventLogger.logSleepTimerAction(milliseconds)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

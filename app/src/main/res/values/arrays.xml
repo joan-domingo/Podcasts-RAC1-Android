@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="sleep_timer_options">
+        <item>@string/do_not_stop</item>
         <item>@string/five_minutes</item>
         <item>@string/ten_minutes</item>
         <item>@string/fifteen_minutes</item>

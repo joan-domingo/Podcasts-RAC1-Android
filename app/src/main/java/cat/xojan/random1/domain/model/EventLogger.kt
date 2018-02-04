@@ -68,4 +68,10 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
     fun logPlaySinglePodcast() {
         firebaseAnalytics?.logEvent("podcast_play_single", null)
     }
+
+    fun logSleepTimerAction(milliseconds: Long) {
+        val bundle = Bundle()
+        bundle.putLong("time_milliseconds",milliseconds)
+        firebaseAnalytics?.logEvent("sleep_timer_action", bundle)
+    }
 }

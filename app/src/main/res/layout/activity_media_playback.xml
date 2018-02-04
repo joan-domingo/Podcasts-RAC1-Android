@@ -21,13 +21,14 @@
 
         <ImageView
             android:id="@+id/sleep_timer"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_timer_off_white_24px"
             android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentTop="true"
+            android:padding="10dp"/>
 
     </RelativeLayout>
 

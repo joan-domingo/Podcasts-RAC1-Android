@@ -29,13 +29,14 @@ class SleepTimeSelectorDialogFragment: DialogFragment() {
         val builder = AlertDialog.Builder(activity as Context)
                 .setItems(R.array.sleep_timer_options, { _, which ->
                     when (which) {
-                        0 -> listener.onTimeSelected(300000)
-                        1 -> listener.onTimeSelected(600000)
-                        2 -> listener.onTimeSelected(900000)
-                        3 -> listener.onTimeSelected(1200000)
-                        4 -> listener.onTimeSelected(1800000)
-                        5 -> listener.onTimeSelected(2700000)
-                        6 -> listener.onTimeSelected(3600000)
+                        0 -> listener.onTimeSelected(0)
+                        1 -> listener.onTimeSelected(300000)
+                        2 -> listener.onTimeSelected(600000)
+                        3 -> listener.onTimeSelected(900000)
+                        4 -> listener.onTimeSelected(1200000)
+                        5 -> listener.onTimeSelected(1800000)
+                        6 -> listener.onTimeSelected(2700000)
+                        7 -> listener.onTimeSelected(3600000)
                     }
                 })
         return builder.create()

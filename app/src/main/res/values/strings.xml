@@ -30,4 +30,5 @@
     <string name="thirty_minutes">30 minutes</string>
     <string name="forty_five_minutes">45 minutes</string>
     <string name="one_hour">1 hour</string>
+    <string name="do_not_stop">Do not stop</string>
 </resources>
