@@ -19,6 +19,7 @@ class QueueManager(val eventLogger: EventLogger) {
     private var currentAllPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     private lateinit var listener: MetaDataUpdateListener
     private var currentQueueId: Long = -1
+    private var isSinglePodcast = false
 
     fun initListener(mediaPlaybackService: MediaPlaybackService) {
         listener = mediaPlaybackService
@@ -78,23 +79,24 @@ class QueueManager(val eventLogger: EventLogger) {
         }
     }
 
-    private fun setCurrentQueue(mediaId: String?) {
+    private fun setCurrentQueue(mediaId: String) {
         currentPlaylist = if (mediaId != MEDIA_ID_PLAY_ALL) {
             listOf(potentialPlaylist.filter { it -> it.description.mediaId == mediaId }[0])
         } else {
             potentialPlaylist
         }
+        isSinglePodcast = mediaId != MEDIA_ID_PLAY_ALL
         currentAllPlaylist =  potentialPlaylist
         listener.updateQueue("Play Queue", currentPlaylist)
     }
 
-    fun updateMetadata(mediaId: String?) {
+    fun updateMetadata(mediaId: String) {
         val metadata = getMediaItem(mediaId)
         listener.updateMetadata(metadata)
     }
 
     fun getNextMediaId(): String? {
-        if (currentPlaylist.size == 1) {
+        if (currentPlaylist.size <= 1) {
             return null
         }
         if ((currentQueueId + 1) < currentPlaylist.size.toLong()) {
@@ -104,7 +106,7 @@ class QueueManager(val eventLogger: EventLogger) {
     }
 
     fun getPreviousMediaId(): String? {
-        if (currentPlaylist.size == 1) {
+        if (currentPlaylist.size <= 1) {
             return null
         }
         if ((currentQueueId - 1) >= 0) {
@@ -115,5 +117,15 @@ class QueueManager(val eventLogger: EventLogger) {
 
     fun getCurrentMediaId(): Long {
         return currentQueueId
+    }
+
+    fun updateDownloadsPlaylist(items: List<MediaSessionCompat.QueueItem>) {
+        potentialPlaylist = items
+        currentAllPlaylist = items
+        currentPlaylist = if (isSinglePodcast) {
+            currentPlaylist
+        } else {
+            items
+        }
     }
 }
