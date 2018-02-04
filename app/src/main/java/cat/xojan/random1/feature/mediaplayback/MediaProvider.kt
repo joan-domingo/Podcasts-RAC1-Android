@@ -120,9 +120,9 @@ class MediaProvider @Inject constructor(
     private fun handleNextDownloadedPodcasts(
             podcasts: List<MediaBrowserCompat.MediaItem>,
             result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>) {
-        result.sendResult(podcasts as MutableList<MediaBrowserCompat.MediaItem>?)
         queueManager.updateDownloadsPlaylist(mediaItemsToQueueItems(podcasts
                 as ArrayList<MediaBrowserCompat.MediaItem>))
+        result.sendResult(podcasts as MutableList<MediaBrowserCompat.MediaItem>?)
     }
 
     private fun handleNextSections(

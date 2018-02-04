@@ -1,5 +1,7 @@
 package cat.xojan.random1.testutil
 
+import android.support.v4.media.MediaDescriptionCompat
+import android.support.v4.media.session.MediaSessionCompat
 import cat.xojan.random1.domain.model.*
 import java.util.*
 
@@ -30,3 +32,18 @@ val program2 = Program("programId2", "programTitle2", listOf(), Images("http://i
 val program3 = Program("programId3", "programTitle3", listOf(), Images("http://image.url", "http://bigImage.url"),
         true)
 val programsMap = linkedMapOf(Pair("programId1", program1), Pair("programId2", program2), Pair("programId3", program3))
+
+// Description item
+val description1:MediaDescriptionCompat = MediaDescriptionCompat.Builder()
+        .build()
+val description2:MediaDescriptionCompat = MediaDescriptionCompat.Builder()
+        .build()
+val description3:MediaDescriptionCompat = MediaDescriptionCompat.Builder()
+        .build()
+
+// Queue item
+val queueItem1 = MediaSessionCompat.QueueItem(description1, 1)
+val queueItem2 = MediaSessionCompat.QueueItem(description2, 2)
+val queueItem3 = MediaSessionCompat.QueueItem(description3, 3)
+val queueList1Item = listOf(queueItem1)
+val queueItemList = listOf(queueItem1, queueItem2, queueItem3)

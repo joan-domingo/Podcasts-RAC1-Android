@@ -15,7 +15,7 @@ class QueueManager(val eventLogger: EventLogger) {
     }
 
     var potentialPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
-    private var currentPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
+    internal var currentPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     private var currentAllPlaylist: List<MediaSessionCompat.QueueItem> = listOf()
     private lateinit var listener: MetaDataUpdateListener
     private var currentQueueId: Long = -1
