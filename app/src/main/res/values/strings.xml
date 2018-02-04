@@ -23,4 +23,11 @@
     <string name="label_forward">Forward 30 seconds</string>
     <string name="label_rewind">Rewind 30 seconds</string>
     <string name="play_all_podcasts">Play all podcasts</string>
+    <string name="five_minutes">5 minutes</string>
+    <string name="ten_minutes">10 minutes</string>
+    <string name="fifteen_minutes">15 minutes</string>
+    <string name="twenty_minutes">20 minutes</string>
+    <string name="thirty_minutes">30 minutes</string>
+    <string name="forty_five_minutes">45 minutes</string>
+    <string name="one_hour">1 hour</string>
 </resources>

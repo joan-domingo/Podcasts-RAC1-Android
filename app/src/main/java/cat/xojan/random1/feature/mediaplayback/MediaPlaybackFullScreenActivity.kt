@@ -3,6 +3,7 @@ package cat.xojan.random1.feature.mediaplayback
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
@@ -20,7 +21,8 @@ import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_H
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_media_playback.*
 
-class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserProvider {
+class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
+        MediaBrowserProvider, SleepTimeSelectorDialogFragment.Listener {
 
     companion object {
         fun newIntent(context: Context): Intent {
@@ -96,6 +98,26 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(), MediaBrowserP
                 handler.postDelayed(updateTimerTask, 100)
             }
         })
+
+        sleep_timer.setOnClickListener {
+            sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
+
+            val dialogFragment = SleepTimeSelectorDialogFragment()
+            dialogFragment.show(supportFragmentManager, SleepTimeSelectorDialogFragment.TAG)
+        }
+    }
+
+    override fun onTimeSelected(milliseconds: Long) {
+        object : CountDownTimer(milliseconds, 1000) {
+            override fun onTick(millisUntilFinished: Long) {}
+
+            override fun onFinish() {
+                val controller = MediaControllerCompat.getMediaController(
+                        this@MediaPlaybackFullScreenActivity)
+                controller.transportControls.pause()
+                sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
+            }
+        }.start()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

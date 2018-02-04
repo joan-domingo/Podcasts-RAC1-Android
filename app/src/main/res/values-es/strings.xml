@@ -22,4 +22,11 @@
     <string name="label_forward">Endavant 30 segons</string>
     <string name="label_rewind">Endarrere 30 segons</string>
     <string name="play_all_podcasts">Reprodueix tots els podcasts</string>
+    <string name="ten_minutes">10 minuts</string>
+    <string name="five_minutes">5 minuts</string>
+    <string name="fifteen_minutes">15 minuts</string>
+    <string name="twenty_minutes">20 minuts</string>
+    <string name="thirty_minutes">30 minuts</string>
+    <string name="forty_five_minutes">45 minuts</string>
+    <string name="one_hour">1 hora</string>
 </resources>
