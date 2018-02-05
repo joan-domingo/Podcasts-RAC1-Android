@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,14 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
         programs_progress_bar.visibility = VISIBLE
         programs_load_button.setOnClickListener({onMediaControllerConnected()})
         adapter = ProgramListAdapter()
+        programs_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
+                    programs_recycler_view.stopScroll()
+                }
+            }
+        })
         programs_recycler_view.adapter = adapter
         setLayoutManager(resources.configuration.orientation)
     }
