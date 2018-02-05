@@ -11,6 +11,7 @@ import com.squareup.moshi.Rfc3339DateJsonAdapter
 import io.reactivex.observers.TestObserver
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.SocketPolicy
 import org.apache.commons.io.IOUtils
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.core.IsEqual.equalTo
@@ -20,6 +21,7 @@ import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.net.SocketTimeoutException
 import java.security.InvalidKeyException
 import java.util.*
 
@@ -111,6 +113,17 @@ class RemoteProgramRepositoryTest {
 
         remoteProgramRepository.getSections("programId104").subscribe(testSubscriber)
         testSubscriber.assertError(InvalidKeyException::class.java)
+    }
+
+    @Test
+    fun catches_timeout_exceptions() {
+        val mockResponse = MockResponse()
+        mockResponse.socketPolicy = SocketPolicy.NO_RESPONSE
+        mockWebServer.enqueue(mockResponse)
+        val testSubscriber = TestObserver<List<Program>>()
+
+        remoteProgramRepository.getPrograms().subscribe(testSubscriber)
+        testSubscriber.assertError(SocketTimeoutException::class.java)
     }
 
     @After

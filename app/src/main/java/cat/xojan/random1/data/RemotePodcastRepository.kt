@@ -14,31 +14,35 @@ class RemotePodcastRepository(private val service: Rac1ApiService): PodcastRepos
     override fun getPodcasts(programId: String, sectionId: String?, refresh:Boolean):
             Single<List<Podcast>> {
         return Single.create { subscriber ->
-            if (sectionId != null) {
-                if (sectionPodcasts.isEmpty() || refresh || programId != this.programId ||
-                        sectionId != this.sectionId) {
-                    val response = service.getPodcastData(programId, sectionId).execute()
-                    if (response.isSuccessful) {
-                        sectionPodcasts = response.body()!!.podcasts
-                    } else {
-                        subscriber.onError(Throwable(response.message()))
+            try {
+                if (sectionId != null) {
+                    if (sectionPodcasts.isEmpty() || refresh || programId != this.programId ||
+                            sectionId != this.sectionId) {
+                        val response = service.getPodcastData(programId, sectionId).execute()
+                        if (response.isSuccessful) {
+                            sectionPodcasts = response.body()!!.podcasts
+                        } else {
+                            subscriber.onError(Throwable(response.message()))
+                        }
                     }
-                }
-                subscriber.onSuccess(sectionPodcasts)
-            } else {
-                if (hourPodcasts.isEmpty() || refresh || programId != this.programId) {
-                    val response = service.getPodcastData(programId).execute()
-                    if (response.isSuccessful) {
-                        hourPodcasts = response.body()!!.podcasts
-                    } else {
-                        subscriber.onError(Throwable(response.message()))
+                    subscriber.onSuccess(sectionPodcasts)
+                } else {
+                    if (hourPodcasts.isEmpty() || refresh || programId != this.programId) {
+                        val response = service.getPodcastData(programId).execute()
+                        if (response.isSuccessful) {
+                            hourPodcasts = response.body()!!.podcasts
+                        } else {
+                            subscriber.onError(Throwable(response.message()))
+                        }
                     }
+                    subscriber.onSuccess(hourPodcasts)
                 }
-                subscriber.onSuccess(hourPodcasts)
-            }
 
-            this.programId = programId
-            this.sectionId = sectionId
+                this.programId = programId
+                this.sectionId = sectionId
+            } catch (e: Throwable) {
+                subscriber.onError(e)
+            }
         }
     }
 }

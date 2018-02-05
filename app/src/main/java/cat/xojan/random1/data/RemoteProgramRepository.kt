@@ -17,17 +17,21 @@ class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepos
 
     override fun getPrograms(): Single<List<Program>> {
         return Single.create { subscriber ->
-            if (programs.isEmpty()) {
-                val response = service.getProgramData().execute()
-                if (response.isSuccessful) {
-                    for (item in response.body()!!.programs) {
-                        programs.put(item.id, item)
+            try {
+                if (programs.isEmpty()) {
+                    val response = service.getProgramData().execute()
+                    if (response.isSuccessful) {
+                        for (item in response.body()!!.programs) {
+                            programs[item.id] = item
+                        }
+                    } else {
+                        subscriber.onError(Throwable(response.message()))
                     }
-                } else {
-                    subscriber.onError(Throwable(response.message()))
                 }
+                subscriber.onSuccess(programs.values.toList())
+            } catch (e: Throwable) {
+                subscriber.onError(e)
             }
-            subscriber.onSuccess(programs.values.toList())
         }
     }
 

@@ -5,6 +5,7 @@ import cat.xojan.random1.testutil.queueList1Item
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.mockito.Mockito.mock
 
@@ -23,7 +24,7 @@ class QueueManagerTest {
         queueManager.initListener(listener)
     }
 
-    @Test
+    @Test @Ignore
     fun all_podcasts_playlist_has_extended_media_controls() {
         // update playlist with 1 item
         queueManager.updateDownloadsPlaylist(queueList1Item)
