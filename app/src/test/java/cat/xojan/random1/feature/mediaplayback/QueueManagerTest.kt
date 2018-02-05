@@ -1,7 +1,6 @@
 package cat.xojan.random1.feature.mediaplayback
 
 import cat.xojan.random1.domain.model.EventLogger
-import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.MEDIA_ID_PLAY_ALL
 import cat.xojan.random1.testutil.queueList1Item
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -32,6 +31,6 @@ class QueueManagerTest {
         assertThat(queueManager.currentPlaylist.size, equalTo(1))
 
         // it has extended media controls
-        assertThat(queueManager.hasNextOrPrevious(MEDIA_ID_PLAY_ALL), equalTo(1L))
+        assertThat(queueManager.hasNextOrPrevious(), equalTo(1L))
     }
 }

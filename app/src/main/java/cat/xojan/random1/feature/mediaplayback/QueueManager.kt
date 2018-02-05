@@ -33,12 +33,6 @@ class QueueManager(val eventLogger: EventLogger) {
                 currentPlaylist.filter { it -> it.description.mediaId == mediaId }[0]
             }
 
-            if (mediaId == MEDIA_ID_PLAY_ALL) {
-                eventLogger.logPlayAllPodcasts()
-            } else {
-                eventLogger.logPlaySinglePodcast()
-            }
-
             val itemMediaData = item.description
             currentQueueId = item.queueId
 
@@ -63,7 +57,7 @@ class QueueManager(val eventLogger: EventLogger) {
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
                             currentPlaylist.size.toLong())
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                    .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious(mediaId))
+                    .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious())
                     .putString(METADATA_PROGRAM_ID, programId)
                     .build()
         } else {
@@ -71,8 +65,8 @@ class QueueManager(val eventLogger: EventLogger) {
         }
     }
 
-    internal fun hasNextOrPrevious(mediaId: String): Long {
-        if (mediaId != MEDIA_ID_PLAY_ALL) {
+    internal fun hasNextOrPrevious(): Long {
+        if (isSinglePodcast) {
             return 0
         }
         return 1
@@ -82,6 +76,11 @@ class QueueManager(val eventLogger: EventLogger) {
         mediaId?.let {
             setCurrentQueue(mediaId)
             updateMetadata(mediaId)
+            if (mediaId == MEDIA_ID_PLAY_ALL) {
+                eventLogger.logPlayAllPodcasts()
+            } else {
+                eventLogger.logPlaySinglePodcast()
+            }
         }
     }
 
