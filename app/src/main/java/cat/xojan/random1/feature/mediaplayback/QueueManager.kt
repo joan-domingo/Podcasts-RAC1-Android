@@ -21,8 +21,8 @@ class QueueManager(val eventLogger: EventLogger) {
     private var currentQueueId: Long = -1
     private var isSinglePodcast = false
 
-    fun initListener(mediaPlaybackService: MediaPlaybackService) {
-        listener = mediaPlaybackService
+    fun initListener(metadataUpdateListener: MetaDataUpdateListener) {
+        listener = metadataUpdateListener
     }
 
     fun getMediaItem(mediaId: String?): MediaMetadataCompat? {
@@ -42,9 +42,16 @@ class QueueManager(val eventLogger: EventLogger) {
             val itemMediaData = item.description
             currentQueueId = item.queueId
 
-            val downloadPath: String? = itemMediaData.extras?.getString(Podcast.PODCAST_FILE_PATH)
-            val programId: String? = itemMediaData.extras?.getString(Podcast.PODCAST_PROGRAM_ID)
+            val extras = itemMediaData.extras
+            val downloadPath: String? = extras?.getString(Podcast.PODCAST_FILE_PATH)
+            val programId: String? = extras?.getString(Podcast.PODCAST_PROGRAM_ID)
             val mediaUri: String = downloadPath ?: itemMediaData.mediaUri.toString()
+            val duration: Long = if (extras?.getLong(PODCAST_DURATION) != null) {
+                extras.getLong(PODCAST_DURATION) * 1000
+            } else {
+                0L
+            }
+
 
             MediaMetadataCompat.Builder()
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, itemMediaData.mediaId)
@@ -55,9 +62,8 @@ class QueueManager(val eventLogger: EventLogger) {
                     .putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, item.queueId + 1)
                     .putLong(MediaMetadataCompat.METADATA_KEY_NUM_TRACKS,
                             currentPlaylist.size.toLong())
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
-                            itemMediaData.extras?.getLong(PODCAST_DURATION)!! * 1000)
-                    .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious())
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                    .putLong(METADATA_HAS_NEXT_OR_PREVIOUS, hasNextOrPrevious(mediaId))
                     .putString(METADATA_PROGRAM_ID, programId)
                     .build()
         } else {
@@ -65,8 +71,8 @@ class QueueManager(val eventLogger: EventLogger) {
         }
     }
 
-    private fun hasNextOrPrevious(): Long {
-        if (currentPlaylist.size == 1) {
+    internal fun hasNextOrPrevious(mediaId: String): Long {
+        if (mediaId != MEDIA_ID_PLAY_ALL) {
             return 0
         }
         return 1
