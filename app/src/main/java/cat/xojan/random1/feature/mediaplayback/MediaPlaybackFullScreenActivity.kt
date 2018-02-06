@@ -18,6 +18,8 @@ import cat.xojan.random1.R
 import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
+import cat.xojan.random1.feature.mediaplayback.PlaybackManager.Companion.SET_SLEEP_TIMER
+import cat.xojan.random1.feature.mediaplayback.PlaybackManager.Companion.SLEEP_TIMER_MILLISECONDS
 import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_HAS_NEXT_OR_PREVIOUS
 import cat.xojan.random1.injection.component.DaggerMediaPlaybackFullScreenComponent
 import cat.xojan.random1.injection.component.MediaPlaybackFullScreenComponent
@@ -123,22 +125,12 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     }
 
     override fun onTimeSelected(milliseconds: Long) {
-        if (milliseconds == 0L) {
-            sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
-            countDownTimer?.cancel()
-        } else {
-            sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
-            countDownTimer = object: CountDownTimer(milliseconds, 1000) {
-                override fun onTick(millisUntilFinished: Long) {}
+        val controller = MediaControllerCompat.getMediaController(this)
 
-                override fun onFinish() {
-                    val controller = MediaControllerCompat.getMediaController(
-                            this@MediaPlaybackFullScreenActivity)
-                    controller.transportControls.pause()
-                    sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
-                }
-            }.start()
-        }
+        val bundle = Bundle()
+        bundle.putLong(SLEEP_TIMER_MILLISECONDS, milliseconds)
+        controller.transportControls.sendCustomAction(SET_SLEEP_TIMER, bundle)
+
         eventLogger.logSleepTimerAction(milliseconds)
     }
 
@@ -214,6 +206,11 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                     button_play_pause.visibility = View.GONE
                 }
             }
+        }
+
+        when (controller.playbackState.extras?.getLong(SLEEP_TIMER_MILLISECONDS)) {
+            0L -> sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
+            else ->  sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.os.CountDownTimer
 import android.os.PowerManager
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
@@ -17,6 +18,8 @@ class Player(appContext: Context,
 
     private val TAG = Player::class.simpleName
     private val mediaPlayer: MediaPlayer = MediaPlayer()
+    private var countDownTimer: CountDownTimer? = null
+    private var timerMilliseconds: Long = 0L
 
     init {
         mediaPlayer.setWakeMode(appContext, PowerManager.PARTIAL_WAKE_LOCK)
@@ -86,6 +89,7 @@ class Player(appContext: Context,
 
         @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
+        countDownTimer?.cancel()
     }
 
     fun seekTo(pos: Long) {
@@ -126,5 +130,27 @@ class Player(appContext: Context,
         } else {
             listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
         }
+    }
+
+    fun setSleepTimer(milliseconds: Long?) {
+        milliseconds?.let {
+            timerMilliseconds = milliseconds
+            if (milliseconds == 0L) {
+                countDownTimer?.cancel()
+            } else {
+                countDownTimer = object: CountDownTimer(milliseconds, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {}
+
+                    override fun onFinish() {
+                        pause()
+                    }
+                }.start()
+            }
+            notifyListener()
+        }
+    }
+
+    fun getTimerMilliseconds(): Long {
+        return timerMilliseconds
     }
 }

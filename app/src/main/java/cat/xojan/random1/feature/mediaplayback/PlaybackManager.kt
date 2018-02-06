@@ -15,6 +15,11 @@ class PlaybackManager(appContext: Context,
                       audioManager: AudioManager,
                       eventLogger: EventLogger): PlayerListener {
 
+    companion object {
+        val SET_SLEEP_TIMER = "set_sleep_timer"
+        val SLEEP_TIMER_MILLISECONDS = "sleep_timer_milliseconds"
+    }
+
     private val TAG = PlaybackManager::class.simpleName
     val player = Player(appContext, this, audioManager, eventLogger)
 
@@ -68,6 +73,13 @@ class PlaybackManager(appContext: Context,
             Log.d(TAG, "onFastForward")
             player.forward()
         }
+
+        override fun onCustomAction(action: String?, extras: Bundle?) {
+            Log.d(TAG, "onCustomAction: " + action)
+            when (action) {
+                SET_SLEEP_TIMER -> player.setSleepTimer(extras?.getLong(SLEEP_TIMER_MILLISECONDS))
+            }
+        }
     }
 
     override fun onCompletion() {
@@ -91,6 +103,12 @@ class PlaybackManager(appContext: Context,
             if (currentMediaId != -1L) {
                 stateBuilder.setActiveQueueItemId(currentMediaId)
             }
+
+            // Set the sleep time if exists
+            val milliseconds = player.getTimerMilliseconds()
+            val bundle = Bundle()
+            bundle.putLong(SLEEP_TIMER_MILLISECONDS, milliseconds)
+            stateBuilder.setExtras(bundle)
 
             stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime())
             listener.updatePlaybackState(stateBuilder.build())
