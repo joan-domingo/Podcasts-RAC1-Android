@@ -20,6 +20,7 @@ class Player(appContext: Context,
     private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var countDownTimer: CountDownTimer? = null
     private var timerMilliseconds: Long = 0L
+    private var timerLabel: String? = null
 
     init {
         mediaPlayer.setWakeMode(appContext, PowerManager.PARTIAL_WAKE_LOCK)
@@ -132,9 +133,10 @@ class Player(appContext: Context,
         }
     }
 
-    fun setSleepTimer(milliseconds: Long?) {
+    fun setSleepTimer(milliseconds: Long?, label: String?) {
         milliseconds?.let {
             timerMilliseconds = milliseconds
+            timerLabel = label
             if (milliseconds == 0L) {
                 countDownTimer?.cancel()
             } else {
@@ -142,6 +144,7 @@ class Player(appContext: Context,
                     override fun onTick(millisUntilFinished: Long) {}
 
                     override fun onFinish() {
+                        timerMilliseconds = 0
                         pause()
                     }
                 }.start()
@@ -152,5 +155,9 @@ class Player(appContext: Context,
 
     fun getTimerMilliseconds(): Long {
         return timerMilliseconds
+    }
+
+    fun getTimerLabel(): String? {
+        return timerLabel
     }
 }

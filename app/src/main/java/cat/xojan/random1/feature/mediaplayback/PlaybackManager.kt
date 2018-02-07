@@ -18,6 +18,7 @@ class PlaybackManager(appContext: Context,
     companion object {
         val SET_SLEEP_TIMER = "set_sleep_timer"
         val SLEEP_TIMER_MILLISECONDS = "sleep_timer_milliseconds"
+        val SLEEP_TIMER_LABEL = "sleep_timer_label"
     }
 
     private val TAG = PlaybackManager::class.simpleName
@@ -77,7 +78,9 @@ class PlaybackManager(appContext: Context,
         override fun onCustomAction(action: String?, extras: Bundle?) {
             Log.d(TAG, "onCustomAction: " + action)
             when (action) {
-                SET_SLEEP_TIMER -> player.setSleepTimer(extras?.getLong(SLEEP_TIMER_MILLISECONDS))
+                SET_SLEEP_TIMER -> player.setSleepTimer(
+                        extras?.getLong(SLEEP_TIMER_MILLISECONDS),
+                        extras?.getString(SLEEP_TIMER_LABEL))
             }
         }
     }
@@ -105,9 +108,9 @@ class PlaybackManager(appContext: Context,
             }
 
             // Set the sleep time if exists
-            val milliseconds = player.getTimerMilliseconds()
             val bundle = Bundle()
-            bundle.putLong(SLEEP_TIMER_MILLISECONDS, milliseconds)
+            bundle.putLong(SLEEP_TIMER_MILLISECONDS, player.getTimerMilliseconds())
+            bundle.putString(SLEEP_TIMER_LABEL, player.getTimerLabel())
             stateBuilder.setExtras(bundle)
 
             stateBuilder.setState(state, position, 1.0f, SystemClock.elapsedRealtime())

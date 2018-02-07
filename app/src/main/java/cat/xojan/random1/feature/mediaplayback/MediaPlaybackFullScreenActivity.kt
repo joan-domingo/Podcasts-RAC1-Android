@@ -3,7 +3,6 @@ package cat.xojan.random1.feature.mediaplayback
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.os.Handler
 import android.os.SystemClock
 import android.support.v4.media.MediaMetadataCompat
@@ -19,6 +18,7 @@ import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.feature.MediaBrowserProvider
 import cat.xojan.random1.feature.MediaPlayerBaseActivity
 import cat.xojan.random1.feature.mediaplayback.PlaybackManager.Companion.SET_SLEEP_TIMER
+import cat.xojan.random1.feature.mediaplayback.PlaybackManager.Companion.SLEEP_TIMER_LABEL
 import cat.xojan.random1.feature.mediaplayback.PlaybackManager.Companion.SLEEP_TIMER_MILLISECONDS
 import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_HAS_NEXT_OR_PREVIOUS
 import cat.xojan.random1.injection.component.DaggerMediaPlaybackFullScreenComponent
@@ -49,7 +49,6 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
     internal lateinit var eventLogger: EventLogger
 
     private val handler = Handler()
-    private var countDownTimer: CountDownTimer? = null
 
     private val updateTimerTask = object : Runnable {
         override fun run() {
@@ -118,17 +117,18 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             }
         })
 
-        sleep_timer.setOnClickListener {
+        sleep_timer_icon.setOnClickListener {
             val dialogFragment = SleepTimeSelectorDialogFragment()
             dialogFragment.show(supportFragmentManager, SleepTimeSelectorDialogFragment.TAG)
         }
     }
 
-    override fun onTimeSelected(milliseconds: Long) {
+    override fun onTimeSelected(milliseconds: Long, label: String?) {
         val controller = MediaControllerCompat.getMediaController(this)
 
         val bundle = Bundle()
         bundle.putLong(SLEEP_TIMER_MILLISECONDS, milliseconds)
+        bundle.putString(SLEEP_TIMER_LABEL, label)
         controller.transportControls.sendCustomAction(SET_SLEEP_TIMER, bundle)
 
         eventLogger.logSleepTimerAction(milliseconds)
@@ -208,9 +208,20 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             }
         }
 
-        when (controller.playbackState.extras?.getLong(SLEEP_TIMER_MILLISECONDS)) {
-            0L -> sleep_timer.setImageResource(R.drawable.ic_timer_off_white_24px)
-            else ->  sleep_timer.setImageResource(R.drawable.ic_timer_white_24px)
+        val timeInMilliseconds: Long = controller.playbackState
+                .extras?.getLong(SLEEP_TIMER_MILLISECONDS) ?: 0L
+        val timerLabel = controller.playbackState
+                .extras?.getString(SLEEP_TIMER_LABEL)
+        when (timeInMilliseconds) {
+            0L -> {
+                sleep_timer_icon.setImageResource(R.drawable.ic_timer_off_white_24px)
+                sleep_timer.visibility = View.GONE
+            }
+            else ->  {
+                sleep_timer.visibility = View.VISIBLE
+                sleep_timer.text = timerLabel
+                sleep_timer_icon.setImageResource(R.drawable.ic_timer_white_24px)
+            }
         }
     }
 

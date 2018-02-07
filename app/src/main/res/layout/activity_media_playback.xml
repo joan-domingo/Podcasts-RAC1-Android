@@ -20,7 +20,7 @@
             tools:src="@drawable/default_rac1" />
 
         <ImageView
-            android:id="@+id/sleep_timer"
+            android:id="@+id/sleep_timer_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
@@ -29,6 +29,14 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:padding="10dp"/>
+
+        <TextView
+            android:id="@+id/sleep_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/sleep_timer_icon"
+            android:layout_marginTop="8dp"
+            tools:text="00:00"/>
 
     </RelativeLayout>
 
