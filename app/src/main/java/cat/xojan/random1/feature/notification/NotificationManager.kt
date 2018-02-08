@@ -202,7 +202,7 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 .setContentTitle(service.getString(R.string.app_name))
                 .setContentText(description?.title)
 
-        setNotificationPlaybackState(notificationBuilder, mPlaybackState)
+        setNotificationPlaybackState(notificationBuilder)
 
         val placeholder = BitmapFactory.decodeResource(service.resources, R.drawable.default_rac1)
         Picasso.with(service)
@@ -213,11 +213,13 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
 
                     override fun onBitmapFailed(errorDrawable: Drawable?) {
                         notificationBuilder.setLargeIcon(placeholder)
+                        setNotificationPlaybackState(notificationBuilder)
                         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                     }
 
                     override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                         notificationBuilder.setLargeIcon(bitmap)
+                        setNotificationPlaybackState(notificationBuilder)
                         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build())
                     }
 
@@ -284,17 +286,16 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
-    private fun setNotificationPlaybackState(builder: NotificationCompat.Builder,
-                                             playbackState: PlaybackStateCompat?) {
-        Log.d(TAG, "updateNotificationPlaybackState. mPlaybackState=" + playbackState)
-        if (playbackState == null || !mStarted) {
+    private fun setNotificationPlaybackState(builder: NotificationCompat.Builder) {
+        Log.d(TAG, "updateNotificationPlaybackState. mPlaybackState=" + mPlaybackState)
+        if (mPlaybackState == null || !mStarted) {
             Log.d(TAG, "updateNotificationPlaybackState. cancelling notification!")
             service.stopForeground(true)
             return
         }
 
         // Make sure that the notification can be dismissed by the user when we are not playing:
-        builder.setOngoing(playbackState.state == PlaybackStateCompat.STATE_PLAYING)
+        builder.setOngoing(mPlaybackState?.state == PlaybackStateCompat.STATE_PLAYING)
     }
 
     private val mCb = object : MediaControllerCompat.Callback() {
