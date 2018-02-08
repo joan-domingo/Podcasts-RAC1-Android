@@ -1,6 +1,9 @@
 package cat.xojan.random1.feature.mediaplayback
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.media.AudioAttributes
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -11,16 +14,21 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import cat.xojan.random1.domain.model.EventLogger
 
-class Player(appContext: Context,
+
+
+class Player(private val appContext: Context,
              private val listener: PlayerListener,
              private val audioManager: AudioManager,
-             private val eventLogger: EventLogger): AudioManager.OnAudioFocusChangeListener {
+             private val eventLogger: EventLogger)
+    : AudioManager.OnAudioFocusChangeListener, BroadcastReceiver() {
 
     private val TAG = Player::class.simpleName
     private val mediaPlayer: MediaPlayer = MediaPlayer()
     private var countDownTimer: CountDownTimer? = null
     private var timerMilliseconds: Long = 0L
     private var timerLabel: String? = null
+    private val intentFilter = IntentFilter(AudioManager.ACTION_AUDIO_BECOMING_NOISY)
+
 
     init {
         mediaPlayer.setWakeMode(appContext, PowerManager.PARTIAL_WAKE_LOCK)
@@ -43,6 +51,7 @@ class Player(appContext: Context,
         @Suppress("DEPRECATION")
         val result = audioManager
                 .requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+        appContext.registerReceiver(this, intentFilter)
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
@@ -75,6 +84,7 @@ class Player(appContext: Context,
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
         @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
+        appContext.unregisterReceiver(this)
     }
 
     fun getCurrentPosition(): Long {
@@ -159,5 +169,12 @@ class Player(appContext: Context,
 
     fun getTimerLabel(): String? {
         return timerLabel
+    }
+
+    override fun onReceive(context: Context, intent: Intent?) {
+        Log.d(TAG, "onReceive()")
+        if (AudioManager.ACTION_AUDIO_BECOMING_NOISY == intent?.action) {
+            pause()
+        }
     }
 }
