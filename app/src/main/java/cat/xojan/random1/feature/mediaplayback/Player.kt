@@ -43,6 +43,7 @@ class Player(private val appContext: Context,
         mediaPlayer.setOnCompletionListener { mediaPlayer ->
             mediaPlayer.release()
         }
+        appContext.registerReceiver(this, intentFilter)
     }
 
     fun isPlaying() = mediaPlayer.isPlaying
@@ -51,7 +52,6 @@ class Player(private val appContext: Context,
         @Suppress("DEPRECATION")
         val result = audioManager
                 .requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
-        appContext.registerReceiver(this, intentFilter)
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
@@ -84,7 +84,6 @@ class Player(private val appContext: Context,
         listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PAUSED)
         @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
-        appContext.unregisterReceiver(this)
     }
 
     fun getCurrentPosition(): Long {
@@ -101,6 +100,7 @@ class Player(private val appContext: Context,
         @Suppress("DEPRECATION")
         audioManager.abandonAudioFocus(this)
         countDownTimer?.cancel()
+        appContext.unregisterReceiver(this)
     }
 
     fun seekTo(pos: Long) {
