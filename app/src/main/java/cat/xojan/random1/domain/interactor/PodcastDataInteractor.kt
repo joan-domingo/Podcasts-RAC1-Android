@@ -9,13 +9,13 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
-import cat.xojan.random1.domain.model.PodcastJsonAdapter
 import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.domain.model.PodcastJsonAdapter
 import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
@@ -154,13 +154,13 @@ class PodcastDataInteractor @Inject constructor(
     }
 
     fun deleteDownloading(reference: Long) {
-        var podcast: MediaDescriptionCompat? = null
-        for (pod in downloadRepo.getDownloadingPodcasts()) {
-            if (reference == pod.extras?.getLong(PODCAST_DOWNLOAD_REFERENCE)) {
-                podcast = pod
-            }
+        val podcast: MediaDescriptionCompat? = downloadRepo.getDownloadingPodcasts()
+                .lastOrNull {
+                    reference == it.extras?.getLong(PODCAST_DOWNLOAD_REFERENCE)
+                }
+        podcast?.let {
+            downloadRepo.deleteDownloadingPodcast(podcast)
         }
-        downloadRepo.deleteDownloadingPodcast(podcast!!)
     }
 
     fun addDownload(audioId: String) {

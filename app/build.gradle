@@ -34,6 +34,7 @@ android {
         debug {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
+            //TODO remove next 2 lines at some point
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
