@@ -329,7 +329,6 @@ class NotificationManager(private val service: MediaPlaybackService): BroadcastR
                 updateMediaSessionToken()
             } catch (e: RemoteException) {
                 Log.e(TAG, "could not connect media controller ")
-                e.printStackTrace()
             }
 
         }

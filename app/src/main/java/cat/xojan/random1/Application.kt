@@ -4,6 +4,7 @@ import android.support.multidex.MultiDexApplication
 import cat.xojan.random1.injection.component.AppComponent
 import cat.xojan.random1.injection.component.DaggerAppComponent
 import cat.xojan.random1.injection.module.AppModule
+import com.crashlytics.android.Crashlytics
 import com.squareup.leakcanary.LeakCanary
 import io.reactivex.exceptions.UndeliverableException
 import io.reactivex.plugins.RxJavaPlugins
@@ -36,10 +37,10 @@ class Application : MultiDexApplication() {
     private fun setErrorHandler() {
         RxJavaPlugins.setErrorHandler { e ->
             if (e is UndeliverableException) {
-                e.printStackTrace()
+                Crashlytics.logException(e)
             }
             if (e is InterruptedException) {
-                e.printStackTrace()
+                Crashlytics.logException(e)
             }
         }
     }

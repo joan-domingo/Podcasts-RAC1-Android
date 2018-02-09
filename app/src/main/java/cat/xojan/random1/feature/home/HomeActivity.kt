@@ -144,8 +144,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             { Log.d(TAG, "Old podcasts exported")},
-                            {e -> Log.d(TAG, "Error exporting old podcasts: "
-                                    + e.printStackTrace())}
+                            {e -> crashReporter.logException(e)}
                     ))
         }
     }
