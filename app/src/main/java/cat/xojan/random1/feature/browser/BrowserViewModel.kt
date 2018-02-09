@@ -7,6 +7,7 @@ import cat.xojan.random1.domain.interactor.ProgramDataInteractor
 import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
+import cat.xojan.random1.domain.model.PodcastState
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
@@ -54,7 +55,7 @@ constructor(
         for (mediaItem in loaded) {
             val podcast = mediaItem.description
             podcast.extras?.putString(Podcast.PODCAST_FILE_PATH, null)
-            podcast.extras?.putSerializable(Podcast.PODCAST_STATE, Podcast.State.LOADED)
+            podcast.extras?.putSerializable(Podcast.PODCAST_STATE, PodcastState.LOADED)
         }
 
         for (mediaItem in updated) {
@@ -66,7 +67,7 @@ constructor(
                         updatedPodcast.extras?.getString(Podcast.PODCAST_FILE_PATH))
                 description.extras?.putSerializable(Podcast.PODCAST_STATE,
                         updatedPodcast.extras?.getSerializable(Podcast.PODCAST_STATE)
-                                as Podcast.State)
+                                as PodcastState)
             }
         }
         return loaded

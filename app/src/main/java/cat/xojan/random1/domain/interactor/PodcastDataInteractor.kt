@@ -9,13 +9,14 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
-import cat.xojan.random1.data.PodcastJsonAdapter
+import cat.xojan.random1.domain.model.PodcastJsonAdapter
 import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
@@ -122,7 +123,7 @@ class PodcastDataInteractor @Inject constructor(
                     podcasts -> Observable.just(podcasts)
                         .flatMapIterable { p -> p }
                         .filter { p -> p.description.extras?.getSerializable(PODCAST_STATE) ==
-                                Podcast.State.DOWNLOADED }
+                                PodcastState.DOWNLOADED }
                         .sorted { p1, p2 -> (p2.description.extras?.getSerializable(PODCAST_DATE)
                                 as Date).compareTo(p1.description.extras?.getSerializable
                             (PODCAST_DATE) as Date) }

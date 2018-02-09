@@ -3,10 +3,11 @@ package cat.xojan.random1.data
 import android.content.Context
 import android.content.SharedPreferences
 import android.support.v4.media.MediaDescriptionCompat
-import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.MediaDescriptionCompatJsonAdapter
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -35,7 +36,7 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
     }
 
     override fun addDownloadingPodcast(podcast: MediaDescriptionCompat): Boolean {
-        podcast.extras?.putSerializable(PODCAST_STATE, Podcast.State.DOWNLOADING)
+        podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.DOWNLOADING)
         val podcasts = getDownloadingPodcasts()
         podcasts.add(podcast)
         return sharedPref.edit()
@@ -55,7 +56,7 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
         val podcast = getDownloadingPodcast(mediaId)
         if (podcast != null && deleteDownloadingPodcast(podcast)) {
             podcast.extras?.putString(PODCAST_FILE_PATH, filePath)
-            podcast.extras?.putSerializable(PODCAST_STATE, Podcast.State.DOWNLOADED)
+            podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.DOWNLOADED)
             addDownloadedPodcast(podcast)
         }
     }

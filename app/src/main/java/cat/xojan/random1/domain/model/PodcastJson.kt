@@ -1,7 +1,4 @@
-package cat.xojan.random1.data
-
-import cat.xojan.random1.domain.model.Audio
-import cat.xojan.random1.domain.model.Podcast
+package cat.xojan.random1.domain.model
 
 data class PodcastJson(
         val appMobileTitle: String,
@@ -11,6 +8,6 @@ data class PodcastJson(
         val mFilePath: String?,
         val mImageUrl: String?,
         val mProgramId: String?,
-        val mState: Podcast.State,
+        val mState: PodcastState,
         val path: String
 )

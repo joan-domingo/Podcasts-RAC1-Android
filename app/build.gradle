@@ -13,8 +13,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
-        versionCode 27
-        versionName "3.0.0"
+        versionCode 29
+        versionName "3.0.2"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -34,9 +34,11 @@ android {
         debug {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (project.rootProject.file('gradle.properties').exists()) {
                 signingConfig signingConfigs.release

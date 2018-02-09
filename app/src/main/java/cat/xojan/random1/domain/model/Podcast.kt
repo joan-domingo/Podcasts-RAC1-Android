@@ -7,16 +7,16 @@ import java.util.*
 
 @Parcelize
 data class Podcast(var audio: Audio,
-              var path: String,
-              var filePath: String?,
-              var dateTime: Date?,
-              var durationSeconds: Long,
-              var programId: String?,
-              private var _imageUrl: String?,
-              private var _bigImageUrl: String?,
-              private var _state: State?,
-              private var appMobileTitle: String,
-              var downloadReference: Long = 0
+                   var path: String,
+                   var filePath: String?,
+                   var dateTime: Date?,
+                   var durationSeconds: Long,
+                   var programId: String?,
+                   private var _imageUrl: String?,
+                   private var _bigImageUrl: String?,
+                   private var _state: PodcastState?,
+                   private var appMobileTitle: String,
+                   var downloadReference: Long = 0
 ) : Parcelable {
 
     companion object {
@@ -44,12 +44,12 @@ data class Podcast(var audio: Audio,
             _bigImageUrl = value
         }
 
-    var state: State
+    var state: PodcastState
         get() {
             _state?.let {
-                return _state as State
+                return _state as PodcastState
             }
-            return State.LOADED
+            return PodcastState.LOADED
         }
         set(value) {
             _state = value
@@ -59,12 +59,6 @@ data class Podcast(var audio: Audio,
     @IgnoredOnParcel
     var audioId: String? = null
         get() = audio.id
-
-    enum class State {
-        LOADED,
-        DOWNLOADING,
-        DOWNLOADED
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

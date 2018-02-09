@@ -10,9 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import cat.xojan.random1.R
-import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.MEDIA_ID_PLAY_ALL
 import com.squareup.picasso.Picasso
 import kotlinx.android.extensions.LayoutContainer
@@ -37,7 +37,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
         for (mediaItem in podcasts) {
             val podcast = mediaItem.description
             podcast.extras?.putString(PODCAST_FILE_PATH, null)
-            podcast.extras?.putSerializable(PODCAST_STATE, Podcast.State.LOADED)
+            podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.LOADED)
         }
 
         for (p in updatedStatePodcasts) {
@@ -48,7 +48,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                 description.extras?.putString(PODCAST_FILE_PATH,
                         updatedPodcast.extras?.getString(PODCAST_FILE_PATH))
                 description.extras?.putSerializable(PODCAST_STATE,
-                        updatedPodcast.extras?.getSerializable(PODCAST_STATE) as Podcast.State)
+                        updatedPodcast.extras?.getSerializable(PODCAST_STATE) as PodcastState)
             }
         }
         notifyDataSetChanged()
@@ -109,23 +109,23 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                         .transportControls.playFromMediaId(item.mediaId, null)
             }
 
-            val state = podcast.extras?.getSerializable(PODCAST_STATE) as Podcast.State
+            val state = podcast.extras?.getSerializable(PODCAST_STATE) as PodcastState
             when (state) {
-                Podcast.State.LOADED -> podcast_icon.setImageResource(R.drawable.ic_arrow_down)
-                Podcast.State.DOWNLOADING -> {
+                PodcastState.LOADED -> podcast_icon.setImageResource(R.drawable.ic_arrow_down)
+                PodcastState.DOWNLOADING -> {
                     podcast_icon.setImageResource(R.drawable.animated_arrow)
                     if (podcast_icon.drawable is Animatable) {
                         (podcast_icon.drawable as Animatable).start()
                     }
                 }
-                Podcast.State.DOWNLOADED -> podcast_icon.setImageResource(R.drawable.ic_delete)
+                PodcastState.DOWNLOADED -> podcast_icon.setImageResource(R.drawable.ic_delete)
             }
 
             podcast_icon.setOnClickListener {
                 when (state) {
-                    Podcast.State.LOADED -> viewModel.downloadPodcast(podcast)
-                    Podcast.State.DOWNLOADING -> {}
-                    Podcast.State.DOWNLOADED -> viewModel.deletePodcast(podcast)
+                    PodcastState.LOADED -> viewModel.downloadPodcast(podcast)
+                    PodcastState.DOWNLOADING -> {}
+                    PodcastState.DOWNLOADED -> viewModel.deletePodcast(podcast)
                 }
                 viewModel.refreshDownloadedPodcast()
             }

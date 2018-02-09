@@ -1,9 +1,8 @@
-package cat.xojan.random1.data
+package cat.xojan.random1.domain.model
 
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.media.MediaDescriptionCompat
-import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_BIG_IMAGE_URL
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
@@ -24,7 +23,7 @@ class MediaDescriptionCompatJsonAdapter {
                 item.title.toString(),
                 item.mediaUri.toString(),
                 item.iconUri.toString(),
-                item.extras?.getSerializable(PODCAST_STATE) as Podcast.State,
+                item.extras?.getSerializable(PODCAST_STATE) as PodcastState,
                 item.extras?.getLong(PODCAST_DOWNLOAD_REFERENCE),
                 item.extras?.getString(PODCAST_FILE_PATH),
                 item.extras?.getString(PODCAST_PROGRAM_ID),

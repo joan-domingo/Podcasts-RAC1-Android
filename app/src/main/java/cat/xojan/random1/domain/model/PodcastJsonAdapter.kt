@@ -1,6 +1,5 @@
-package cat.xojan.random1.data
+package cat.xojan.random1.domain.model
 
-import cat.xojan.random1.domain.model.Podcast
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.text.SimpleDateFormat
