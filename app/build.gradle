@@ -34,12 +34,9 @@ android {
         debug {
             applicationIdSuffix ".dev"
             versionNameSuffix "-dev"
-            //TODO remove next 2 lines at some point
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (project.rootProject.file('gradle.properties').exists()) {
                 signingConfig signingConfigs.release

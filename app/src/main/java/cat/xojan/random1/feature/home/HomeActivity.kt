@@ -33,8 +33,8 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     @Inject internal lateinit var crashReporter: CrashReporter
     private val compositeDisposable = CompositeDisposable()
 
-    private lateinit var programFragment: ProgramFragment
-    private lateinit var downloadsFragment: DownloadsFragment
+    private var programFragment: ProgramFragment? = null
+    private var downloadsFragment: DownloadsFragment? = null
 
     override val component: HomeComponent by lazy {
         DaggerHomeComponent.builder()
@@ -57,8 +57,8 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     }
 
     override fun onMediaControllerConnected() {
-        programFragment.onMediaControllerConnected()
-        downloadsFragment.onMediaControllerConnected()
+        programFragment?.onMediaControllerConnected()
+        downloadsFragment?.onMediaControllerConnected()
     }
 
     private fun initView(savedInstanceState: Bundle?) {
@@ -74,8 +74,8 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
                     DownloadsFragment.TAG) as DownloadsFragment
         }
 
-        pageAdapter.addFragment(programFragment)
-        pageAdapter.addFragment(downloadsFragment)
+        pageAdapter.addFragment(programFragment!!)
+        pageAdapter.addFragment(downloadsFragment!!)
 
         viewPager.adapter = pageAdapter
         tabLayout.setupWithViewPager(viewPager)
@@ -120,8 +120,12 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment)
-        supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment)
+        programFragment?.let {
+            supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment)
+        }
+        downloadsFragment?.let {
+            supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment)
+        }
     }
 
     private fun exportPodcasts() {
