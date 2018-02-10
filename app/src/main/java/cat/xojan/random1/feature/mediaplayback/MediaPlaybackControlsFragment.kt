@@ -40,7 +40,8 @@ class MediaPlaybackControlsFragment : Fragment() {
         }
         media_controls_view.setOnClickListener {
             val intent = MediaPlaybackFullScreenActivity.newIntent(activity!!.baseContext)
-            intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             activity?.baseContext?.startActivity(intent)
         }
     }
