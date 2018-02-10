@@ -58,7 +58,8 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     override fun onStart() {
         super.onStart()
         try {
-            controlsFragment = supportFragmentManager.findFragmentById(R.id.fragment_playback_controls)
+            controlsFragment = supportFragmentManager
+                    .findFragmentById(R.id.fragment_playback_controls)
                     as MediaPlaybackControlsFragment
         } catch (t:Throwable) {}
         hidePlaybackControls()

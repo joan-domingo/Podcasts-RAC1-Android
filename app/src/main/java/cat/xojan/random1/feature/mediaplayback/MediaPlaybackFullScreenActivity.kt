@@ -206,21 +206,20 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                     button_play_pause.visibility = View.GONE
                 }
             }
-        }
 
-        val timeInMilliseconds: Long = controller.playbackState
-                .extras?.getLong(SLEEP_TIMER_MILLISECONDS) ?: 0L
-        val timerLabel = controller.playbackState
-                .extras?.getString(SLEEP_TIMER_LABEL)
-        when (timeInMilliseconds) {
-            0L -> {
-                sleep_timer_icon.setImageResource(R.drawable.ic_timer_off_white_24px)
-                sleep_timer.visibility = View.GONE
-            }
-            else ->  {
-                sleep_timer.visibility = View.VISIBLE
-                sleep_timer.text = timerLabel
-                sleep_timer_icon.setImageResource(R.drawable.ic_timer_white_24px)
+            val timeInMilliseconds: Long = playbackState.extras
+                    ?.getLong(SLEEP_TIMER_MILLISECONDS) ?: 0L
+            val timerLabel = playbackState.extras?.getString(SLEEP_TIMER_LABEL)
+            when (timeInMilliseconds) {
+                0L -> {
+                    sleep_timer_icon.setImageResource(R.drawable.ic_timer_off_white_24px)
+                    sleep_timer.visibility = View.GONE
+                }
+                else ->  {
+                    sleep_timer.visibility = View.VISIBLE
+                    sleep_timer.text = timerLabel
+                    sleep_timer_icon.setImageResource(R.drawable.ic_timer_white_24px)
+                }
             }
         }
     }

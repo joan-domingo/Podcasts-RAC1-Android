@@ -99,17 +99,17 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
         queueManager.initListener(this)
     }
 
-    override fun onStartCommand(startIntent: Intent, flags: Int, startId: Int): Int {
-        val action = startIntent.action
-        val command = startIntent.getStringExtra(CMD_NAME)
-        Log.d(TAG, "action: $action, command: $command")
-        if (ACTION_CMD == action) {
-            if (CMD_PAUSE == command) {
+    override fun onStartCommand(startIntent: Intent?, flags: Int, startId: Int): Int {
+        startIntent?.let {
+            val action = startIntent.action
+            val command = startIntent.getStringExtra(CMD_NAME)
+            Log.d(TAG, "action: $action, command: $command")
+            if (ACTION_CMD == action && CMD_PAUSE == command) {
                 playbackManager.handlePauseRequest()
+            } else {
+                // Try to handle the intent as a media button event wrapped by MediaButtonReceiver
+                MediaButtonReceiver.handleIntent(mediaSession, startIntent)
             }
-        } else {
-            // Try to handle the intent as a media button event wrapped by MediaButtonReceiver
-            MediaButtonReceiver.handleIntent(mediaSession, startIntent)
         }
         return START_STICKY
     }
