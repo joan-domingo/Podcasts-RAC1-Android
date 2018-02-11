@@ -73,6 +73,10 @@ androidExtensions {
     experimental true
 }
 
+kapt {
+    useBuildCache = true
+}
+
 repositories {
     mavenCentral()
     jcenter()
