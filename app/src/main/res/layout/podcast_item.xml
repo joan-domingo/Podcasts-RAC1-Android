@@ -63,7 +63,7 @@
         android:layout_alignParentRight="true"
         android:contentDescription="@string/download_program"
         android:layout_marginLeft="8dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:tintMode="src_in" />
 
 </RelativeLayout>

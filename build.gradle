@@ -39,7 +39,7 @@ allprojects {
 ext {
     buildTools = '27.0.3'
     compileSdk = 27
-    minSdk = 21
+    minSdk = 19
     targetSdk = 27
 
     supportLib = '27.0.2'
