@@ -122,7 +122,7 @@ class MediaPlaybackControlsFragment : Fragment() {
     // Receive callbacks from the MediaController. Here we update our state such as which queue
     // is being shown, the current title and description and the PlaybackState.
     private val mediaControllerCallback = object : MediaControllerCompat.Callback() {
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             this@MediaPlaybackControlsFragment.onPlaybackStateChanged(state)
         }
 

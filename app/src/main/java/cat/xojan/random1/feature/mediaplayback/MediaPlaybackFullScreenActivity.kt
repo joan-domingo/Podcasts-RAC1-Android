@@ -264,7 +264,7 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
             updateDuration(metadata)
         }
 
-        override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+        override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
             super.onPlaybackStateChanged(state)
             updateView()
         }

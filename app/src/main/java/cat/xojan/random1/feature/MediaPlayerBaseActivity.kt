@@ -37,7 +37,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
                 },
                 null)
         mediaControllerCallback = object : MediaControllerCompat.Callback() {
-            override fun onPlaybackStateChanged(state: PlaybackStateCompat) {
+            override fun onPlaybackStateChanged(state: PlaybackStateCompat?) {
                 if (shouldShowControls()) {
                     showPlaybackControls()
                 } else {

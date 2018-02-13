@@ -23,7 +23,7 @@
             android:id="@+id/sleep_timer_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:tintMode="src_in"
             app:srcCompat="@drawable/ic_timer_off_white_24px"
             android:layout_alignParentRight="true"
@@ -90,7 +90,7 @@
                 android:id="@+id/button_fast_rewind"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_replay_30_white_24px"/>
 
@@ -102,7 +102,7 @@
                 android:id="@+id/button_previous"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_previous_white_24px"/>
 
@@ -118,7 +118,7 @@
                     android:id="@+id/button_play_pause"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:tintMode="src_in"
                     app:srcCompat="@drawable/ic_pause" />
 
@@ -138,7 +138,7 @@
                 android:id="@+id/button_next"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_skip_next_white_24px"/>
 
@@ -150,7 +150,7 @@
                 android:id="@+id/button_fast_forward"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:tintMode="src_in"
                 app:srcCompat="@drawable/ic_forward_30_white_24px"/>
 
