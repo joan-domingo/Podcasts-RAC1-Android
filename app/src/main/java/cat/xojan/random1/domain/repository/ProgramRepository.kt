@@ -7,9 +7,9 @@ import io.reactivex.Single
 interface ProgramRepository {
     fun getPrograms(): Single<List<Program>>
 
-    fun getProgram(programId: String): Program?
+    fun getProgram(programId: String): Single<Program>
 
-    fun hasSections(programId: String): Boolean
+    fun hasSections(programId: String): Single<Boolean>
 
     fun getSections(programId: String): Single<List<Section>>
 }

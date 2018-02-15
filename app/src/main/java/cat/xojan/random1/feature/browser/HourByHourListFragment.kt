@@ -80,8 +80,16 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         val programId = arguments?.getString(ARG_PROGRAM)
-        if (viewModel.hasSections(programId)) {
-            inflater!!.inflate(R.menu.hour_by_hour, menu)
+        programId?.let {
+            compositeDisposable.add(
+                viewModel.hasSections(programId)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                            {boolean -> if (boolean) inflater!!.inflate(R.menu.hour_by_hour, menu)},
+                            {}
+                        )
+            )
         }
         super.onCreateOptionsMenu(menu, inflater)
     }

@@ -4,12 +4,7 @@ import android.support.multidex.MultiDexApplication
 import cat.xojan.random1.injection.component.AppComponent
 import cat.xojan.random1.injection.component.DaggerAppComponent
 import cat.xojan.random1.injection.module.AppModule
-import com.crashlytics.android.Crashlytics
 import com.squareup.leakcanary.LeakCanary
-import io.reactivex.exceptions.UndeliverableException
-import io.reactivex.plugins.RxJavaPlugins
-
-
 
 class Application : MultiDexApplication() {
 
@@ -19,7 +14,6 @@ class Application : MultiDexApplication() {
         super.onCreate()
         initInjector()
         initLeakDetection()
-        setErrorHandler()
     }
 
     private fun initInjector() {
@@ -31,17 +25,6 @@ class Application : MultiDexApplication() {
     private fun initLeakDetection() {
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this)
-        }
-    }
-
-    private fun setErrorHandler() {
-        RxJavaPlugins.setErrorHandler { e ->
-            if (e is UndeliverableException) {
-                Crashlytics.logException(e)
-            }
-            if (e is InterruptedException) {
-                Crashlytics.logException(e)
-            }
         }
     }
 }

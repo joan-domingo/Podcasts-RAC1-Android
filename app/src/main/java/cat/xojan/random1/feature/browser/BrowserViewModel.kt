@@ -8,11 +8,11 @@ import cat.xojan.random1.domain.model.EventLogger
 import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.PodcastState
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
-class BrowserViewModel @Inject
-constructor(
+class BrowserViewModel @Inject constructor(
         private val podcastInteractor: PodcastDataInteractor,
         private val programInteractor: ProgramDataInteractor,
         private val eventLogger: EventLogger) {
@@ -25,11 +25,11 @@ constructor(
 
     fun isSectionSelected(): Boolean = podcastInteractor.isSectionSelected()
 
-    fun hasSections(programId: String?): Boolean {
+    fun hasSections(programId: String?): Single<Boolean> {
         programId?.let {
             return programInteractor.hasSections(programId)
         }
-        return false
+        return Single.just(false)
     }
 
     fun downloadPodcast(podcast: MediaDescriptionCompat) {

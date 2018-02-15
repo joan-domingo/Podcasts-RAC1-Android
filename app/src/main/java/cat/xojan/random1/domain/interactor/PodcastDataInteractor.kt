@@ -9,14 +9,11 @@ import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
-import cat.xojan.random1.domain.model.EventLogger
-import cat.xojan.random1.domain.model.Podcast
+import cat.xojan.random1.domain.model.*
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
-import cat.xojan.random1.domain.model.PodcastJsonAdapter
-import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
@@ -26,6 +23,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.PublishSubject
 import java.io.File
 import java.io.FileInputStream
@@ -53,38 +51,33 @@ class PodcastDataInteractor @Inject constructor(
 
     fun getHourByHourPodcasts(programId: String, refresh: Boolean): Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
-        return podcastRepo.getPodcasts(programId, null, refresh)
-                .flatMap { podcasts -> Observable.just(podcasts)
-                        .flatMapIterable { list -> list }
-                        .map { podcast ->
-                            program?.let {
-                                podcast.programId = program.id
-                                podcast.imageUrl = program.imageUrl()
-                                podcast.bigImageUrl = program.bigImageUrl()
-                            }
-                            podcast
-                        }
-                        .toList()
-                }
+        val podcastList = podcastRepo.getPodcasts(programId, null, refresh)
+
+        return Single.zip(program, podcastList,
+                BiFunction<Program, List<Podcast>, List<Podcast>> { program, podcastList ->
+            for (p in podcastList) {
+                p.programId = program.id
+                p.imageUrl = program.imageUrl()
+                p.bigImageUrl = program.bigImageUrl()
+            }
+            podcastList
+        })
     }
 
     fun getSectionPodcasts(programId: String, sectionId: String, refresh: Boolean):
             Single<List<Podcast>> {
         val program = programRepo.getProgram(programId)
-        return podcastRepo.getPodcasts(programId, sectionId, refresh)
-                .flatMap {
-                    podcasts -> Observable.just(podcasts)
-                        .flatMapIterable { list -> list }
-                        .map { podcast ->
-                            program?.let {
-                                podcast.programId = program.id
-                                podcast.imageUrl = program.imageUrl()
-                                podcast.bigImageUrl = program.bigImageUrl()
-                            }
-                            podcast
-                        }
-                        .toList()
-                }
+        val podcastList = podcastRepo.getPodcasts(programId, sectionId, refresh)
+
+        return Single.zip(program, podcastList,
+                BiFunction<Program, List<Podcast>, List<Podcast>> { program, podcastList ->
+                    for (p in podcastList) {
+                        p.programId = program.id
+                        p.imageUrl = program.imageUrl()
+                        p.bigImageUrl = program.bigImageUrl()
+                    }
+                    podcastList
+                })
     }
 
     fun isSectionSelected(): Boolean {

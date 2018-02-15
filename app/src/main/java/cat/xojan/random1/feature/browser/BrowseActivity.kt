@@ -11,6 +11,9 @@ import cat.xojan.random1.injection.HasComponent
 import cat.xojan.random1.injection.component.BrowseComponent
 import cat.xojan.random1.injection.component.DaggerBrowseComponent
 import cat.xojan.random1.injection.module.BrowseModule
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
@@ -26,6 +29,7 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
     }
 
     @Inject internal lateinit var viewModel: BrowserViewModel
+    private val compositeDisposable = CompositeDisposable()
 
     override val component: BrowseComponent by lazy {
         DaggerBrowseComponent.builder()
@@ -48,13 +52,27 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
 
     private fun initView() {
         val mediaItem = intent.getParcelableExtra<MediaBrowserCompat.MediaItem>(EXTRA_PROGRAM)
-        title = mediaItem.description.title
-        if (viewModel.isSectionSelected() && viewModel.hasSections(mediaItem.mediaId)) {
-            addFragment(SectionFragment.newInstance(mediaItem.mediaId),
-                    SectionFragment.TAG, false)
-        } else {
-            addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
-                    HourByHourListFragment.TAG, false)
+        mediaItem?.let {
+            title = mediaItem.description.title
+            if (viewModel.isSectionSelected()) {
+                compositeDisposable.add(
+                        viewModel.hasSections(mediaItem.mediaId)
+                                .subscribeOn(Schedulers.newThread())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(
+                                    {b -> if (b) {
+                                        addFragment(SectionFragment.newInstance(mediaItem.mediaId),
+                                                SectionFragment.TAG, false)
+                                    } else {
+                                        addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
+                                                HourByHourListFragment.TAG, false)
+                                    }},
+                                    {}
+                                ))
+            } else {
+                addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
+                        HourByHourListFragment.TAG, false)
+            }
         }
     }
 
@@ -65,5 +83,10 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
             is SectionFragment -> frag.onMediaControllerConnected()
             is HourByHourListFragment -> frag.onMediaControllerConnected()
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        compositeDisposable.clear()
     }
 }
