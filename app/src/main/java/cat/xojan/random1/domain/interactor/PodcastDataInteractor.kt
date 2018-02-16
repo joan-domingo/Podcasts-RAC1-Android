@@ -54,13 +54,13 @@ class PodcastDataInteractor @Inject constructor(
         val podcastList = podcastRepo.getPodcasts(programId, null, refresh)
 
         return Single.zip(program, podcastList,
-                BiFunction<Program, List<Podcast>, List<Podcast>> { program, podcastList ->
-            for (p in podcastList) {
-                p.programId = program.id
-                p.imageUrl = program.imageUrl()
-                p.bigImageUrl = program.bigImageUrl()
+                BiFunction<Program, List<Podcast>, List<Podcast>> { pr, podList ->
+            for (p in podList) {
+                p.programId = pr.id
+                p.imageUrl = pr.imageUrl()
+                p.bigImageUrl = pr.bigImageUrl()
             }
-            podcastList
+                    podList
         })
     }
 
@@ -70,13 +70,13 @@ class PodcastDataInteractor @Inject constructor(
         val podcastList = podcastRepo.getPodcasts(programId, sectionId, refresh)
 
         return Single.zip(program, podcastList,
-                BiFunction<Program, List<Podcast>, List<Podcast>> { program, podcastList ->
-                    for (p in podcastList) {
-                        p.programId = program.id
-                        p.imageUrl = program.imageUrl()
-                        p.bigImageUrl = program.bigImageUrl()
+                BiFunction<Program, List<Podcast>, List<Podcast>> { pr, podList ->
+                    for (p in podList) {
+                        p.programId = pr.id
+                        p.imageUrl = pr.imageUrl()
+                        p.bigImageUrl = pr.bigImageUrl()
                     }
-                    podcastList
+                    podList
                 })
     }
 
@@ -141,9 +141,8 @@ class PodcastDataInteractor @Inject constructor(
 
         Log.d(TAG, "Downloading: " + downloading.size + ", downloaded: " + downloaded.size)
 
-        val mediaItemList = podcastList.map { description ->
+        return podcastList.map { description ->
             MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE) }
-        return ArrayList(mediaItemList)
     }
 
     fun deleteDownloading(reference: Long) {
