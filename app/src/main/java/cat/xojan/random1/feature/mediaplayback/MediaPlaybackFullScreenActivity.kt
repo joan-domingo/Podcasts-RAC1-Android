@@ -69,12 +69,15 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
 
         button_play_pause.setOnClickListener {
             val controller = MediaControllerCompat.getMediaController(this)
-            when (controller.playbackState.state) {
-                PlaybackStateCompat.STATE_PLAYING -> {
-                    controller.transportControls.pause()
-                }
-                PlaybackStateCompat.STATE_PAUSED -> {
-                    controller.transportControls.play()
+            val playbackState = controller.playbackState
+            playbackState?.let {
+                when (playbackState.state) {
+                    PlaybackStateCompat.STATE_PLAYING -> {
+                        controller.transportControls.pause()
+                    }
+                    PlaybackStateCompat.STATE_PAUSED -> {
+                        controller.transportControls.play()
+                    }
                 }
             }
         }
