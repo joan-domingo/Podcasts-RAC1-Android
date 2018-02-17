@@ -155,13 +155,6 @@ class SectionFragment : BaseFragment(), IsMediaBrowserFragment {
         }
     }
 
-    /*private fun loadSections() {
-        mCompositeDisposable.add(mSectionsViewModel!!.loadSections(mProgram)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(Consumer<List<Section>> { this.updateView(it) }))
-    }*/
-
     private fun showHourByHour() {
         viewModel.selectedSection(false)
         (activity as BrowseActivity).addFragment(
