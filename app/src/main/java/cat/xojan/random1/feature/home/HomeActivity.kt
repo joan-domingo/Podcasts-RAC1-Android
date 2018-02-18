@@ -120,10 +120,10 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
 
     override fun onSaveInstanceState(outState: Bundle?) {
         super.onSaveInstanceState(outState)
-        programFragment?.let {
+        if (programFragment != null && programFragment!!.isAdded) {
             supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment)
         }
-        downloadsFragment?.let {
+        if (downloadsFragment != null && downloadsFragment!!.isAdded) {
             supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment)
         }
     }

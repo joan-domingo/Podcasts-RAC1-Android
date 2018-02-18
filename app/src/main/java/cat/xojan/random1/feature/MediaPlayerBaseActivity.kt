@@ -119,11 +119,8 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     private fun showPlaybackControls() {
         controlsFragment?.let {
             supportFragmentManager.beginTransaction()
-                    /*.setCustomAnimations(
-                            R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom,
-                            R.animator.slide_in_from_bottom, R.animator.slide_out_to_bottom)*/
                     .show(controlsFragment)
-                    .commit()
+                    .commitAllowingStateLoss()
         }
     }
 }
