@@ -13,8 +13,8 @@ android {
         applicationId "cat.xojan.random1"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
-        versionCode 32
-        versionName "3.1.1"
+        versionCode 33
+        versionName "3.1.2"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
