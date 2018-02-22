@@ -12,7 +12,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import cat.xojan.random1.domain.model.EventLogger
 
-class Player(private val appContext: Context,
+class Player(appContext: Context,
              private val listener: PlayerListener,
              private val audioManager: AudioManager,
              private val eventLogger: EventLogger) : AudioManager.OnAudioFocusChangeListener {
@@ -53,7 +53,7 @@ class Player(private val appContext: Context,
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
-               playMediaId(currentMedia)
+                playMediaId(currentMedia)
                 eventLogger.logPlayedPodcast(currentMedia)
             } else {
                 mediaPlayer.start()
@@ -64,17 +64,20 @@ class Player(private val appContext: Context,
 
     private fun playMediaId(currentMedia: MediaMetadataCompat) {
         mediaPlayer.reset()
-        val mediaUri = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
-        Log.d(TAG, mediaUri)
-        mediaPlayer.setDataSource(mediaUri)
-        mediaPlayer.setOnPreparedListener {
-            play()
+        val mediaUri: String? = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
+        mediaUri?.let {
+            Log.d(TAG, mediaUri)
+            mediaPlayer.setDataSource(mediaUri)
+            mediaPlayer.setOnPreparedListener {
+                play()
+            }
+            mediaPlayer.setOnCompletionListener {
+                listener.onCompletion()
+            }
+            mediaPlayer.prepareAsync()
+            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
         }
-        mediaPlayer.setOnCompletionListener {
-            listener.onCompletion()
-        }
-        mediaPlayer.prepareAsync()
-        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
+        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_STOPPED)
     }
 
     fun pause() {

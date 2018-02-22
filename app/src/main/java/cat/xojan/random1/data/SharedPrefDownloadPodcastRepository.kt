@@ -73,10 +73,11 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
 
     override fun deleteDownloadedPodcast(podcast: MediaDescriptionCompat) {
         val podcasts = getDownloadedPodcasts()
-        podcasts.removeAll{it.mediaId == podcast.mediaId}
-        sharedPref.edit()
-                .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
-                .apply()
+        if (podcasts.removeAll { it.mediaId == podcast.mediaId }) {
+            sharedPref.edit()
+                    .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
+                    .apply()
+        }
     }
 
     override fun getDownloadedPodcastTitle(mediaId: String): String? {
