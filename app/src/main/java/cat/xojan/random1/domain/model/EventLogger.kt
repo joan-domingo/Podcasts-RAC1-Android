@@ -58,7 +58,7 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, item?.description?.mediaId)
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, item?.description?.title.toString())
         bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, item?.getString(METADATA_PROGRAM_ID))
-        firebaseAnalytics?.logEvent("podcast_played", null)
+        firebaseAnalytics?.logEvent("podcast_played", bundle)
     }
 
     fun logPlayAllPodcasts() {
