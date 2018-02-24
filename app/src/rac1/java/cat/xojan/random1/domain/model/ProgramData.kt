@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import org.jetbrains.annotations.TestOnly
 
 
-data class ProgramData {
+class ProgramData {
 
     @Json(name = "result")
     @set:TestOnly
