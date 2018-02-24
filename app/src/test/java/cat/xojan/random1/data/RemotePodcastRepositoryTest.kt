@@ -14,7 +14,7 @@ import java.util.*
 class RemotePodcastRepositoryTest {
 
     private lateinit var remotePodcastRepository: RemotePodcastRepository
-    private lateinit var rac1ApiService: Rac1ApiService
+    private lateinit var rac1ApiService: ApiService
     private lateinit var mockWebServer: MockWebServer
 
     @Before
@@ -32,7 +32,7 @@ class RemotePodcastRepositoryTest {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
 
-        rac1ApiService = retrofit.create(Rac1ApiService::class.java)
+        rac1ApiService = retrofit.create(ApiService::class.java)
         remotePodcastRepository = RemotePodcastRepository(rac1ApiService)
     }
 

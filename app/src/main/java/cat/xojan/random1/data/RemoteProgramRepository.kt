@@ -9,7 +9,7 @@ import io.reactivex.Single
 
 
 
-class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepository {
+class RemoteProgramRepository(private val service: ApiService): ProgramRepository {
 
     private var programData: Single<ProgramData>? = null
     // private var programData: Single<ProgramData> = service.getProgramData().cache()

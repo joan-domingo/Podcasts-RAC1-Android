@@ -10,11 +10,8 @@ android {
     buildToolsVersion buildTools
 
     defaultConfig {
-        applicationId "cat.xojan.random1"
         minSdkVersion minSdk
         targetSdkVersion targetSdk
-        versionCode 33
-        versionName "3.1.2"
         vectorDrawables.useSupportLibrary true
         multiDexEnabled true
     }
@@ -41,6 +38,23 @@ android {
             if (project.rootProject.file('gradle.properties').exists()) {
                 signingConfig signingConfigs.release
             }
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        rac1 {
+            applicationId "cat.xojan.random1"
+            versionCode 33
+            versionName "3.1.2"
+            buildConfigField "String", "BASE_URL", "\"http://www.rac1.cat/audioteca/api/app/\""
+        }
+        catradio {
+            applicationId "cat.xojan.randomcat"
+            versionCode 1
+            versionName "1.0.0"
+            buildConfigField "String", "BASE_URL", "\"http://api.ccma.cat/\""
         }
     }
 

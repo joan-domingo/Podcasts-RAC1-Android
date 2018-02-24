@@ -5,7 +5,7 @@ import cat.xojan.random1.domain.model.PodcastData
 import cat.xojan.random1.domain.repository.PodcastRepository
 import io.reactivex.Single
 
-class RemotePodcastRepository(private val service: Rac1ApiService): PodcastRepository {
+class RemotePodcastRepository(private val service: ApiService): PodcastRepository {
 
     private var hourPodcasts: Single<PodcastData>? = null
     private var sectionPodcasts: Single<PodcastData>? = null

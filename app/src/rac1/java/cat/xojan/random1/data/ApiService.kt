@@ -6,7 +6,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface Rac1ApiService {
+interface ApiService {
     @GET("v1/programs")
     fun getProgramData(): Single<ProgramData>
 

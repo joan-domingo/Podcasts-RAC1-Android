@@ -32,7 +32,7 @@ import javax.inject.Singleton
 class AppModule(private val application: Application) {
 
     companion object {
-        private val RAC1_URL = "http://www.rac1.cat/audioteca/api/app/"
+        private const val BASE_URL = BuildConfig.BASE_URL
     }
 
     @Provides
@@ -43,7 +43,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideRetrofitRac1Service(): Rac1ApiService {
+    internal fun provideRetrofitRac1Service(): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -56,13 +56,13 @@ class AppModule(private val application: Application) {
                 .build()
 
         val retrofit = Retrofit.Builder()
-                .baseUrl(RAC1_URL)
+                .baseUrl(BASE_URL)
                 .addConverterFactory(MoshiConverterFactory.create(moshi))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(httpClientBuilder.build())
                 .build()
 
-        return retrofit.create(Rac1ApiService::class.java)
+        return retrofit.create(ApiService::class.java)
     }
 
     @Provides
@@ -112,13 +112,13 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    fun provideRemoteProgramRepository(service: Rac1ApiService): ProgramRepository {
+    internal fun provideRemoteProgramRepository(service: ApiService): ProgramRepository {
         return RemoteProgramRepository(service)
     }
 
     @Provides
     @Singleton
-    fun provideRemotePodcastRepository(service: Rac1ApiService): PodcastRepository {
+    internal fun provideRemotePodcastRepository(service: ApiService): PodcastRepository {
         return RemotePodcastRepository(service)
     }
 
