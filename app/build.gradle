@@ -48,7 +48,7 @@ android {
             applicationId "cat.xojan.random1"
             versionCode 33
             versionName "3.1.2"
-            buildConfigField "String", "BASE_URL", "\"http://www.rac1.cat/audioteca/api/app/\""
+            buildConfigField "String", "BASE_URL", "\"http://api.audioteca.rac1.cat/api/app/\""
         }
         catradio {
             applicationId "cat.xojan.randomcat"

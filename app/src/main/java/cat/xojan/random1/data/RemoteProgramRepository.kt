@@ -12,8 +12,6 @@ import io.reactivex.Single
 class RemoteProgramRepository(private val service: ApiService): ProgramRepository {
 
     private var programData: Single<ProgramData>? = null
-    // private var programData: Single<ProgramData> = service.getProgramData().cache()
-    //private var programs: Single<List<Program>> = programData.map {pd: ProgramData -> pd.programs }
 
     override fun getPrograms(refresh: Boolean): Single<List<Program>> {
         if (programData == null || refresh) {

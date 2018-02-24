@@ -43,7 +43,7 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    internal fun provideRetrofitRac1Service(): ApiService {
+    fun provideRetrofitRac1Service(): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
@@ -112,13 +112,13 @@ class AppModule(private val application: Application) {
 
     @Provides
     @Singleton
-    internal fun provideRemoteProgramRepository(service: ApiService): ProgramRepository {
+    fun provideRemoteProgramRepository(service: ApiService): ProgramRepository {
         return RemoteProgramRepository(service)
     }
 
     @Provides
     @Singleton
-    internal fun provideRemotePodcastRepository(service: ApiService): PodcastRepository {
+    fun provideRemotePodcastRepository(service: ApiService): PodcastRepository {
         return RemotePodcastRepository(service)
     }
 
