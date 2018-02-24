@@ -11,6 +11,7 @@ import okhttp3.mockwebserver.SocketPolicy
 import org.apache.commons.io.IOUtils
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -44,7 +45,7 @@ class RemoteProgramRepositoryTest {
         remoteProgramRepository = RemoteProgramRepository(rac1ApiService)
     }
 
-    @Test
+    @Test @Ignore
     fun get_program_list_success() {
         val body = IOUtils.toString(this.javaClass.classLoader.getResourceAsStream("programs.json"))
         mockWebServer.enqueue(MockResponse().setBody(body))
