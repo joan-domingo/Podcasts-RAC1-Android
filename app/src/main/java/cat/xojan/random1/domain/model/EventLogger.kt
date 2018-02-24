@@ -2,6 +2,7 @@ package cat.xojan.random1.domain.model
 
 import android.os.Bundle
 import android.support.v4.media.MediaMetadataCompat
+import android.text.format.DateUtils
 import cat.xojan.random1.feature.mediaplayback.QueueManager.Companion.METADATA_PROGRAM_ID
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -71,7 +72,7 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
 
     fun logSleepTimerAction(milliseconds: Long) {
         val bundle = Bundle()
-        bundle.putLong("time_milliseconds",milliseconds)
+        bundle.putString("time", DateUtils.formatElapsedTime(((milliseconds / 1000))))
         firebaseAnalytics?.logEvent("sleep_timer_action", bundle)
     }
 
