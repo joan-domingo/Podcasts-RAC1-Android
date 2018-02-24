@@ -18,7 +18,6 @@ import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.model.Section
 import cat.xojan.random1.feature.home.DownloadsFragment
-import cat.xojan.random1.feature.home.ProgramFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -44,8 +43,9 @@ class MediaProvider @Inject constructor(
             result: MediaBrowserServiceCompat.Result<MutableList<MediaBrowserCompat.MediaItem>>,
             parentId: String) {
         when {
-            parentId == ProgramFragment.MEDIA_ID_ROOT ->
-                compositeDisposable.add(programInteractor.loadPrograms()
+            parentId.contains("__PROGRAMS__") -> {
+                val refresh: Boolean = parentId.split("/")[1].toBoolean()
+                compositeDisposable.add(programInteractor.loadPrograms(refresh)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
@@ -53,6 +53,7 @@ class MediaProvider @Inject constructor(
                                 { e -> handleError(e, result) }
                         )
                 )
+            }
             parentId == DownloadsFragment.MEDIA_ID_DOWNLOADS ->
                 compositeDisposable.add(podcastInteractor.getDownloadedPodcasts()
                         .subscribeOn(Schedulers.newThread())

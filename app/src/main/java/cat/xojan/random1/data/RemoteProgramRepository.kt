@@ -9,15 +9,21 @@ import io.reactivex.Single
 
 
 
-class RemoteProgramRepository(service: Rac1ApiService): ProgramRepository {
+class RemoteProgramRepository(private val service: Rac1ApiService): ProgramRepository {
 
-    private var programData: Single<ProgramData> = service.getProgramData().cache()
-    private var programs: Single<List<Program>> = programData.map {pd: ProgramData -> pd.programs }
+    private var programData: Single<ProgramData>? = null
+    // private var programData: Single<ProgramData> = service.getProgramData().cache()
+    //private var programs: Single<List<Program>> = programData.map {pd: ProgramData -> pd.programs }
 
-    override fun getPrograms(): Single<List<Program>> = programs
+    override fun getPrograms(refresh: Boolean): Single<List<Program>> {
+        if (programData == null || refresh) {
+            programData = service.getProgramData().cache()
+        }
+        return programData!!.map { pd: ProgramData -> pd.programs }
+    }
 
     override fun getProgram(programId: String): Single<Program> =
-            programs.flatMap {
+            getPrograms(false).flatMap {
                 programs -> Observable.fromIterable(programs)
                     .filter { p: Program ->  p.id == programId }
                     .firstOrError()

@@ -145,7 +145,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     }
 
     override fun onGetRoot(clientPackageName: String, clientUid: Int, rootHints: Bundle?): BrowserRoot? {
-        Log.d(TAG, "onGetRoot: " + MEDIA_ID_ROOT)
+        Log.d(TAG, "onGetRoot: $clientPackageName, $clientUid")
         eventLogger.logClientPackageName(clientPackageName)
         // To ensure we are not allowing any arbitrary app to browse the app's contents, we
         // need to check the origin:

@@ -5,7 +5,7 @@ import cat.xojan.random1.domain.model.Section
 import io.reactivex.Single
 
 interface ProgramRepository {
-    fun getPrograms(): Single<List<Program>>
+    fun getPrograms(refresh: Boolean): Single<List<Program>>
 
     fun getProgram(programId: String): Single<Program>
 

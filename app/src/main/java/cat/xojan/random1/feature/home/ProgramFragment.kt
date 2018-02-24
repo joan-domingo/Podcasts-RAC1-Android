@@ -38,6 +38,7 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
     private val mCompositeDisposable = CompositeDisposable()
     private lateinit var adapter: ProgramListAdapter
     private var mediaBrowserProvider: MediaBrowserProvider? = null
+    private var refresh = false
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -53,7 +54,10 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         programs_progress_bar.visibility = VISIBLE
-        programs_load_button.setOnClickListener({onMediaControllerConnected()})
+        programs_load_button.setOnClickListener({
+            refresh = true
+            onMediaControllerConnected()
+        })
         adapter = ProgramListAdapter()
         programs_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
@@ -102,7 +106,7 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
         }
 
 
-        val mediaId = MEDIA_ID_ROOT
+        val mediaId = getMediaId()
         val mediaBrowser = mediaBrowserProvider?.getMediaBrowser()
 
         // Unsubscribing before subscribing is required if this mediaId already has a subscriber
@@ -146,6 +150,12 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
     override fun onDetach() {
         super.onDetach()
         mediaBrowserProvider = null
+    }
+
+    private fun getMediaId(): String {
+        val mediaId = MEDIA_ID_ROOT + "/" + refresh.toString()
+        refresh = false
+        return mediaId
     }
 
     private val mediaBrowserSubscriptionCallback =

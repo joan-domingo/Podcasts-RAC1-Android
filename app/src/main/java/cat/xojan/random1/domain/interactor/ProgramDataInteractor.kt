@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 class ProgramDataInteractor @Inject constructor(private val programRepo: ProgramRepository) {
 
-    fun loadPrograms(): Single<List<Program>> {
-        return programRepo.getPrograms()
+    fun loadPrograms(refresh: Boolean): Single<List<Program>> {
+        return programRepo.getPrograms(refresh)
                 .flatMap {
                     programs -> Observable.just(programs)
                         .flatMapIterable { p -> p }
@@ -29,12 +29,12 @@ class ProgramDataInteractor @Inject constructor(private val programRepo: Program
         val sectionList = programRepo.getSections(programId)
 
         return Single.zip(program, sectionList,
-                BiFunction<Program, List<Section>, List<Section>> { program, sectionList ->
-                    for (s in sectionList) {
-                        s.programId = program.id
-                        s.imageUrl = program.imageUrl()
+                BiFunction<Program, List<Section>, List<Section>> { p, secList ->
+                    for (s in secList) {
+                        s.programId = p.id
+                        s.imageUrl = p.imageUrl()
                     }
-                    sectionList
+                    secList
                 })
                 .flatMap {
                     sections -> Observable.just(sections)
