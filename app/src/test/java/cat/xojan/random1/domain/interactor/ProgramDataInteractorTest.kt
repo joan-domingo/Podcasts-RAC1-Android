@@ -64,9 +64,9 @@ class ProgramDataInteractorTest {
     @Ignore
     @Throws(IOException::class)
     fun fail_to_load_programs() {
-        `when`(mProgramRepo.getPrograms()).thenThrow(IOException())
+        `when`(mProgramRepo.getPrograms(true)).thenThrow(IOException())
         val testSubscriber = TestObserver<List<Program>>()
-        mProgramDataInteractor.loadPrograms().subscribe(testSubscriber)
+        mProgramDataInteractor.loadPrograms(true).subscribe(testSubscriber)
         testSubscriber.assertError(IOException::class.java)
     }
 

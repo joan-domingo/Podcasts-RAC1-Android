@@ -50,7 +50,7 @@ class RemoteProgramRepositoryTest {
         mockWebServer.enqueue(MockResponse().setBody(body))
         val testSubscriber = TestObserver<List<Program>>()
 
-        remoteProgramRepository.getPrograms().subscribe(testSubscriber)
+        remoteProgramRepository.getPrograms(true).subscribe(testSubscriber)
         testSubscriber.assertValue(
                 listOf(Program("el-mon"),
                         Program("la-competencia"),
@@ -115,7 +115,7 @@ class RemoteProgramRepositoryTest {
         mockWebServer.enqueue(mockResponse)
         val testSubscriber = TestObserver<List<Program>>()
 
-        remoteProgramRepository.getPrograms().subscribe(testSubscriber)
+        remoteProgramRepository.getPrograms(true).subscribe(testSubscriber)
         testSubscriber.assertError(SocketTimeoutException::class.java)
     }
 
