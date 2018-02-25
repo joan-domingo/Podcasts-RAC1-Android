@@ -7,4 +7,5 @@
 .idea/
 app/build
 /gradle.properties
-/app/release
+/app/rac1
+/app/catradio
