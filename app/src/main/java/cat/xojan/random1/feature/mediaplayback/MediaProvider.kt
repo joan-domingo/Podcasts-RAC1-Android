@@ -44,7 +44,12 @@ class MediaProvider @Inject constructor(
             parentId: String) {
         when {
             parentId.contains("__PROGRAMS__") -> {
-                val refresh: Boolean = parentId.split("/")[1].toBoolean()
+                val splitString: List<String> = parentId.split("/")
+                val refresh = if (!splitString.isEmpty() && splitString.size > 1) {
+                    splitString[1].toBoolean()
+                } else {
+                    false
+                }
                 compositeDisposable.add(programInteractor.loadPrograms(refresh)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
