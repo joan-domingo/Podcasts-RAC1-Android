@@ -10,7 +10,7 @@ class PodcastData(
         return podcasts.map { p ->
             Podcast(
                     p.audio.id,
-                    p.remoteUrl,
+                    getRemoteUrl(p.remoteUrl),
                     null,
                     p.date,
                     p.durationSeconds,
@@ -21,6 +21,10 @@ class PodcastData(
                     p.title
             )
         }
+    }
+
+    private fun getRemoteUrl(remoteUrl: String): String {
+        return remoteUrl.split("?source=APP")[0]
     }
 }
 

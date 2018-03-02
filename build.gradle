@@ -42,7 +42,7 @@ ext {
     minSdk = 19
     targetSdk = 27
 
-    supportLib = '27.0.2'
+    supportLib = '27.1.0'
     firebase = '11.8.0'
     retrofit = '2.3.0'
     okhttp = '3.9.1'

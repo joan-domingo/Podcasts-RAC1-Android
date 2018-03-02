@@ -21,13 +21,13 @@ class SectionListAdapter(private val activity: BrowseActivity)
             notifyDataSetChanged()
         }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MediaItemViewHolder {
-        val itemView = LayoutInflater.from(parent?.context).inflate(R.layout.section_item, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.section_item, parent, false)
         return MediaItemViewHolder(itemView)
     }
 
-    override fun onBindViewHolder(holder: MediaItemViewHolder?, position: Int) {
-        holder?.bind(sections[position], activity)
+    override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {
+        holder.bind(sections[position], activity)
     }
 
     override fun getItemCount(): Int = sections.size

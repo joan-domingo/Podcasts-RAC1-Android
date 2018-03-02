@@ -23,12 +23,12 @@ class ProgramListAdapter: RecyclerView.Adapter<ProgramListAdapter.MediaItemViewH
 
     override fun getItemCount(): Int = programs.size
 
-    override fun onBindViewHolder(holder: MediaItemViewHolder?, position: Int) {
-        holder?.bind(programs[position])
+    override fun onBindViewHolder(holder: MediaItemViewHolder, position: Int) {
+        holder.bind(programs[position])
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): MediaItemViewHolder {
-        val itemView = LayoutInflater.from(parent?.context)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaItemViewHolder {
+        val itemView = LayoutInflater.from(parent.context)
                 .inflate(R.layout.program_item, parent, false)
         return MediaItemViewHolder(itemView)
     }
