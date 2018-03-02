@@ -66,7 +66,11 @@ class Player(appContext: Context,
                         listener.onCompletion()
                     }
                     mediaPlayer.setOnErrorListener { _, _, _ ->
-                        !hasNext
+                        if (mediaUri != null && !mediaUri.contains("http")) {
+                            false
+                        } else {
+                            !hasNext
+                        }
                     }
                     mediaPlayer.prepareAsync()
                     listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
