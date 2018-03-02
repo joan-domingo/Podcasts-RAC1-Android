@@ -46,38 +46,43 @@ class Player(appContext: Context,
 
     fun isPlaying() = mediaPlayer.isPlaying
 
-    fun play(currentMedia: MediaMetadataCompat? = null) {
+    fun play(currentMedia: MediaMetadataCompat? = null, hasNext: Boolean) {
         @Suppress("DEPRECATION")
         val result = audioManager
                 .requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
 
         if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             if (currentMedia != null) {
-                playMediaId(currentMedia)
+                mediaPlayer.reset()
+                val mediaUri: String? =
+                        currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
+                Log.d(TAG, mediaUri)
+                try {
+                    mediaPlayer.setDataSource(mediaUri)
+                    mediaPlayer.setOnPreparedListener {
+                        startPlaying()
+                    }
+                    mediaPlayer.setOnCompletionListener {
+                        listener.onCompletion()
+                    }
+                    mediaPlayer.setOnErrorListener { _, _, _ ->
+                        !hasNext
+                    }
+                    mediaPlayer.prepareAsync()
+                    listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
+                } catch (e: Exception) {
+                    pause()
+                }
                 eventLogger.logPlayedPodcast(currentMedia)
             } else {
-                mediaPlayer.start()
-                listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
+                startPlaying()
             }
         }
     }
 
-    private fun playMediaId(currentMedia: MediaMetadataCompat) {
-        mediaPlayer.reset()
-        val mediaUri: String? = currentMedia.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI)
-        mediaUri?.let {
-            Log.d(TAG, mediaUri)
-            mediaPlayer.setDataSource(mediaUri)
-            mediaPlayer.setOnPreparedListener {
-                play()
-            }
-            mediaPlayer.setOnCompletionListener {
-                listener.onCompletion()
-            }
-            mediaPlayer.prepareAsync()
-            listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_BUFFERING)
-        }
-        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_STOPPED)
+    private fun startPlaying() {
+        listener.onPlaybackStatusChanged(PlaybackStateCompat.STATE_PLAYING)
+        mediaPlayer.start()
     }
 
     fun pause() {

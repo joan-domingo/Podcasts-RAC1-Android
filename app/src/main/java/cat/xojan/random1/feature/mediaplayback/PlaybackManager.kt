@@ -138,10 +138,14 @@ class PlaybackManager(appContext: Context,
     }
 
     fun handlePlayRequest(mediaId: String? = null) {
-        Log.d(TAG, "handlePlayRequest: mediaId= " + mediaId)
+        Log.d(TAG, "handlePlayRequest: mediaId= $mediaId")
         val currentMedia = queueManager.getMediaItem(mediaId)
         listener.onPlaybackStart()
-        player.play(currentMedia)
+        player.play(currentMedia, hasNext())
+    }
+
+    private fun hasNext(): Boolean {
+        return queueManager.hasNextOrPrevious() == 1L
     }
 
     fun handlePauseRequest() {
