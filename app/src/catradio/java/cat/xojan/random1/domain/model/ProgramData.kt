@@ -20,7 +20,7 @@ class ProgramData(
 
     private fun getSmallImageUrl(images: List<ImageCatRadio>?): String? {
         return images?.firstOrNull {
-            it -> it.size == "200x200"
+            it -> it.size == "240x350"
         }?.text
     }
 
