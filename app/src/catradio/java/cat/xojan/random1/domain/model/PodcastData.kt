@@ -1,17 +1,23 @@
 package cat.xojan.random1.domain.model
 
 import com.squareup.moshi.Json
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PodcastData(
         @Json(name = "resposta") private val resposta: RespostaPodcastsCatRadio
 ): PodcastInterface {
+
+    private val dateFormatter: SimpleDateFormat =
+            SimpleDateFormat("dd/MM/yyyy hh:mm:ss", Locale.ENGLISH)
+
     override fun toPodcasts(programId: String): List<Podcast> {
         return resposta.items.items.map { p ->
             Podcast(
                     p.id,
                     getRemoteUrl(p.audios.audio),
                     null,
-                    null, //TODO p.date Date
+                    getDate(p.date),
                     getDurationSeconds(p.audios.audio),
                     programId,
                     null,
@@ -20,6 +26,10 @@ class PodcastData(
                     p.title
             )
         }
+    }
+
+    private fun getDate(dateString: String): Date? {
+        return dateFormatter.parse(dateString)
     }
 
     private fun getDurationSeconds(audio: List<AudioCatRadio>): Long {
