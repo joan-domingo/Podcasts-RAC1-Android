@@ -76,12 +76,6 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
         firebaseAnalytics?.logEvent("sleep_timer_action", bundle)
     }
 
-    fun logClientPackageName(clientPackageName: String) {
-        val bundle = Bundle()
-        bundle.putString("client_package_name", clientPackageName)
-        firebaseAnalytics?.logEvent("on_get_root", bundle)
-    }
-
     fun logPlayerException(message: String?) {
         val bundle = Bundle()
         bundle.putString("exception_msg", message)
