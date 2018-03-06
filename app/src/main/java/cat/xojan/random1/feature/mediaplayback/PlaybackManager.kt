@@ -7,13 +7,15 @@ import android.os.SystemClock
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import cat.xojan.random1.domain.model.CrashReporter
 import cat.xojan.random1.domain.model.EventLogger
 
 class PlaybackManager(appContext: Context,
                       val queueManager: QueueManager,
                       private val listener: PlaybackStateListener,
                       audioManager: AudioManager,
-                      eventLogger: EventLogger): PlayerListener {
+                      eventLogger: EventLogger,
+                      crashReporter: CrashReporter): PlayerListener {
 
     companion object {
         const val SET_SLEEP_TIMER = "set_sleep_timer"
@@ -22,7 +24,12 @@ class PlaybackManager(appContext: Context,
     }
 
     private val TAG = PlaybackManager::class.simpleName
-    val player = Player(appContext, this, audioManager, eventLogger)
+    val player = Player(
+            appContext,
+            this,
+            audioManager,
+            eventLogger,
+            crashReporter)
 
     val mediaSessionCallback = object : MediaSessionCompat.Callback() {
 

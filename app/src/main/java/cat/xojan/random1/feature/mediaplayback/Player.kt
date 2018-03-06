@@ -7,6 +7,7 @@ import android.os.CountDownTimer
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
+import cat.xojan.random1.domain.model.CrashReporter
 import cat.xojan.random1.domain.model.EventLogger
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
@@ -23,7 +24,8 @@ import java.io.File
 class Player(private val appContext: Context,
              private val listener: PlayerListener,
              private val audioManager: AudioManager,
-             private val eventLogger: EventLogger) : AudioManager.OnAudioFocusChangeListener {
+             private val eventLogger: EventLogger,
+             private val crashReporter: CrashReporter) : AudioManager.OnAudioFocusChangeListener {
 
     private val TAG = Player::class.simpleName
 
@@ -58,8 +60,7 @@ class Player(private val appContext: Context,
                                          trackSelections: TrackSelectionArray?) {}
 
             override fun onPlayerError(error: ExoPlaybackException?) {
-                eventLogger.logPlayerException(error?.message)
-                error?.printStackTrace()
+                crashReporter.logException(error.toString())
             }
 
             override fun onLoadingChanged(isLoading: Boolean) {}

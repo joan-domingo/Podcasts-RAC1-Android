@@ -75,10 +75,4 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
         bundle.putString("time", DateUtils.formatElapsedTime(((milliseconds / 1000))))
         firebaseAnalytics?.logEvent("sleep_timer_action", bundle)
     }
-
-    fun logPlayerException(message: String?) {
-        val bundle = Bundle()
-        bundle.putString("exception_msg", message)
-        firebaseAnalytics?.logEvent("player_exception", bundle)
-    }
 }
