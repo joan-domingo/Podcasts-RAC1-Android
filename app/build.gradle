@@ -115,7 +115,8 @@ dependencies {
     implementation "com.google.dagger:dagger:$dagger"
 
     // ExoPlayer
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.7.0'
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
+    implementation "com.google.android.exoplayer:extension-okhttp:$exoplayer"
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$firebase"

@@ -9,13 +9,14 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import cat.xojan.random1.domain.model.EventLogger
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSourceFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import okhttp3.OkHttpClient
 import java.io.File
 
 
@@ -25,11 +26,22 @@ class Player(private val appContext: Context,
              private val eventLogger: EventLogger) : AudioManager.OnAudioFocusChangeListener {
 
     private val TAG = Player::class.simpleName
+
     private val exoPlayer: SimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(
             DefaultRenderersFactory(appContext),
             DefaultTrackSelector(),
             DefaultLoadControl()
     )
+
+    private val remoteDataSource = ExtractorMediaSource.Factory(
+            OkHttpDataSourceFactory(OkHttpClient(),
+                    "exoplayer-random1",
+                    null))
+    private val localDataSource = ExtractorMediaSource.Factory(
+            DefaultDataSourceFactory(
+                    appContext,
+                    "exoplayer-random1"))
+
     private var countDownTimer: CountDownTimer? = null
     private var timerMilliseconds: Long = 0L
     private var timerLabel: String? = null
@@ -107,13 +119,9 @@ class Player(private val appContext: Context,
 
     private fun buildMediaSource(path: String): MediaSource {
         return if (path.contains("http")) {
-            ExtractorMediaSource.Factory(
-                    DefaultHttpDataSourceFactory("exoplayer-random1"))
-                    .createMediaSource(Uri.parse(path))
+            remoteDataSource.createMediaSource(Uri.parse(path))
         } else {
-            ExtractorMediaSource.Factory(
-                    DefaultDataSourceFactory(appContext, "exoplayer-random1"))
-                    .createMediaSource(Uri.fromFile(File(path)))
+            localDataSource.createMediaSource(Uri.fromFile(File(path)))
         }
     }
 

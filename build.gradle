@@ -50,4 +50,5 @@ ext {
     dagger = '2.11'
     leakCanary = '1.5.3'
     moshi = '1.5.0'
+    exoplayer = '2.7.0'
 }
