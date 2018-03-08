@@ -1,12 +1,10 @@
 package cat.xojan.random1.feature.home
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -25,9 +23,8 @@ import javax.inject.Inject
 
 class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     companion object {
-        private val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
+        private const val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
-    private val TAG = HomeActivity::class.java.simpleName
 
     @Inject internal lateinit var viewModel: HomeViewModel
     @Inject internal lateinit var crashReporter: CrashReporter
@@ -53,7 +50,6 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         setContentView(R.layout.activity_home)
         initView(savedInstanceState)
         component.inject(this)
-        importOldPodcasts()
     }
 
     override fun onMediaControllerConnected() {
@@ -136,21 +132,6 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
                         {notifyUser()},
                         {e -> crashReporter.logException(e)}
                 ))
-    }
-
-    private fun importOldPodcasts() {
-        val sharedPref = getSharedPreferences("old_podcasts", Context.MODE_PRIVATE)
-        val areConverted = sharedPref.getBoolean("converted", false)
-        if (!areConverted) {
-            sharedPref.edit().putBoolean("converted", true).apply()
-            compositeDisposable.add(viewModel.importOldPodcasts()
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            { Log.d(TAG, "Old podcasts exported")},
-                            {e -> crashReporter.logException(e)}
-                    ))
-        }
     }
 
     private fun notifyUser() {

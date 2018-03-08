@@ -2,25 +2,23 @@ package cat.xojan.random1.domain.interactor
 
 import android.app.DownloadManager
 import android.content.Context
-import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
 import android.support.v4.media.MediaBrowserCompat
 import android.support.v4.media.MediaDescriptionCompat
 import android.text.TextUtils
 import android.util.Log
-import cat.xojan.random1.domain.model.*
+import cat.xojan.random1.domain.model.EventLogger
+import cat.xojan.random1.domain.model.Podcast
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DATE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_DOWNLOAD_REFERENCE
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
+import cat.xojan.random1.domain.model.PodcastState
+import cat.xojan.random1.domain.model.Program
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
 import cat.xojan.random1.domain.repository.PodcastPreferencesRepository
 import cat.xojan.random1.domain.repository.PodcastRepository
 import cat.xojan.random1.domain.repository.ProgramRepository
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.functions.BiFunction
@@ -42,7 +40,7 @@ class PodcastDataInteractor @Inject constructor(
 {
 
     companion object {
-        val EXTENSION = ".mp3"
+        const val EXTENSION = ".mp3"
     }
     private val TAG = PodcastDataInteractor::class.simpleName
 
@@ -193,7 +191,7 @@ class PodcastDataInteractor @Inject constructor(
 
                     if (!TextUtils.isEmpty(podcastTitle)) {
                         podcastTitle = podcastTitle!!.replace("/", "-")
-                        val dest = File(externalFilesDir, podcastTitle + ".mp3")
+                        val dest = File(externalFilesDir, "$podcastTitle.mp3")
                         copy(podcastFile, dest)
                     }
                     eventLogger.logExportedPodcast(audioId, podcastTitle)
@@ -219,55 +217,5 @@ class PodcastDataInteractor @Inject constructor(
         inChannel.transferTo(0, inChannel.size(), outChannel)
         inStream.close()
         outStream.close()
-    }
-
-    fun convertOldPodcasts():  Single<Boolean> {
-        return Single.create { subscriber ->
-            try {
-                val sharedPref = context.getSharedPreferences("dowload_podcasts_repo",
-                        Context.MODE_PRIVATE)
-                val oldPodcastsJson = sharedPref.getString("downloaded_podcasts", null)
-                oldPodcastsJson?.let {
-                    val mediaItems = getMediaItemsFromJson(oldPodcastsJson)
-                    mediaItems.map { item -> downloadRepo.addDownloadedPodcast(item) }
-                }
-                subscriber.onSuccess(true)
-            } catch (e: Throwable) {
-                subscriber.onError(e)
-            }
-        }
-    }
-
-    fun getMediaItemsFromJson(oldPodcastsJson: String?): List<MediaDescriptionCompat> {
-        val resultList = mutableListOf<MediaDescriptionCompat>()
-        oldPodcastsJson?.let {
-            val type = Types.newParameterizedType(List::class.java, Podcast::class.java)
-            val moshi = Moshi.Builder()
-                    .add(PodcastJsonAdapter())
-                    .build()
-            val jsonAdapter: JsonAdapter<List<Podcast>> = moshi.adapter(type)
-            jsonAdapter.fromJson(oldPodcastsJson)?.mapTo(resultList) {
-                createBrowsableMediaItemForPodcast(it)
-            }
-        }
-        return resultList
-    }
-
-    private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaDescriptionCompat {
-        val extras = Bundle()
-        extras.putSerializable(PODCAST_STATE, podcast.state)
-        extras.putString(Podcast.PODCAST_PROGRAM_ID, podcast.programId)
-        extras.putString(Podcast.PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
-        extras.putLong(Podcast.PODCAST_DURATION, podcast.durationSeconds)
-        extras.putSerializable(PODCAST_DATE, podcast.dateTime)
-        extras.putSerializable(PODCAST_FILE_PATH, podcast.filePath)
-
-        return MediaDescriptionCompat.Builder()
-                .setMediaId(podcast.id)
-                .setTitle(podcast.title)
-                .setMediaUri(Uri.parse(podcast.remoteUrl))
-                .setIconUri(Uri.parse(podcast.smallImageUrl))
-                .setExtras(extras)
-                .build()
     }
 }
