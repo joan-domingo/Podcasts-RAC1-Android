@@ -109,9 +109,4 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
                 .putString(DOWNLOADED_PODCASTS, setToJson(podcasts))
                 .apply()
     }
-
-    override fun getDownloadedPodcastProgramId(audioId: String): String? {
-        return getDownloadedPodcasts().firstOrNull { it.mediaId == audioId }
-                ?.extras!!.getString(PODCAST_PROGRAM_ID)
-    }
 }

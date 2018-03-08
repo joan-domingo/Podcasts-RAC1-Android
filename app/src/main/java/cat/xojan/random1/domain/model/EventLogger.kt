@@ -16,12 +16,8 @@ class EventLogger(val firebaseAnalytics: FirebaseAnalytics?) {
         firebaseAnalytics?.logEvent("podcast_download_action", bundle)
     }
 
-    fun logDownloadedPodcastSuccess(audioId: String, title: String, programTitle: String?) {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, audioId)
-        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, title)
-        bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, programTitle)
-        firebaseAnalytics?.logEvent("podcast_download_success", bundle)
+    fun logDownloadedPodcastSuccess() {
+        firebaseAnalytics?.logEvent("podcast_download_success", null)
     }
 
     fun logDownloadedPodcastFail(reason: Int, reasonText: String?) {

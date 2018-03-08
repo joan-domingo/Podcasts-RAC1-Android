@@ -168,10 +168,6 @@ class PodcastDataInteractor @Inject constructor(
         }
     }
 
-    fun getProgramId(audioId: String): String? {
-        return downloadRepo.getDownloadedPodcastProgramId(audioId)
-    }
-
     fun exportPodcasts(): Single<Unit> {
         eventLogger.logExportPodcastsAction()
         return Single.create { subscriber ->

@@ -48,8 +48,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                             .replace(PodcastDataInteractor.EXTENSION, "")
 
                     podcastDataInteractor.addDownload(audioId)
-                    val programId = podcastDataInteractor.getProgramId(audioId)
-                    eventLogger.logDownloadedPodcastSuccess(audioId, title, programId)
+                    eventLogger.logDownloadedPodcastSuccess()
 
                     Toast.makeText(context, context.getString(R.string.download_successful) + ": " +
                             title, Toast.LENGTH_SHORT).show()
