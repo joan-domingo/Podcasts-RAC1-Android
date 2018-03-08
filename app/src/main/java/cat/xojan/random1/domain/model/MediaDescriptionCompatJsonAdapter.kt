@@ -40,7 +40,7 @@ class MediaDescriptionCompatJsonAdapter {
         extras.putString(PODCAST_FILE_PATH, itemJson.mediaFilePath)
         extras.putString(PODCAST_PROGRAM_ID, itemJson.programId)
         extras.putString(PODCAST_BIG_IMAGE_URL, itemJson.bigImageUrl)
-        extras.putLong(PODCAST_DURATION, itemJson.duration!!)
+        extras.putLong(PODCAST_DURATION, itemJson.duration ?: 0)
         extras.putSerializable(PODCAST_DATE, itemJson.date)
 
         return MediaDescriptionCompat.Builder()
