@@ -68,6 +68,7 @@ class HourByHourListFragment : BaseFragment(), IsMediaBrowserFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipe_refresh.setColorSchemeResources(R.color.colorAccent)
+        swipe_refresh.setProgressBackgroundColorSchemeResource(R.color.colorPrimaryDark)
         swipe_refresh.setOnRefreshListener {
             refresh = true
             onMediaControllerConnected()
