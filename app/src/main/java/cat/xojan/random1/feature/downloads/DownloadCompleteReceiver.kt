@@ -50,6 +50,7 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                     podcastDataInteractor.addDownload(audioId)
                     eventLogger.logDownloadedPodcastSuccess()
 
+                    Log.d(TAG, "Download successful")
                     Toast.makeText(context, context.getString(R.string.download_successful) + ": " +
                             title, Toast.LENGTH_SHORT).show()
                 }
@@ -71,19 +72,31 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
                         DownloadManager.ERROR_UNKNOWN -> reasonText = "ERROR_UNKNOWN"
                     }
 
-                    crashReporter.logException("Download failed: $reason $reasonText")
                     eventLogger.logDownloadedPodcastFail(reason, reasonText)
                     podcastDataInteractor.deleteDownloading(reference)
+
+                    Log.d(TAG, "Download failed")
                     Toast.makeText(context, context.getString(R.string.download_failed) + ": "
                             + reasonText, Toast.LENGTH_SHORT).show()
+                }
+
+                DownloadManager.STATUS_PAUSED -> {
+                    Log.d(TAG, "Download paused")
+                    cancelDownload(reference, context)
+                }
+
+                DownloadManager.STATUS_PENDING -> {
+                    Log.d(TAG, "Download pending")
+                }
+
+                DownloadManager.STATUS_RUNNING -> {
+                    Log.d(TAG, "Download running")
+                    cancelDownload(reference, context)
                 }
             }
             cursor.close()
         } else {
-            podcastDataInteractor.deleteDownloading(reference)
-            eventLogger.logDownloadedPodcastCancel()
-            Toast.makeText(context, context.getString(R.string.download_cancelled),
-                    Toast.LENGTH_SHORT).show()
+            cancelDownload(reference, context)
         }
         podcastDataInteractor.refreshDownloadedPodcasts()
     }
@@ -93,7 +106,15 @@ class DownloadCompleteReceiver : BroadcastReceiver() {
     }
 
     companion object {
-
         private val TAG = DownloadCompleteReceiver::class.java.simpleName
+    }
+
+    private fun cancelDownload(reference: Long, context: Context) {
+        podcastDataInteractor.deleteDownloading(reference)
+        eventLogger.logDownloadedPodcastCancel()
+
+        Log.d(TAG, "Download cancelled")
+        Toast.makeText(context, context.getString(R.string.download_cancelled),
+                Toast.LENGTH_SHORT).show()
     }
 }
