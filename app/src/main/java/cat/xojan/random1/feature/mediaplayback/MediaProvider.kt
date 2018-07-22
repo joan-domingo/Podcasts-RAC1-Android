@@ -168,12 +168,15 @@ class MediaProvider @Inject constructor(
     }
 
     private fun createBrowsableMediaItemForSection(section: Section): MediaBrowserCompat.MediaItem {
-        val description = MediaDescriptionCompat.Builder()
+        val descriptionBuilder = MediaDescriptionCompat.Builder()
                 .setMediaId(section.programId + "/" + section.id)
                 .setTitle(section.title)
-                .setIconUri(Uri.parse(section.imageUrl))
-                .build()
-        return MediaBrowserCompat.MediaItem(description,
+
+        section.imageUrl?.let {
+            descriptionBuilder.setIconUri(Uri.parse(section.imageUrl))
+        }
+
+        return MediaBrowserCompat.MediaItem(descriptionBuilder.build(),
                 MediaBrowserCompat.MediaItem.FLAG_BROWSABLE)
     }
 
@@ -185,14 +188,18 @@ class MediaProvider @Inject constructor(
         extras.putLong(PODCAST_DURATION, podcast.durationSeconds)
         extras.putSerializable(PODCAST_DATE, podcast.dateTime)
 
-        val description = MediaDescriptionCompat.Builder()
+        val descriptionBuilder = MediaDescriptionCompat.Builder()
                 .setMediaId(podcast.id)
                 .setTitle(podcast.title)
                 .setMediaUri(Uri.parse(podcast.remoteUrl))
-                .setIconUri(Uri.parse(podcast.smallImageUrl))
                 .setExtras(extras)
-                .build()
-        return MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+
+        podcast.smallImageUrl?.let {
+            descriptionBuilder.setIconUri(Uri.parse(podcast.smallImageUrl))
+        }
+
+        return MediaBrowserCompat.MediaItem(descriptionBuilder.build(),
+                MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
     }
 
     private fun mediaItemsToQueueItems(mediaItems: ArrayList<MediaBrowserCompat.MediaItem>)
