@@ -43,7 +43,7 @@ ext {
     targetSdk = 27
 
     supportLib = '27.1.1'
-    firebase = '11.8.0'
+    firebase = '16.0.1'
     retrofit = '2.3.0'
     okhttp = '3.9.1'
     jUnit = '4.12'
