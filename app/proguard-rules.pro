@@ -23,7 +23,6 @@
   **[] $VALUES;
   public *;
 }
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
 # Retrofit2
 -dontwarn retrofit2.**
