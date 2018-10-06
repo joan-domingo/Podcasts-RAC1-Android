@@ -97,7 +97,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     private fun hidePlaybackControls() {
         controlsFragment?.let {
             supportFragmentManager.beginTransaction()
-                    .hide(controlsFragment)
+                    .hide(controlsFragment as MediaPlaybackControlsFragment)
                     .commit()
         }
     }
@@ -119,7 +119,7 @@ abstract class MediaPlayerBaseActivity : BaseActivity(), MediaBrowserProvider {
     private fun showPlaybackControls() {
         controlsFragment?.let {
             supportFragmentManager.beginTransaction()
-                    .show(controlsFragment)
+                    .show(controlsFragment as MediaPlaybackControlsFragment)
                     .commitAllowingStateLoss()
         }
     }

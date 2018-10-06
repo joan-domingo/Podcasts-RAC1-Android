@@ -77,7 +77,7 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
     }
 
     override fun onMediaControllerConnected() {
-        val frag: Fragment = supportFragmentManager.findFragmentById(R.id.container_fragment)
+        val frag: Fragment? = supportFragmentManager.findFragmentById(R.id.container_fragment)
         when (frag) {
             is SectionPodcastListFragment -> frag.onMediaControllerConnected()
             is SectionFragment -> frag.onMediaControllerConnected()

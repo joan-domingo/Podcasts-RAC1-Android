@@ -114,13 +114,13 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
         compositeDisposable.clear()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (programFragment != null && programFragment!!.isAdded) {
-            supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment)
+            supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment as ProgramFragment)
         }
         if (downloadsFragment != null && downloadsFragment!!.isAdded) {
-            supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment)
+            supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment as DownloadsFragment)
         }
     }
 

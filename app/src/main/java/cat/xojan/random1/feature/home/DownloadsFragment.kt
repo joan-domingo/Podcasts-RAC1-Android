@@ -30,7 +30,7 @@ import javax.inject.Inject
 class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
 
     companion object {
-        val TAG = DownloadsFragment::class.simpleName
+        val TAG = DownloadsFragment::class.simpleName.toString()
         val MEDIA_ID_DOWNLOADS = "/DOWNLOADS"
     }
 
@@ -151,7 +151,7 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
         }
 
         override fun onError(id: String) {
-            val msg = "downloads fragment subscription onError, id=" + id
+            val msg = "downloads fragment subscription onError, id=$id"
             Log.e(TAG, msg)
             crashReporter.logException(msg)
         }

@@ -106,9 +106,7 @@ dependencies {
     testImplementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
 
     // Crashlytics
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
 
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:$dagger"
@@ -120,7 +118,7 @@ dependencies {
 
     // Firebase
     implementation "com.google.firebase:firebase-core:$firebase"
-    implementation 'com.google.firebase:firebase-perf:16.0.0'
+    implementation 'com.google.firebase:firebase-perf:16.1.2'
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.7.1'

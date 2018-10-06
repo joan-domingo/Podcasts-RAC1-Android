@@ -28,7 +28,7 @@ import javax.inject.Inject
 class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
 
     companion object {
-        val TAG = ProgramFragment::class.simpleName
+        val TAG = ProgramFragment::class.simpleName.toString()
         val MEDIA_ID_ROOT = "__PROGRAMS__"
         val MEDIA_ID_EMPTY_ROOT = "__EMPTY_ROOT__"
     }
@@ -54,13 +54,13 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         programs_progress_bar.visibility = VISIBLE
-        programs_load_button.setOnClickListener({
+        programs_load_button.setOnClickListener {
             refresh = true
             onMediaControllerConnected()
-        })
+        }
         adapter = ProgramListAdapter()
         programs_recycler_view.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
                 if (newState == RecyclerView.SCROLL_STATE_SETTLING) {
                     programs_recycler_view.stopScroll()
@@ -172,7 +172,7 @@ class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
         }
 
         override fun onError(id: String) {
-            val msg = "program fragment subscription onError, id=" + id
+            val msg = "program fragment subscription onError, id=$id"
             Log.e(TAG, msg)
             crashReporter.logException(msg)
         }
