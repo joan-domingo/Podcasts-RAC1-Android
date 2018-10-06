@@ -101,6 +101,8 @@ dependencies {
     // Android support
     implementation "com.android.support:appcompat-v7:$supportLib"
     implementation "com.android.support:design:$supportLib"
+    implementation "com.android.support:support-media-compat:$supportLib"
+    implementation "com.android.support:support-v4:$supportLib"
 
     // Apache
     testImplementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
@@ -157,11 +159,11 @@ dependencies {
     testImplementation "com.squareup.okhttp3:mockwebserver:$okhttp"
 
     // Rx
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
 
     // RxLint
-    debugImplementation 'nl.littlerobots.rxlint:rxlint:1.5'
+    debugImplementation 'nl.littlerobots.rxlint:rxlint:1.6'
 }
 
 apply plugin: 'com.google.gms.google-services'
