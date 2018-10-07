@@ -3,7 +3,7 @@
 # Podcasts RAC1
 Android app to listen to podcasts from RAC1 radio station
 
-![App icon](https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/852/464/original/25a9806edd9c5a9804dd31a824545bdd.png)
+![App icon](https://raw.githubusercontent.com/joan-domingo/Podcasts-RAC1-Android/master/app/src/rac1Release/res/mipmap-hdpi/ic_launcher.png)
 
 ![App screenshot 1](https://lh3.googleusercontent.com/mJb_bSsDe50-S7dWjyLltriJHNiphYtxbaL05O1OBb4_grADuc7W_RfymgG3obRI_Es=w720-h310-rw)
 ![App screenshot 2](https://lh3.googleusercontent.com/EnbUveG4rigaBJmNnZS86gvovDWD51NTOASRJpPFGtwFWu5knkE1YtOww1OviSRiCA=w720-h310-rw)
@@ -23,7 +23,7 @@ https://install.appcenter.ms/users/joands-17w1/apps/podcasts-rac1-production/dis
 # Podcasts Catalunya Ràdio
 Android app to listen to podcasts from Catalunya Ràdio radio station
 
-![App icon](https://dl0tgz6ee3upo.cloudfront.net/production/apps/icons/000/852/463/original/9c1b70bca50052e03e775e9ebdc02a44.png)
+![App icon](https://raw.githubusercontent.com/joan-domingo/Podcasts-RAC1-Android/master/app/src/catradioRelease/res/mipmap-hdpi/ic_launcher.png)
 
 ## Download APK
 https://install.appcenter.ms/users/joands-17w1/apps/podcasts-catradio-production/distribution_groups/public
