@@ -30,12 +30,14 @@ import javax.inject.Inject
 class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
 
     companion object {
-        val TAG = DownloadsFragment::class.simpleName.toString()
+        val TAG: String = DownloadsFragment::class.simpleName.toString()
         val MEDIA_ID_DOWNLOADS = "/DOWNLOADS"
     }
 
-    @Inject internal lateinit var viewModel: BrowserViewModel
-    @Inject internal lateinit var crashReporter: CrashReporter
+    @Inject
+    internal lateinit var viewModel: BrowserViewModel
+    @Inject
+    internal lateinit var crashReporter: CrashReporter
 
     private val compositeDisposable = CompositeDisposable()
     private lateinit var adapter: PodcastListAdapter
@@ -80,8 +82,8 @@ class DownloadsFragment : BaseFragment(), IsMediaBrowserFragment {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        {onMediaControllerConnected()},
-                        {e -> crashReporter.logException(e)}
+                        { onMediaControllerConnected() },
+                        { e -> crashReporter.logException(e) }
                 ))
     }
 

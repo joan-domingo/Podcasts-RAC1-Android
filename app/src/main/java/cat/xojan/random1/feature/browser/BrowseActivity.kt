@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 
-class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
+class BrowseActivity : MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
     companion object {
         private val EXTRA_PROGRAM = "extra_program"
 
@@ -28,7 +28,8 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
         }
     }
 
-    @Inject internal lateinit var viewModel: BrowserViewModel
+    @Inject
+    internal lateinit var viewModel: BrowserViewModel
     private val compositeDisposable = CompositeDisposable()
 
     override val component: BrowseComponent by lazy {
@@ -60,14 +61,16 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
                                 .subscribeOn(Schedulers.newThread())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(
-                                    {b -> if (b) {
-                                        addFragment(SectionFragment.newInstance(mediaItem.mediaId),
-                                                SectionFragment.TAG, false)
-                                    } else {
-                                        addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
-                                                HourByHourListFragment.TAG, false)
-                                    }},
-                                    {}
+                                        { b ->
+                                            if (b) {
+                                                addFragment(SectionFragment.newInstance(mediaItem.mediaId),
+                                                        SectionFragment.TAG, false)
+                                            } else {
+                                                addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
+                                                        HourByHourListFragment.TAG, false)
+                                            }
+                                        },
+                                        {}
                                 ))
             } else {
                 addFragment(HourByHourListFragment.newInstance(mediaItem.mediaId),
@@ -77,7 +80,7 @@ class BrowseActivity: MediaPlayerBaseActivity(), HasComponent<BrowseComponent> {
     }
 
     override fun onMediaControllerConnected() {
-        val frag: Fragment? = supportFragmentManager.findFragmentById(R.id.container_fragment)
+        val frag: Fragment = supportFragmentManager.findFragmentById(R.id.container_fragment)!!
         when (frag) {
             is SectionPodcastListFragment -> frag.onMediaControllerConnected()
             is SectionFragment -> frag.onMediaControllerConnected()

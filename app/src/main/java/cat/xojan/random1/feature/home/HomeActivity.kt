@@ -21,13 +21,15 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_home.*
 import javax.inject.Inject
 
-class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
+class HomeActivity : MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     companion object {
         private const val PERMISSION_WRITE_EXTERNAL_STORAGE = 20
     }
 
-    @Inject internal lateinit var viewModel: HomeViewModel
-    @Inject internal lateinit var crashReporter: CrashReporter
+    @Inject
+    internal lateinit var viewModel: HomeViewModel
+    @Inject
+    internal lateinit var crashReporter: CrashReporter
     private val compositeDisposable = CompositeDisposable()
 
     private var programFragment: ProgramFragment? = null
@@ -85,7 +87,7 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_export_podcasts -> if (ContextCompat.checkSelfPermission(this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestWriteExternalStoragePermission()
             } else {
                 exportPodcasts()
@@ -117,10 +119,12 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         if (programFragment != null && programFragment!!.isAdded) {
-            supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment as ProgramFragment)
+            supportFragmentManager.putFragment(outState, ProgramFragment.TAG, programFragment as
+                    ProgramFragment)
         }
         if (downloadsFragment != null && downloadsFragment!!.isAdded) {
-            supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment as DownloadsFragment)
+            supportFragmentManager.putFragment(outState, DownloadsFragment.TAG, downloadsFragment
+                    as DownloadsFragment)
         }
     }
 
@@ -129,8 +133,8 @@ class HomeActivity: MediaPlayerBaseActivity(), HasComponent<HomeComponent> {
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        {notifyUser()},
-                        {e -> crashReporter.logException(e)}
+                        { notifyUser() },
+                        { e -> crashReporter.logException(e) }
                 ))
     }
 

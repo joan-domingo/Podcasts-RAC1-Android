@@ -28,7 +28,7 @@ import javax.inject.Inject
 class ProgramFragment: BaseFragment(), IsMediaBrowserFragment {
 
     companion object {
-        val TAG = ProgramFragment::class.simpleName.toString()
+        val TAG: String = ProgramFragment::class.simpleName.toString()
         val MEDIA_ID_ROOT = "__PROGRAMS__"
         val MEDIA_ID_EMPTY_ROOT = "__EMPTY_ROOT__"
     }
