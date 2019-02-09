@@ -19,6 +19,8 @@ https://install.appcenter.ms/users/joands-17w1/apps/podcasts-rac1-production/dis
 ## See also
 [emibcn's - Rac1.py](https://github.com/emibcn/Rac1.py)
 
+[emibcn's - Rac1 web app based on ReactJS](https://github.com/emibcn/Rac1.js)
+
 
 # Podcasts Catalunya Ràdio
 Android app to listen to podcasts from Catalunya Ràdio radio station
