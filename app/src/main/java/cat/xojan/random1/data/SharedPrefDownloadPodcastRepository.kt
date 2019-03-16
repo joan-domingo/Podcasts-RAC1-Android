@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import android.support.v4.media.MediaDescriptionCompat
 import cat.xojan.random1.domain.model.MediaDescriptionCompatJsonAdapter
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_FILE_PATH
-import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_PROGRAM_ID
 import cat.xojan.random1.domain.model.Podcast.Companion.PODCAST_STATE
 import cat.xojan.random1.domain.model.PodcastState
 import cat.xojan.random1.domain.repository.DownloadPodcastRepository
@@ -36,7 +35,7 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
     }
 
     override fun addDownloadingPodcast(podcast: MediaDescriptionCompat): Boolean {
-        podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.DOWNLOADING)
+        podcast.extras?.putString(PODCAST_STATE, PodcastState.DOWNLOADING.name)
         val podcasts = getDownloadingPodcasts()
         podcasts.add(podcast)
         return sharedPref.edit()
@@ -56,7 +55,7 @@ class SharedPrefDownloadPodcastRepository(context: Context) : DownloadPodcastRep
         val podcast = getDownloadingPodcast(mediaId)
         if (podcast != null && deleteDownloadingPodcast(podcast)) {
             podcast.extras?.putString(PODCAST_FILE_PATH, filePath)
-            podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.DOWNLOADED)
+            podcast.extras?.putString(PODCAST_STATE, PodcastState.DOWNLOADED.name)
             addDownloadedPodcast(podcast)
         }
     }

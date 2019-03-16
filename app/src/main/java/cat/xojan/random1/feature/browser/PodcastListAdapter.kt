@@ -38,7 +38,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
         for (mediaItem in podcasts) {
             val podcast = mediaItem.description
             podcast.extras?.putString(PODCAST_FILE_PATH, null)
-            podcast.extras?.putSerializable(PODCAST_STATE, PodcastState.LOADED)
+            podcast.extras?.putString(PODCAST_STATE, PodcastState.LOADED.name)
         }
 
         for (p in updatedStatePodcasts) {
@@ -48,8 +48,8 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                 val description = currentPodcast.description
                 description.extras?.putString(PODCAST_FILE_PATH,
                         updatedPodcast.extras?.getString(PODCAST_FILE_PATH))
-                description.extras?.putSerializable(PODCAST_STATE,
-                        updatedPodcast.extras?.getSerializable(PODCAST_STATE) as PodcastState)
+                description.extras?.putString(PODCAST_STATE,
+                        updatedPodcast.extras?.getString(PODCAST_STATE))
             }
         }
         notifyDataSetChanged()
@@ -110,7 +110,7 @@ class PodcastListAdapter(private val viewModel: BrowserViewModel,
                         .transportControls.playFromMediaId(item.mediaId, null)
             }
 
-            val state = podcast.extras?.getSerializable(PODCAST_STATE) as PodcastState
+            val state = PodcastState.fromString(podcast.extras!!.getString(PODCAST_STATE)!!)
             when (state) {
                 PodcastState.LOADED -> podcast_icon.setImageResource(R.drawable.ic_arrow_down)
                 PodcastState.DOWNLOADING -> {

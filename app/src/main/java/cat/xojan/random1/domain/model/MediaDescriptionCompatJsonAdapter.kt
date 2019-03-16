@@ -23,7 +23,7 @@ class MediaDescriptionCompatJsonAdapter {
                 item.title.toString(),
                 item.mediaUri.toString(),
                 item.iconUri.toString(),
-                item.extras?.getSerializable(PODCAST_STATE) as PodcastState,
+                PodcastState.fromString(item.extras!!.getString(PODCAST_STATE)),
                 item.extras?.getLong(PODCAST_DOWNLOAD_REFERENCE),
                 item.extras?.getString(PODCAST_FILE_PATH),
                 item.extras?.getString(PODCAST_PROGRAM_ID),
@@ -35,7 +35,7 @@ class MediaDescriptionCompatJsonAdapter {
     @FromJson
     fun fromJson(itemJson: MediaDescriptionCompatJson): MediaDescriptionCompat {
         val extras = Bundle()
-        extras.putSerializable(PODCAST_STATE, itemJson.state)
+        extras.putString(PODCAST_STATE, itemJson.state.name)
         extras.putLong(PODCAST_DOWNLOAD_REFERENCE, itemJson.downloadReference!!)
         extras.putString(PODCAST_FILE_PATH, itemJson.mediaFilePath)
         extras.putString(PODCAST_PROGRAM_ID, itemJson.programId)

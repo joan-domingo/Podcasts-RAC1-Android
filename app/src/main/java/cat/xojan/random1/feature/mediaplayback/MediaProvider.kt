@@ -182,7 +182,7 @@ class MediaProvider @Inject constructor(
 
     private fun createBrowsableMediaItemForPodcast(podcast: Podcast): MediaBrowserCompat.MediaItem {
         val extras = Bundle()
-        extras.putSerializable(PODCAST_STATE, podcast.state)
+        extras.putString(PODCAST_STATE, podcast.state.name)
         extras.putString(PODCAST_PROGRAM_ID, podcast.programId)
         extras.putString(PODCAST_BIG_IMAGE_URL, podcast.bigImageUrl)
         extras.putLong(PODCAST_DURATION, podcast.durationSeconds)

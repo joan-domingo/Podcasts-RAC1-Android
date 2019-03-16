@@ -36,12 +36,12 @@ class PodcastDataInteractor @Inject constructor(
         private val downloadManager: DownloadManager,
         private val context: Context,
         private val downloadRepo: DownloadPodcastRepository,
-        private val eventLogger: EventLogger)
-{
+        private val eventLogger: EventLogger) {
 
     companion object {
         const val EXTENSION = ".mp3"
     }
+
     private val TAG = PodcastDataInteractor::class.simpleName
 
     private val stateUpdatesSubject: PublishSubject<List<MediaBrowserCompat.MediaItem>> =
@@ -53,13 +53,13 @@ class PodcastDataInteractor @Inject constructor(
 
         return Single.zip(program, podcastList,
                 BiFunction<Program, List<Podcast>, List<Podcast>> { pr, podList ->
-            for (p in podList) {
-                p.programId = pr.id
-                p.smallImageUrl = pr.smallImageUrl
-                p.bigImageUrl = pr.bigImageUrl
-            }
+                    for (p in podList) {
+                        p.programId = pr.id
+                        p.smallImageUrl = pr.smallImageUrl
+                        p.bigImageUrl = pr.bigImageUrl
+                    }
                     podList
-        })
+                })
     }
 
     fun getSectionPodcasts(programId: String, sectionId: String, refresh: Boolean):
@@ -110,15 +110,20 @@ class PodcastDataInteractor @Inject constructor(
 
     fun getDownloadedPodcasts(): Single<List<MediaBrowserCompat.MediaItem>> {
         return Single.just(fetchDownloadedPodcasts())
-                .flatMap {
-                    podcasts -> Observable.just(podcasts)
-                        .flatMapIterable { p -> p }
-                        .filter { p -> p.description.extras?.getSerializable(PODCAST_STATE) ==
-                                PodcastState.DOWNLOADED }
-                        .sorted { p1, p2 -> (p2.description.extras?.getSerializable(PODCAST_DATE)
-                                as Date).compareTo(p1.description.extras?.getSerializable
-                            (PODCAST_DATE) as Date) }
-                        .toList()
+                .flatMap { podcasts ->
+                    Observable.just(podcasts)
+                            .flatMapIterable { p -> p }
+                            .filter { p ->
+                                p.description.extras?.getString(PODCAST_STATE)!!
+                                        .toUpperCase() ==
+                                        PodcastState.DOWNLOADED.name.toUpperCase()
+                            }
+                            .sorted { p1, p2 ->
+                                (p2.description.extras?.getSerializable(PODCAST_DATE)
+                                        as Date).compareTo(p1.description.extras?.getSerializable
+                                (PODCAST_DATE) as Date)
+                            }
+                            .toList()
                 }
     }
 
@@ -140,7 +145,8 @@ class PodcastDataInteractor @Inject constructor(
         Log.d(TAG, "Downloading: " + downloading.size + ", downloaded: " + downloaded.size)
 
         return podcastList.map { description ->
-            MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE) }
+            MediaBrowserCompat.MediaItem(description, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE)
+        }
     }
 
     fun deleteDownloading(reference: Long) {

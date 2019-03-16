@@ -54,7 +54,7 @@ class BrowserViewModel @Inject constructor(
         for (mediaItem in loaded) {
             val podcast = mediaItem.description
             podcast.extras?.putString(Podcast.PODCAST_FILE_PATH, null)
-            podcast.extras?.putSerializable(Podcast.PODCAST_STATE, PodcastState.LOADED)
+            podcast.extras?.putString(Podcast.PODCAST_STATE, PodcastState.LOADED.name)
         }
 
         for (mediaItem in updated) {
@@ -64,9 +64,8 @@ class BrowserViewModel @Inject constructor(
                 val description = currentPodcast.description
                 description.extras?.putString(Podcast.PODCAST_FILE_PATH,
                         updatedPodcast.extras?.getString(Podcast.PODCAST_FILE_PATH))
-                description.extras?.putSerializable(Podcast.PODCAST_STATE,
-                        updatedPodcast.extras?.getSerializable(Podcast.PODCAST_STATE)
-                                as PodcastState)
+                description.extras?.putString(Podcast.PODCAST_STATE,
+                        updatedPodcast.extras?.getString(Podcast.PODCAST_STATE))
             }
         }
         return loaded
