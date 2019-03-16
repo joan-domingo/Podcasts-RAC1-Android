@@ -74,3 +74,5 @@
 -keepclassmembers class com.google.android.exoplayer2.ext.ima.ImaAdsLoader {
   <init>(android.content.Context, android.net.Uri);
 }
+
+-keep public class kotlin.reflect.jvm.internal.impl.** { public *; }
