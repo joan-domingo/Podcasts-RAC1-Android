@@ -52,8 +52,8 @@ android {
         }
         catradio {
             applicationId "cat.xojan.randomcat"
-            versionCode 2
-            versionName "0.2.0"
+            versionCode 3
+            versionName "0.2.1"
             buildConfigField "String", "BASE_URL", "\"http://api.ccma.cat/\""
         }
     }
