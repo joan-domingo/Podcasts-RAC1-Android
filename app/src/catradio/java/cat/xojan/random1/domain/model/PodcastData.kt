@@ -38,7 +38,7 @@ class PodcastData(
     }
 
     private fun getRemoteUrl(audios: List<AudioCatRadio>): String {
-        return "http://audios.catradio.cat/multimedia/" + audios.firstOrNull()?.urlPostfix
+        return "http://audios.ccma.cat/multimedia/" + audios.firstOrNull()?.urlPostfix
     }
 }
 
