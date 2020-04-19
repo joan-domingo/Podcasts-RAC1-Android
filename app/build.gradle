@@ -15,15 +15,6 @@ android {
         multiDexEnabled true
     }
 
-    signingConfigs {
-        releaseSigningConfig {
-            storeFile rootProject.file("app/apps_keystore.jks")
-            storePassword System.getProperty("APPCENTER_KEYSTORE_PASSWORD")
-            keyAlias System.getProperty("APPCENTER_KEY_ALIAS")
-            keyPassword System.getProperty("APPCENTER_KEY_PASSWORD")
-        }
-    }
-
     buildTypes {
         debug {
             applicationIdSuffix ".dev"
@@ -32,7 +23,6 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.releaseSigningConfig
         }
     }
 
