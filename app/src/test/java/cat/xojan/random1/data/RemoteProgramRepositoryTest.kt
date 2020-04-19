@@ -47,7 +47,7 @@ class RemoteProgramRepositoryTest {
 
     @Test @Ignore
     fun get_program_list_success() {
-        val body = IOUtils.toString(this.javaClass.classLoader.getResourceAsStream("programs.json"))
+        val body = IOUtils.toString(this.javaClass.classLoader?.getResourceAsStream("programs.json"))
         mockWebServer.enqueue(MockResponse().setBody(body))
         val testSubscriber = TestObserver<List<Program>>()
 
