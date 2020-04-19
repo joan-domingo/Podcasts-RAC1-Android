@@ -6,6 +6,6 @@
 /captures
 .idea/
 app/build
-/gradle.properties
 /app/rac1
 /app/catradio
+signing_credentials

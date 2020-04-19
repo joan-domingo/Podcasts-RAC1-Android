@@ -16,13 +16,11 @@ android {
     }
 
     signingConfigs {
-        release {
-            if (project.rootProject.file('gradle.properties').exists()) {
-                keyAlias KEY_ALIAS
-                keyPassword KEY_PASSWORD
-                storeFile file(STORE_FILE_PATH)
-                storePassword STORE_PASSWORD
-            }
+        releaseSigningConfig {
+            storeFile rootProject.file("app/apps_keystore.jks")
+            storePassword System.getProperty("APPCENTER_KEYSTORE_PASSWORD")
+            keyAlias System.getProperty("APPCENTER_KEY_ALIAS")
+            keyPassword System.getProperty("APPCENTER_KEY_PASSWORD")
         }
     }
 
@@ -34,9 +32,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            if (project.rootProject.file('gradle.properties').exists()) {
-                signingConfig signingConfigs.release
-            }
+            signingConfig signingConfigs.releaseSigningConfig
         }
     }
 
