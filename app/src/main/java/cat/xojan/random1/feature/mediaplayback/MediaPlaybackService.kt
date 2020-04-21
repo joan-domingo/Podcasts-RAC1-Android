@@ -178,7 +178,7 @@ class MediaPlaybackService: MediaBrowserServiceCompat(),
     }
 
     override fun updatePlaybackState(newState: PlaybackStateCompat) {
-        Log.d(TAG, "newState: $newState")
+        Log.d(TAG, "new playback state: $newState")
         mediaSession.setPlaybackState(newState)
     }
 

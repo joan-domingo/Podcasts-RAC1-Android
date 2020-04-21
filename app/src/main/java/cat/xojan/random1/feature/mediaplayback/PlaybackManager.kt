@@ -15,7 +15,7 @@ class PlaybackManager(appContext: Context,
                       private val listener: PlaybackStateListener,
                       audioManager: AudioManager,
                       eventLogger: EventLogger,
-                      crashReporter: CrashReporter): PlayerListener {
+                      crashReporter: CrashReporter) : PlayerListener {
 
     companion object {
         const val SET_SLEEP_TIMER = "set_sleep_timer"
@@ -98,8 +98,11 @@ class PlaybackManager(appContext: Context,
             handlePlayRequest(nextMediaId)
             queueManager.updateMetadata(nextMediaId)
         } else {
-            player.pause()
-            player.seekTo(0)
+            val stateBuilder: PlaybackStateCompat.Builder = PlaybackStateCompat.Builder()
+                    .setState(PlaybackStateCompat.STATE_STOPPED,
+                            player.getCurrentPosition(),
+                            1.0f)
+            listener.updatePlaybackState(stateBuilder.build())
         }
     }
 
