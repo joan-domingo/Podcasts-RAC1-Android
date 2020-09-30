@@ -208,6 +208,9 @@ class MediaPlaybackFullScreenActivity : MediaPlayerBaseActivity(),
                     buffer_progress_bar.visibility = View.VISIBLE
                     button_play_pause.visibility = View.GONE
                 }
+                PlaybackStateCompat.STATE_STOPPED -> {
+                    this.finish()
+                }
             }
 
             val timeInMilliseconds: Long = playbackState.extras
