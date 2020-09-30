@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion compileSdk
@@ -96,7 +96,7 @@ dependencies {
     testImplementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
 
     // Crashlytics
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
 
     // Dagger 2
     kapt "com.google.dagger:dagger-compiler:$dagger"

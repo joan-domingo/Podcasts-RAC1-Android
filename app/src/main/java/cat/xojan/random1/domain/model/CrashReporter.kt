@@ -1,15 +1,18 @@
 package cat.xojan.random1.domain.model
 
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 
 class CrashReporter {
 
+    val crashlytics = FirebaseCrashlytics.getInstance()
+
+
     fun logException(e: Throwable) {
-        Crashlytics.logException(e)
+        crashlytics.recordException(e)
     }
 
     fun logException(message: String) {
-        Crashlytics.log(message)
+        crashlytics.log(message)
     }
 }
